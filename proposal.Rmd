@@ -33,12 +33,50 @@ As the links above indicate, there are two sets of data containing distinct reco
 The dataset contains mostly categorical variables and dates with each row indicating a crime/violation.
 As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. 
 
-Column description:
+Column names and description:
 
+S.No Column Name (Data Type): Description
+
+1) CMPLNT_NUM (text): Randomly generated persistent ID for each complaint
+2) ADDR_PCT_CD (text): The precinct in which the incident occurred
+3) BORO_NM	(text): The name of the borough in which the incident occurred 
+4) CMPLNT_FR_DT	(DateTime): Exact date of occurrence for the reported event (or starting date of occurrence, if CMPLNT_TO_DT exists)
+5) CMPLNT_FR_TM	(text): Exact time of occurrence for the reported event (or starting time of occurrence, if CMPLNT_TO_TM exists)
+6) CMPLNT_TO_DT	(DateTime): Ending date of occurrence for the reported event, if exact time of occurrence is unknown
+7) CMPLNT_TO_TM	(text): Ending time of occurrence for the reported event, if exact time of occurrence is unknown
+8) CRM_ATPT_CPTD_CD	(text): Indicator of whether crime was successfully completed or attempted, but failed or was interrupted prematurely 
+9) HADEVELOPT	(text): Name of NYCHA housing development of occurrence, if applicable 
+10) HOUSING_PSA	(Number): Development Level CodeNumber
+11) JURISDICTION_CODE	(Number): Jurisdiction responsible for incident. Either internal, like Police(0), Transit(1), and Housing(2); or external(3), like Correction, Port Authority, etc.
+12) JURIS_DESC (text): Description of the jurisdiction code
+13) KY_CD	(Number): Three digit offense classification code
+14) LAW_CAT_CD (text): Level of offense: felony, misdemeanor, violation
+15) LOC_OF_OCCUR_DESC	(text): Specific location of occurrence in or around the premises; inside, opposite of, front of, rear of
+16) OFNS_DESC	(text): Description of offense corresponding with key code
+17) PARKS_NM	(text): Name of NYC park, playground or greenspace of occurrence, if applicable (state parks are not included)
+18) PATROL_BORO	(text): The name of the patrol borough in which the incident occurred
+19) PD_CD	(Number): Three digit internal classification code (more granular than Key Code)
+20) PD_DESC (text): Description of internal classification corresponding with PD code (more granular than Offense Description)
+21) PREM_TYP_DESC	(text): Specific description of premises; grocery store, residence, street, etc.
+22) RPT_DT (DateTime): Date event was reported to police
+23) STATION_NAME	(text): Transit station name
+24) SUSP_AGE_GROUP	(text): Suspect’s Age Group
+25) SUSP_RACE	(text): Suspect’s Race Description
+26) SUSP_SEX	(text): Suspect’s Sex Description
+27) TRANSIT_DISTRICT (Number): Transit district in which the offense occurred
+28) VIC_AGE_GROUP (text):	Victim’s Age Group
+29) VIC_RACE (text): Victim’s Race Description
+30) VIC_SEX	(text): Victim’s Sex Description
+31) X_COORD_CD (Number): X-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)
+32) Y_COORD_CD (Number): Y-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)
+33) Latitude (Number): Midblock Latitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)
+34) Longitude	(Number): Midblock Longitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)
+35) LatLon (Location)
+36) New Georeferenced Column (Point)
 
 
 ### *Who Collects The Data*
-TBD
+The data was collected and published by the Police Department (NYPD)
 
 ### *Format and Importation*
 OTI provides the data in 4 formats: 1) online table, 2) visualization, 3) CSV, and 4) API. The first two have limited functionality and customization so we will not use those versions. The API requires an account and authentication tokens. Given that the CSV for YTD data is not too large (140MB), it seems the easiest to work with. CSV is a format we are most familiar with and one that R handles well. 
