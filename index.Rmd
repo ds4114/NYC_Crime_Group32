@@ -1,6 +1,6 @@
 --- 
-title: "NYC Crime Group32"
-author: "Abhiram Gaddam, Faizan Dogar, Devan Samant"
+title: "NYC Crime"
+author: "Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---

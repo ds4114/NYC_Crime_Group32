@@ -1,8 +1,40 @@
+--- 
+title: "NYC Crime"
+author: "Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+--- 
+title: "NYC Crime"
+author: "Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Introduction
+
+
+<!--chapter:end:index.Rmd-->
+
 ---
 output:
   html_document: default
   pdf_document: default
 ---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
 # Proposal
 
 ## Research topic
@@ -34,15 +66,6 @@ The dataset contains mostly categorical variables and dates with each row indica
 As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. 
 
 Column description:
-```{r}
-output <- matrix(1:4,
-                 ncol = 2,
-                 dimnames = list(c("Row 1", "Row 2"),
-                                 c("Column 1", "Column 2")))
-htmlTable(output,
-          ctable = c("solid", "double"),
-          caption = "A table caption above and ctable borders")
-```
 
 
 ### *Who Collects The Data*
@@ -67,4 +90,61 @@ There are longitude and latitude fields which we would like to utilize but have 
 ### *Other Comments*
 --TBD - open
 
+
+
+<!--chapter:end:proposal.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data 
+
+## Sources
+
+## Cleaning / transformation
+
+## Missing value analysis
+
+
+<!--chapter:end:data.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Results
+
+<!--chapter:end:results.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Interactive component
+
+
+
+<!--chapter:end:interactive.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Conclusion
+
+
+<!--chapter:end:conclusion.Rmd-->
 

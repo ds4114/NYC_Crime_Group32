@@ -1,4 +1,4 @@
-Project Description: The broad aim of the project is to explore crime rates across different parts of New York. We are looking specifically around the Columbia University neighborhood to understand what times and areas that are more prone to higher crime rates.
+Project Description: The broad aim of the project is to explore crime rates and patterns across different parts of New York City. We plan to focus specifically around the Columbia University neighborhood to understand various factors that may correlate with varying crime. We will explore how crime rates and profiles change with time of day and area, and try to answer relevant questions like if walking through a park really is more dangerous than the street after sunset. 
 
 
 
