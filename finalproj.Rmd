@@ -66,6 +66,41 @@ The dataset contains mostly categorical variables and dates with each row indica
 As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. 
 
 Column description:
+Column Name	Description	Type
+CMPLNT_NUM	Randomly generated persistent ID for each complaint	Plain Text
+ADDR_PCT_CD	The precinct in which the incident occurred	Number
+BORO_NM	The name of the borough in which the incident occurred	Plain Text
+CMPLNT_FR_DT	Exact date of occurrence for the reported event (or starting date of occurrence, if CMPLNT_TO_DT exists)	Date & Time
+CMPLNT_FR_TM	Exact time of occurrence for the reported event (or starting time of occurrence, if CMPLNT_TO_TM exists)	Plain Text
+CMPLNT_TO_DT	Ending date of occurrence for the reported event, if exact time of occurrence is unknown	Date & Time
+CMPLNT_TO_TM	Ending time of occurrence for the reported event, if exact time of occurrence is unknown	Plain Text
+CRM_ATPT_CPTD_CD	Indicator of whether crime was successfully completed or attempted, but failed or was interrupted prematurely	Plain Text
+HADEVELOPT	Name of NYCHA housing development of occurrence, if applicable	Plain Text
+HOUSING_PSA	Development Level Code	Number
+JURISDICTION_CODE	Jurisdiction responsible for incident. Either internal, like Police(0), Transit(1), and Housing(2); or external(3), like Correction, Port Authority, etc.	Number
+JURIS_DESC	Description of the jurisdiction code	Plain Text
+KY_CD	Three digit offense classification code	Number
+LAW_CAT_CD	Level of offense: felony, misdemeanor, violation	Plain Text
+LOC_OF_OCCUR_DESC	Specific location of occurrence in or around the premises; inside, opposite of, front of, rear of	Plain Text
+OFNS_DESC	Description of offense corresponding with key code	Plain Text
+PARKS_NM	Name of NYC park, playground or greenspace of occurrence, if applicable (state parks are not included)	Plain Text
+PATROL_BORO	The name of the patrol borough in which the incident occurred	Plain Text
+PD_CD	Three digit internal classification code (more granular than Key Code)	Number
+PD_DESC	Description of internal classification corresponding with PD code (more granular than Offense Description)	Plain Text
+PREM_TYP_DESC	Specific description of premises; grocery store, residence, street, etc.	Plain Text
+RPT_DT	Date event was reported to police	Date & Time
+STATION_NAME	Transit station name	Plain Text
+SUSP_AGE_GROUP	Suspect’s Age Group	Plain Text
+SUSP_RACE	Suspect’s Race Description	Plain Text
+SUSP_SEX	Suspect’s Sex Description	Plain Text
+TRANSIT_DISTRICT	Transit district in which the offense occurred.	Number
+VIC_AGE_GROUP	Victim’s Age Group	Plain Text
+VIC_RACE	Victim’s Race Description	Plain Text
+VIC_SEX	Victim’s Sex Description	Plain Text
+X_COORD_CD	X-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)	Number
+Y_COORD_CD	Y-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)	Number
+Latitude	Midblock Latitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)	Number
+Longitude	Midblock Longitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)	Number
 
 
 ### *Who Collects The Data*
