@@ -1,4 +1,4 @@
-Project Description: The broad aim of the project is to explore crime rates across different parts of New York. We are looking specifically around the Columbia University neighborhood to understand what times and areas are more prone to higher crime rates.  
+Project Description: The broad aim of the project is to explore crime rates across different parts of New York. We are looking specifically around the Columbia University neighborhood to understand what times and areas that are more prone to higher crime rates.
 
 
 
