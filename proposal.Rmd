@@ -34,15 +34,7 @@ The dataset contains mostly categorical variables and dates with each row indica
 As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. 
 
 Column description:
-```{r}
-output <- matrix(1:4,
-                 ncol = 2,
-                 dimnames = list(c("Row 1", "Row 2"),
-                                 c("Column 1", "Column 2")))
-htmlTable(output,
-          ctable = c("solid", "double"),
-          caption = "A table caption above and ctable borders")
-```
+
 
 
 ### *Who Collects The Data*
