@@ -1,6 +1,52 @@
 # Proposal
 
 ## Research topic
+--short description of topic (1/2 page)
+--please add more to this. Feel free to edit tone, content, etc.
+
+Have you ever gotten out of a class at 9:30pm and wondered if it was safe to walk home? Do you wonder if you should cut through a park or take the subway? Is it possible to quantify "safe"? Does your risk profile change after 10:30pm or if you are a certain gender? 
+
+The motivation for this project spawned from these practical questions we had in relation to navigating NYC on and off campus. Many of our classes get out at night and we live nearby but wonder if there is a walking path home that exhibits the least risk. We want to answer these types of questions using data and visualizations.
+
+The focus of this project is to analyze NYPD crime and complaint data around Columbia during the school year. However, the data (described more in the next section) lends itself to investigate broader questions of equity by demographics and neighborhood across NYC. We also have flexibility in the time range to investigate and may look at longer trends. 
+
 
 ## Data availability
+--sources, how collected, who, format, frequency of updates, etc. (1/2 page)
+
+NYC Open Data (NYC Office of Technology and Innovation (OTI)) in conjunction with New York City Police Department (NYPD) makes public saftey data available for anyone online. In particular they publish Complaint Data which contains felony, misdemeanor, and violation crimes reported to the NYPD from 2006 till present.
+
+Year to Date: https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-Year-To-Date-/5uac-w243
+Historic: https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i
+
+### *Content*
+"Compliant data" is a mixed set of records because it contains crimes (ex. robbery, rape, assualt), parking violations, complains of harassment, reports of abandoned animals, and more. We will need to investigate, clean, and filter the data to answer our research questions. 
+
+As the links above indicate, there are two sets of data containing distinct records. A year-to-date dataset from 1/1/2022 to 9/30/2022 and one containing records from 1/1/2006 to 12/31/2021. We plan to start with the year to date information and potentially incorporate historic records as needed. 
+
+The dataset contains mostly categorical variables and dates with one row indicating a crime/violation.
+--ADD MORE HERE about what is in the data
+
+### *Who Collects The Data*
+TBD
+
+### *Format and Importation*
+OTI provides the data in 4 formats: 1) online table, 2) visualization, 3) CSV, and 4) API. The first two have limited functionality and customization so we will not use those versions. The API requires and account and authentication tokens. Given that the CSV for YTD data is not too large (140MB), it seems the easiest to work with. CSV is a format we are most familiar with and one that R handles well. 
+
+--TBD is there ia difference between CSV and API?
+
+### *Updates*
+The data appears to be updated monthly. It seems that metadata is updated more frequently but it is not clear what changes as there could be several updates made in Oct 2022 but the data will only contain records up to the prior month end of Sept 2022. 
+
+### *Expected Challenges*
+The data does not have many continuous variables. We will have to derive one based on counts and may need to supplement with other data to obtain others (ex. average cost/insurance per type of crime). 
+There are longitude and latitude fields which we would like to utilize but have not identified an R package to process and visualize.
+--More?
+
+### *Data Not Used*
+--TBD. N/A or are we not using something else available
+
+### *Other Comments*
+--TBD - open
+
 
