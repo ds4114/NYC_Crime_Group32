@@ -7,8 +7,6 @@ who-collects-the-data
 format-and-importation
 updates
 expected-challenges
-data-not-used
-other-comments
 data
 sources
 cleaning-transformation

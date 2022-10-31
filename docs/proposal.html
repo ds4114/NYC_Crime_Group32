@@ -23,7 +23,7 @@
 <meta name="author" content="Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant" />
 
 
-<meta name="date" content="2022-10-28" />
+<meta name="date" content="2022-10-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -83,8 +83,6 @@
 <li class="chapter" data-level="2.2.3" data-path="proposal.html"><a href="proposal.html#format-and-importation"><i class="fa fa-check"></i><b>2.2.3</b> <em>Format and Importation</em></a></li>
 <li class="chapter" data-level="2.2.4" data-path="proposal.html"><a href="proposal.html#updates"><i class="fa fa-check"></i><b>2.2.4</b> <em>Updates</em></a></li>
 <li class="chapter" data-level="2.2.5" data-path="proposal.html"><a href="proposal.html#expected-challenges"><i class="fa fa-check"></i><b>2.2.5</b> <em>Expected Challenges</em></a></li>
-<li class="chapter" data-level="2.2.6" data-path="proposal.html"><a href="proposal.html#data-not-used"><i class="fa fa-check"></i><b>2.2.6</b> <em>Data Not Used</em></a></li>
-<li class="chapter" data-level="2.2.7" data-path="proposal.html"><a href="proposal.html#other-comments"><i class="fa fa-check"></i><b>2.2.7</b> <em>Other Comments</em></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>3</b> Data</a>
@@ -137,16 +135,64 @@
 <p>As the links above indicate, there are two sets of data containing distinct records. A year-to-date dataset from 1/1/2022 to 9/30/2022 and a historic dataset containing records from 1/1/2006 to 12/31/2021. We plan to start with the year-to-date data and potentially incorporate historic records as needed.</p>
 <p>The dataset contains mostly categorical variables and dates with each row indicating a crime/violation.
 As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns.</p>
-<p>Column description:</p>
+<p>Column names and description:</p>
+<p>S.No Column Name (Data Type): Description</p>
+<ol style="list-style-type: decimal">
+<li>CMPLNT_NUM (text): Randomly generated persistent ID for each complaint</li>
+<li>ADDR_PCT_CD (text): The precinct in which the incident occurred</li>
+<li>BORO_NM (text): The name of the borough in which the incident occurred</li>
+<li>CMPLNT_FR_DT (DateTime): Exact date of occurrence for the reported event (or starting date of occurrence, if CMPLNT_TO_DT exists)</li>
+<li>CMPLNT_FR_TM (text): Exact time of occurrence for the reported event (or starting time of occurrence, if CMPLNT_TO_TM exists)</li>
+<li>CMPLNT_TO_DT (DateTime): Ending date of occurrence for the reported event, if exact time of occurrence is unknown</li>
+<li>CMPLNT_TO_TM (text): Ending time of occurrence for the reported event, if exact time of occurrence is unknown</li>
+<li>CRM_ATPT_CPTD_CD (text): Indicator of whether crime was successfully completed or attempted, but failed or was interrupted prematurely</li>
+<li>HADEVELOPT (text): Name of NYCHA housing development of occurrence, if applicable</li>
+<li>HOUSING_PSA (Number): Development Level CodeNumber</li>
+<li>JURISDICTION_CODE (Number): Jurisdiction responsible for incident. Either internal, like Police(0), Transit(1), and Housing(2); or external(3), like Correction, Port Authority, etc.</li>
+<li>JURIS_DESC (text): Description of the jurisdiction code</li>
+<li>KY_CD (Number): Three digit offense classification code</li>
+<li>LAW_CAT_CD (text): Level of offense: felony, misdemeanor, violation</li>
+<li>LOC_OF_OCCUR_DESC (text): Specific location of occurrence in or around the premises; inside, opposite of, front of, rear of</li>
+<li>OFNS_DESC (text): Description of offense corresponding with key code</li>
+<li>PARKS_NM (text): Name of NYC park, playground or greenspace of occurrence, if applicable (state parks are not included)</li>
+<li>PATROL_BORO (text): The name of the patrol borough in which the incident occurred</li>
+<li>PD_CD (Number): Three digit internal classification code (more granular than Key Code)</li>
+<li>PD_DESC (text): Description of internal classification corresponding with PD code (more granular than Offense Description)</li>
+<li>PREM_TYP_DESC (text): Specific description of premises; grocery store, residence, street, etc.</li>
+<li>RPT_DT (DateTime): Date event was reported to police</li>
+<li>STATION_NAME (text): Transit station name</li>
+<li>SUSP_AGE_GROUP (text): Suspect’s Age Group</li>
+<li>SUSP_RACE (text): Suspect’s Race Description</li>
+<li>SUSP_SEX (text): Suspect’s Sex Description</li>
+<li>TRANSIT_DISTRICT (Number): Transit district in which the offense occurred</li>
+<li>VIC_AGE_GROUP (text): Victim’s Age Group</li>
+<li>VIC_RACE (text): Victim’s Race Description</li>
+<li>VIC_SEX (text): Victim’s Sex Description</li>
+<li>X_COORD_CD (Number): X-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)</li>
+<li>Y_COORD_CD (Number): Y-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)</li>
+<li>Latitude (Number): Midblock Latitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)</li>
+<li>Longitude (Number): Midblock Longitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)</li>
+<li>LatLon (Location)</li>
+<li>New Georeferenced Column (Point)</li>
+</ol>
 </div>
 <div id="who-collects-the-data" class="section level3 hasAnchor" number="2.2.2">
 <h3><span class="header-section-number">2.2.2</span> <em>Who Collects The Data</em><a href="proposal.html#who-collects-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>TBD</p>
+<p>The data was collected and published by the Police Department (NYPD)</p>
 </div>
 <div id="format-and-importation" class="section level3 hasAnchor" number="2.2.3">
 <h3><span class="header-section-number">2.2.3</span> <em>Format and Importation</em><a href="proposal.html#format-and-importation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>OTI provides the data in 4 formats: 1) online table, 2) visualization, 3) CSV, and 4) API. The first two have limited functionality and customization so we will not use those versions. The API requires an account and authentication tokens. Given that the CSV for YTD data is not too large (140MB), it seems the easiest to work with. CSV is a format we are most familiar with and one that R handles well.</p>
-<p>–TBD is there a difference between CSV and API?</p>
+<p>Is there a difference between CSV and API? Yes. Not in number of observations but in the columns. With the CSV, we get a total of 36 columns (listed above) but with the API we get a total of 41 columns.</p>
+<p>Following are the columns that are present in the CSV data but not in the API data:
+1. New Georeferenced Column.</p>
+<p>Following are the columns that are present in the API data but not in the CSV data:
+1. :<span class="citation">@computed_region_92fq_4b7q</span>
+2. :<span class="citation">@computed_region_yeji_bk3q</span>
+3. :<span class="citation">@computed_region_efsh_h5xi</span>
+4. geocoded_column
+5. :<span class="citation">@computed_region_sbqj_enih</span>
+6. :<span class="citation">@computed_region_f5dn_yrer</span></p>
 </div>
 <div id="updates" class="section level3 hasAnchor" number="2.2.4">
 <h3><span class="header-section-number">2.2.4</span> <em>Updates</em><a href="proposal.html#updates" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -155,16 +201,7 @@ As of the last update on October 19, 2022, the YTD Dataset contains 397K rows an
 <div id="expected-challenges" class="section level3 hasAnchor" number="2.2.5">
 <h3><span class="header-section-number">2.2.5</span> <em>Expected Challenges</em><a href="proposal.html#expected-challenges" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The data does not have many continuous variables. We will have to derive one based on counts and may need to supplement with other data to obtain others (ex. average cost/insurance per type of crime).
-There are longitude and latitude fields which we would like to utilize but have not identified an R package to process and visualize.
-–More?</p>
-</div>
-<div id="data-not-used" class="section level3 hasAnchor" number="2.2.6">
-<h3><span class="header-section-number">2.2.6</span> <em>Data Not Used</em><a href="proposal.html#data-not-used" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>–TBD. N/A or are we not using something else available</p>
-</div>
-<div id="other-comments" class="section level3 hasAnchor" number="2.2.7">
-<h3><span class="header-section-number">2.2.7</span> <em>Other Comments</em><a href="proposal.html#other-comments" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>–TBD - open</p>
+There are longitude and latitude fields which we would like to utilize but have not identified an R package to process and visualize.</p>
 
 </div>
 </div>

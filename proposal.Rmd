@@ -6,8 +6,6 @@ output:
 # Proposal
 
 ## Research topic
---short description of topic (1/2 page)
---please add more to this. Feel free to edit tone, content, etc.
 
 Have you ever gotten out of a class at 9:30pm and wondered if it was safe to walk home? Do you wonder if you should cut through a park or take the subway? Is it possible to quantify "safe"? Does your risk profile change after 10:30pm or if you are a certain gender? 
 
