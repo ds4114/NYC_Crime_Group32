@@ -81,7 +81,18 @@ The data was collected and published by the Police Department (NYPD)
 ### *Format and Importation*
 OTI provides the data in 4 formats: 1) online table, 2) visualization, 3) CSV, and 4) API. The first two have limited functionality and customization so we will not use those versions. The API requires an account and authentication tokens. Given that the CSV for YTD data is not too large (140MB), it seems the easiest to work with. CSV is a format we are most familiar with and one that R handles well. 
 
---TBD is there a difference between CSV and API?
+Is there a difference between CSV and API? Yes. Not in number of observations but in the columns. With the CSV, we get a total of 36 columns (listed above) but with the API we get a total of 41 columns. 
+
+Following are the columns that are present in the CSV data but not in the API data: 
+1. New Georeferenced Column. 
+
+Following are the columns that are present in the API data but not in the CSV data:
+1. :@computed_region_92fq_4b7q
+2. :@computed_region_yeji_bk3q
+3. :@computed_region_efsh_h5xi
+4. geocoded_column
+5. :@computed_region_sbqj_enih
+6. :@computed_region_f5dn_yrer
 
 ### *Updates*
 This dataset was first made public on 11/1/2018. It is updated quarterly. It apprears that the metadata is updated more frequently but it is not clear what changes are incorporated as there could be several updates made in Oct 2022 but the data will only contain records up to the prior month end of Sept 2022. 
@@ -89,12 +100,4 @@ This dataset was first made public on 11/1/2018. It is updated quarterly. It app
 ### *Expected Challenges*
 The data does not have many continuous variables. We will have to derive one based on counts and may need to supplement with other data to obtain others (ex. average cost/insurance per type of crime). 
 There are longitude and latitude fields which we would like to utilize but have not identified an R package to process and visualize.
---More?
-
-### *Data Not Used*
---TBD. N/A or are we not using something else available
-
-### *Other Comments*
---TBD - open
-
 
