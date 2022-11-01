@@ -15,7 +15,6 @@ The focus of this project is to analyze NYPD crime and complaint data around Col
 
 
 ## Data availability
---sources, how collected, who, format, frequency of updates, etc. (1/2 page)
 
 NYC Open Data (NYC Office of Technology and Innovation (OTI)) in conjunction with New York City Police Department (NYPD) makes public safety data available for anyone online. In particular they publish Complaint Data which contains felony, misdemeanor, and violation crimes reported to the NYPD from 2006 till present.
 
@@ -29,7 +28,7 @@ Historic: https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Histor
 As the links above indicate, there are two sets of data containing distinct records. A year-to-date dataset from 1/1/2022 to 9/30/2022 and a historic dataset containing records from 1/1/2006 to 12/31/2021. We plan to start with the year-to-date data and potentially incorporate historic records as needed. 
 
 The dataset contains mostly categorical variables and dates with each row indicating a crime/violation.
-As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. 
+As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. A data dictionary is provided by NYC Open Data at the link above.  
 
 Column names and description:
 
@@ -93,7 +92,7 @@ Following are the columns that are present in the API data but not in the CSV da
 6. :@computed_region_f5dn_yrer
 
 ### *Updates*
-This dataset was first made public on 11/1/2018. It is updated quarterly. It apprears that the metadata is updated more frequently but it is not clear what changes are incorporated as there could be several updates made in Oct 2022 but the data will only contain records up to the prior month end of Sept 2022. 
+This dataset was first made public on 11/1/2018. It is updated quarterly. It appears that the metadata is updated more frequently but it is not clear what changes are incorporated as there could be several updates made in Oct 2022 but the data will only contain records up to the prior month end of Sept 2022. 
 
 ### *Expected Challenges*
 The data does not have many continuous variables. We will have to derive one based on counts and may need to supplement with other data to obtain others (ex. average cost/insurance per type of crime). 
