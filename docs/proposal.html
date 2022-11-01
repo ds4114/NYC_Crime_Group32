@@ -130,8 +130,7 @@
 <h3><span class="header-section-number">2.2.1</span> <em>Content</em><a href="proposal.html#content" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>“Complaint data” is a mixed set of records because it contains crimes (ex. robbery, rape, assault), parking violations, complaints of harassment, reports of abandoned animals, and more. We will need to investigate, clean, and filter the data to answer our research questions.</p>
 <p>As the links above indicate, there are two sets of data containing distinct records. A year-to-date dataset from 1/1/2022 to 9/30/2022 and a historic dataset containing records from 1/1/2006 to 12/31/2021. We plan to start with the year-to-date data and potentially incorporate historic records as needed.</p>
-<p>The dataset contains mostly categorical variables and dates with each row indicating a crime/violation.
-As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. A data dictionary is provided by NYC Open Data at the link above.</p>
+<p>The dataset contains mostly categorical variables and dates with each row indicating a crime/violation. As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. A data dictionary is provided by NYC Open Data at the link above.</p>
 <p>Column names and description:</p>
 <p>S.No Column Name (Data Type): Description</p>
 <ol style="list-style-type: decimal">
@@ -175,21 +174,27 @@ As of the last update on October 19, 2022, the YTD Dataset contains 397K rows an
 </div>
 <div id="who-collects-the-data" class="section level3 hasAnchor" number="2.2.2">
 <h3><span class="header-section-number">2.2.2</span> <em>Who Collects The Data</em><a href="proposal.html#who-collects-the-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The data was collected and published by the Police Department (NYPD)</p>
+<p>The data was collected and published by the NY Police Department (NYPD).</p>
 </div>
 <div id="format-and-importation" class="section level3 hasAnchor" number="2.2.3">
 <h3><span class="header-section-number">2.2.3</span> <em>Format and Importation</em><a href="proposal.html#format-and-importation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>OTI provides the data in 4 formats: 1) online table, 2) visualization, 3) CSV, and 4) API. The first two have limited functionality and customization so we will not use those versions. The API requires an account and authentication tokens. Given that the CSV for YTD data is not too large (140MB), it seems the easiest to work with. CSV is a format we are most familiar with and one that R handles well.</p>
 <p>Is there a difference between CSV and API? Yes. Not in number of observations but in the columns. With the CSV, we get a total of 36 columns (listed above) but with the API we get a total of 41 columns.</p>
-<p>Following are the columns that are present in the CSV data but not in the API data:
-1. New Georeferenced Column.</p>
-<p>Following are the columns that are present in the API data but not in the CSV data:
-1. :<span class="citation">@computed_region_92fq_4b7q</span>
-2. :<span class="citation">@computed_region_yeji_bk3q</span>
-3. :<span class="citation">@computed_region_efsh_h5xi</span>
-4. geocoded_column
-5. :<span class="citation">@computed_region_sbqj_enih</span>
-6. :<span class="citation">@computed_region_f5dn_yrer</span></p>
+<p>Following are the columns that are present in the CSV data but not in the API data:</p>
+<ol style="list-style-type: decimal">
+<li>New Georeferenced Column.</li>
+</ol>
+<p>Following are the columns that are present in the API data but not in the CSV data:</p>
+<ol style="list-style-type: decimal">
+<li>:<span class="citation">@computed_region_92fq_4b7q</span><br />
+</li>
+<li>:<span class="citation">@computed_region_yeji_bk3q</span><br />
+</li>
+<li>:<span class="citation">@computed_region_efsh_h5xi</span></li>
+<li>geocoded_column</li>
+<li>:<span class="citation">@computed_region_sbqj_enih</span></li>
+<li>:<span class="citation">@computed_region_f5dn_yrer</span></li>
+</ol>
 </div>
 <div id="updates" class="section level3 hasAnchor" number="2.2.4">
 <h3><span class="header-section-number">2.2.4</span> <em>Updates</em><a href="proposal.html#updates" class="anchor-section" aria-label="Anchor link to header"></a></h3>

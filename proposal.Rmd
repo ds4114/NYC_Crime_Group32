@@ -27,8 +27,7 @@ Historic: https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Histor
 
 As the links above indicate, there are two sets of data containing distinct records. A year-to-date dataset from 1/1/2022 to 9/30/2022 and a historic dataset containing records from 1/1/2006 to 12/31/2021. We plan to start with the year-to-date data and potentially incorporate historic records as needed. 
 
-The dataset contains mostly categorical variables and dates with each row indicating a crime/violation.
-As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. A data dictionary is provided by NYC Open Data at the link above.  
+The dataset contains mostly categorical variables and dates with each row indicating a crime/violation. As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. A data dictionary is provided by NYC Open Data at the link above.  
 
 Column names and description:
 
@@ -73,7 +72,8 @@ S.No Column Name (Data Type): Description
 
 
 ### *Who Collects The Data*
-The data was collected and published by the Police Department (NYPD)
+The data was collected and published by the NY Police Department (NYPD).
+
 
 ### *Format and Importation*
 OTI provides the data in 4 formats: 1) online table, 2) visualization, 3) CSV, and 4) API. The first two have limited functionality and customization so we will not use those versions. The API requires an account and authentication tokens. Given that the CSV for YTD data is not too large (140MB), it seems the easiest to work with. CSV is a format we are most familiar with and one that R handles well. 
@@ -81,11 +81,13 @@ OTI provides the data in 4 formats: 1) online table, 2) visualization, 3) CSV, a
 Is there a difference between CSV and API? Yes. Not in number of observations but in the columns. With the CSV, we get a total of 36 columns (listed above) but with the API we get a total of 41 columns. 
 
 Following are the columns that are present in the CSV data but not in the API data: 
+
 1. New Georeferenced Column. 
 
 Following are the columns that are present in the API data but not in the CSV data:
-1. :@computed_region_92fq_4b7q
-2. :@computed_region_yeji_bk3q
+
+1. :@computed_region_92fq_4b7q  
+2. :@computed_region_yeji_bk3q  
 3. :@computed_region_efsh_h5xi
 4. geocoded_column
 5. :@computed_region_sbqj_enih
