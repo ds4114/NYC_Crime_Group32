@@ -49,5 +49,16 @@ Results / Graph Ideas
   
   Map: 
   
-    
+  
+#Tasks
+1. Get coordinates data for a specific location and use that calculate the distance from each complaint --Faizan
+2. We need to assign categories to crimes --Abhi
+3. Look into how best to use the time variables for various time series analyses
+4. General exploration of data (via online viz or R) / take notes on missing value cleanup/interesting findings --All
+
+
+
+
+
+
     
