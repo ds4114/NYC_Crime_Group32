@@ -1,0 +1,53 @@
+---
+title: "Calculate Distance Between Coordinates"
+author: "Faizan Dogar"
+date: "2022-11-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r NYC Crime}
+data <- read.csv("/Users/Dogar/Desktop/Columbia Material/Fall 2022/EDAV/Group Project/NYPD_Complaint_Data_Current__Year_To_Date_.csv")
+```
+
+## Add a column with location of our interest - say Columbia University.
+```{r}
+data$lat_loc = 40.807384
+data$lon_loc = -73.963036
+```
+
+## Now calculate distances for each crime from our point of interest
+``` {r}
+library(geosphere)
+data$dist <- apply(data, 1, function(x)distm(c(x[34],x[33]),c(x[38],x[37]),fun = distGeo))
+
+```
+
+## Selecting only those points that are within a 1000m of our point of interest
+``` {r}
+# Keeping only those observations that are within 1 km from columbia
+columbia <- data[data$dist <= 1000,]
+```
+
+# Visualizing our points on google maps
+``` {r}
+# Plottting columbia data on a map
+library(ggmap)
+register_google(key = "AIzaSyDUVtOF3qSoJEcQAZ9mU0E1rGKQDqcuNGw")
+map = get_googlemap(center = c(lon = -73.963036, lat = 40.807384),zoom = 15)
+ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, size = 1, color = 'red')
+
+```
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
