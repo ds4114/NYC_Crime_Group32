@@ -4,26 +4,26 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>NYC Crime</title>
-  <meta name="description" content="NYC Crime" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <title>Data Preparation</title>
+  <meta name="description" content="Data Preparation" />
+  <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="NYC Crime" />
+  <meta property="og:title" content="Data Preparation" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="NYC Crime" />
+  <meta name="twitter:title" content="Data Preparation" />
   
   
   
 
-<meta name="author" content="Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant" />
+<meta name="author" content="Group32" />
 
 
-<meta name="date" content="2022-11-01" />
+<meta name="date" content="2022-11-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,6 +54,70 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -105,7 +169,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">NYC Crime</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Preparation</a>
           </h1>
         </div>
 
@@ -114,12 +178,92 @@
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">NYC Crime</h1>
-<p class="author"><em>Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant</em></p>
-<p class="date"><em>2022-11-01</em></p>
+<h1 class="title">Data Preparation</h1>
+<p class="author"><em>Group32</em></p>
+<p class="date"><em>2022-11-18</em></p>
 </div>
 <div id="introduction" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>#Outline/Work/Notes
+Introduction - “Explain why you chose this topic, and the questions you are interested in studying. Provide context for readers who are not familiar with the topic.”</p>
+<p>Data
+copy proposal wording back into data section
+–Focus: Just around Upper Manhattan (if enough data)</p>
+<p>Profiling
+Describe any issues / problems with the data, either known or that you discover.
+NULL values -
+Binning for dates
+Potential date mismatch of when crime happened vs when crime was reported
+Recreate some basic statistics about the data we have using bar charts or whatever
+Google to see how others used dataset
+<a href="https://towardsdatascience.com/analysis-of-nyc-reported-crime-data-using-pandas-821753cd7e22" class="uri">https://towardsdatascience.com/analysis-of-nyc-reported-crime-data-using-pandas-821753cd7e22</a>
+<a href="https://www.kaggle.com/datasets/adamschroeder/crimes-new-york-city" class="uri">https://www.kaggle.com/datasets/adamschroeder/crimes-new-york-city</a>
+<a href="https://jingjing-ge.medium.com/analysis-of-crime-data-in-new-york-city-in-2020-e6a65edf4429" class="uri">https://jingjing-ge.medium.com/analysis-of-crime-data-in-new-york-city-in-2020-e6a65edf4429</a>
+<a href="https://www.kaggle.com/code/spoons/nyc-crime-complaints-guided-eda-with-shiny-app" class="uri">https://www.kaggle.com/code/spoons/nyc-crime-complaints-guided-eda-with-shiny-app</a></p>
+<p>Data Cleaning
+need a metric count of crimes
+derived field of the distance from morningside park center to the row’s coordinate (ie. radius nearby –need another package)
+derived field about the severity or relcassify crime - (ex parking tickets). To reduce distinct number down to something managble.
+derive day of week from the datetime field
+date cleanups using data dictionary and maybe some assumptions so that we have a more accurate point in time (just use start)</p>
+<p>Results / Graph Ideas
+Univariate/Multivariate Categorical Ideas:
+crime frequency vs gender/age group/borough –maybe bar charts or mosaics</p>
+<p>Continuous Variable Ideas:
+(Interactive) changing radius from (morningside) park to see impact on crime rate density (frequency/area of radius). Take snapshots at like .25mi, .5mi, .75 etc as x-axis and plot density on y
+Time series (over months/days of week) - look at changes over time/seasonality
+(interactive) - control time lapse of heatmap of NYC or something
+Time (during the day) -</p>
+<p>Map:</p>
+<p>Ideas:
+compare NYU vs Columbia
+Compare walking vs subway (using premise)</p>
+<p>#Tasks
+1. Get coordinates data for a specific location and use that calculate the distance from each complaint –Faizan
+2. We need to assign categories to crimes –Abhi
+3. Look into how best to use the time variables for various time series analyses
+4. General exploration of data (via online viz or R) / take notes on missing value cleanup/interesting findings –All</p>
+<p>#Next Steps Note 2022-11-13
+Agree on Data Prep Steps
+Derived Fields
+- a few for time series (Devan)
+- day night
+- was time estimated or not
+- crime category (Abhi)
+- distance from XYZ location - Columbia, NYU?, tbd (Faizan)
+- Aggregate Field for Premise (3-4 values, simple to use) - like street/park/inside/subway?
+- Combines inside/outside and premise and anythign else nee(incl. something for subway)
+- “Relevant Crime for EDAV”
+- victim is an individual and crime type is relevant or some aggregate of the two
+–Abhi to look at percentages and determine how to filter. May need to recategorize and/or use the victim sex field
+- (Other flags as needed)
+–
+Missing Value Analysis - Need to satisfy requirement for project
+- Describe any missing values in fields
+For date (Devan) - Look at difference between date reported and date of incident if anything interesting</p>
+<pre><code>  For crime type (Abhi) - There are 5 values with missing &quot;OFNS_DESC&quot;. Since they have valid PD_CD and PD_DESC, we can impute these values from other columns with the same PD_CD
+  two values are for obscenity - 594 PD_CD. categorized as sex crimes
+  one values for crime pos weap - 797 PD_CD. categorized as dangerous weapons 
+  one value for &quot;place false bomb&quot; - 648 PD_CD. No other examples of this crime. Ignore?
+  one value for &quot;noise&quot; -  872 PD_CD. No other examples of this crime. Ignore?
+  
+  Placeholder for anything else </code></pre>
+<p>Data Filtration Justification (missing and not relevant)
+Date - We only have crimes that took place (as defined by derived field above) in 1/1/2022 onward (this should remove 5%) (Devan)
+Crime Type - Use the derived field from above
+Location? - Tentative, only look within 3.2km of Columbia (per derived field above)</p>
+<p>Guiding Questions to keep in mind
+What is the safest route back home, - interactive component?
+Is cutting through the park bad? -
+what is a dangerous time to be out?
+Is there a difference by gender/race/age for safety?</p>
+<p>Analyses
+Demographics - 3+ (mosaic, ) –tbd to see what is interesting (All)
+Time - 3 graphs (line graph, ridge plot, bar chart/split?)
+Location - 2 graphs (map, crime density at different radiaii, routes to uptown?)
+-how to represent overlapping lat/long points differently? Color (Faizan)
+——–
+Interactive - TBD, depends on complexity - Maybe user will enter address and then it will show a map that is shown around columbia and that location and basically plots heat map but allows user to add filters to make more specific and change the heatmap (ex change time or day or gender)</p>
 
 </div>
             </section>

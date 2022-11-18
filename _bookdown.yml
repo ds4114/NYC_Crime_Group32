@@ -10,6 +10,7 @@ language:
 rmd_files: [
   'index.Rmd',
   'proposal.Rmd',
+  #'EDA_Preprocessing/StandardizeInput_todiscuss.Rmd',
   'data.Rmd',
   'results.Rmd',
   'interactive.Rmd',
