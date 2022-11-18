@@ -67,7 +67,7 @@ Derived Fields
   - a few for time series (Devan)
       - day night
       - was time estimated or not
-  - crime category (Ahbi)
+  - crime category (Abhi)
   - distance from XYZ location - Columbia, NYU?, tbd (Faizan)
   - Aggregate Field for Premise (3-4 values, simple to use) - like street/park/inside/subway?
     - Combines inside/outside and premise and anythign else nee(incl. something for subway)
@@ -79,7 +79,13 @@ Derived Fields
 Missing Value Analysis - Need to satisfy requirement for project
   - Describe any missing values in fields 
       For date (Devan) - Look at difference between date reported and date of incident if anything interesting 
-      For crime type (Abhi)
+      
+      For crime type (Abhi) - There are 5 values with missing "OFNS_DESC". Since they have valid PD_CD and PD_DESC, we can impute these values from other columns with the same PD_CD
+      two values are for obscenity - 594 PD_CD. categorized as sex crimes
+      one values for crime pos weap - 797 PD_CD. categorized as dangerous weapons 
+      one value for "place false bomb" - 648 PD_CD. No other examples of this crime. Ignore?
+      one value for "noise" -  872 PD_CD. No other examples of this crime. Ignore?
+      
       Placeholder for anything else 
   
 Data Filtration Justification (missing and not relevant)

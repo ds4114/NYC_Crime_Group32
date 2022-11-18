@@ -1,0 +1,82 @@
+---
+title: "Crime pre-processing"
+author: "Abhiram Gaddam"
+date: "2022-11-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+#library(readr)
+library(lubridate)
+library(ggridges)
+```
+
+
+1) Imputing null values 
+
+For crime type (Abhi) - There are 5 values with missing "OFNS_DESC". Since they have valid PD_CD and PD_DESC, we can impute these values from other columns with the same PD_CD
+      two values are for obscenity - 594 PD_CD. categorized as sex crimes
+      one values for crime pos weap - 797 PD_CD. categorized as dangerous weapons 
+      one value for "place false bomb" - 648 PD_CD. No other examples of this crime. Ignore?
+      one value for "noise" -  872 PD_CD. No other examples of this crime. Ignore?
+      
+```{r}
+df<- read_csv('/Users/abhiramgaddam21/Desktop/EDAV/NYPD_Complaint_Data_Current__Year_To_Date_.csv')
+#head(df)
+
+df$OFNS_DESC[df$CMPLNT_NUM %in% c("248613125", "248290778")] <- "SEX CRIMES"
+df$OFNS_DESC[df$CMPLNT_NUM %in% ("246605653")] <- "DANGEROUS WEAPONS"
+
+
+df <- df[df$CMPLNT_NUM != "243170965",]
+df <- df[df$CMPLNT_NUM != "245874611",]
+
+```
+
+
+2) Creating a new column to bucket crimes
+```{r}
+
+df <- df %>% 
+  mutate(CRIME_CAT = case_when(
+    OFNS_DESC %in% c("RAPE", "SEX CRIMES", "HARRASSMENT 2", "FELONY SEX CRIMES", "PROSTITUTION & RELATED OFFENSES") ~ "SEX CRIMES",
+    OFNS_DESC %in% c("DANGEROUS DRUGS","CANNABIS RELATED OFFENSES","INTOXICATED & IMPAIRED DRIVING","ALCOHOLIC BEVERAGE CONTROL LAW","INTOXICATED/IMPAIRED DRIVING") ~ "DRUG AND ALCOHOL RELATED",
+    OFNS_DESC %in% c("ROBBERY","GRAND LARCENY","THEFT-FRAUD","PETIT LARCENY","BURGLARY","GRAND LARCENY OF MOTOR VEHICLE","POSSESSION OF STOLEN PROPERTY","THEFT OF SERVICES","BURGLAR'S TOOLS","PETIT LARCENY OF MOTOR VEHICLE","OTHER OFFENSES RELATED TO THEF") ~ "THEFT OR BURGLARY",
+    OFNS_DESC %in% c("DANGEROUS WEAPONS","MURDER & NON-NEGL. MANSLAUGHTER","KIDNAPPING & RELATED OFFENSES","HOMICIDE-NEGLIGENT,UNCLASSIFIE","HOMICIDE-NEGLIGENT-VEHICLE","KIDNAPPING","FELONY ASSAULT","ARSON","ASSAULT 3 & RELATED OFFENSES","UNLAWFUL POSS. WEAP. ON SCHOOL") ~ "MAJOR VIOLENT CRIMES",
+    OFNS_DESC %in% c("CRIMINAL MISCHIEF & RELATED OF","UNAUTHORIZED USE OF A VEHICLE","FRAUDS","OFFENSES AGAINST PUBLIC SAFETY","DISORDERLY CONDUCT","JOSTLING","DISRUPTION OF A RELIGIOUS SERV","ESCAPE 3","OFF. AGNST PUB ORD SENSBLTY &","CRIMINAL TRESPASS","VEHICLE AND TRAFFIC LAWS","GAMBLING","OFFENSES AGAINST THE PERSON","OFFENSES INVOLVING FRAUD","FRAUDULENT ACCOSTING","ANTICIPATORY OFFENSES","LOITERING/GAMBLING (CARDS, DIC") ~ "FRAUD/GAMBLING AND MISC",
+    OFNS_DESC %in% c("NYS LAWS-UNCLASSIFIED FELONY","MISCELLANEOUS PENAL LAW","FORGERY","OFFENSES AGAINST PUBLIC ADMINI","CHILD ABANDONMENT/NON SUPPORT","NYS LAWS-UNCLASSIFIED VIOLATION","OTHER STATE LAWS","OTHER STATE LAWS (NON PENAL LAW)","NEW YORK CITY HEALTH CODE","ADMINISTRATIVE CODE","OTHER STATE LAWS (NON PENAL LA","AGRICULTURE & MRKTS LAW-UNCLASSIFIED","ENDAN WELFARE INCOMP","OFFENSES RELATED TO CHILDREN") ~"OTHER"))
+
+```
+
+
+3) Basic counts and plots
+```{r}
+#head(df)
+
+agg_tbl <- df %>% group_by(CRIME_CAT) %>% 
+  summarise(total_count=n(),
+            .groups = 'drop')
+df_counts <- agg_tbl %>% as.data.frame()
+df_counts
+
+
+#x <- c(4, 5, 6, 7, 8, 9, 10)
+#counts <- c(78, 45, 50, 12, 30, 50)
+#df <- data.frame(x=x, counts=counts)
+
+plt <- ggplot(df_counts) + geom_bar(aes(x=CRIME_CAT, y=total_count), stat="identity")
+print(plt)
+```
+
+
+
+
+
+
+
