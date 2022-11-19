@@ -53,8 +53,6 @@ df <- df_raw
 df$OFNS_DESC[df$CMPLNT_NUM %in% c("248613125", "248290778")] <- "SEX CRIMES"
 df$OFNS_DESC[df$CMPLNT_NUM %in% ("246605653")] <- "DANGEROUS WEAPONS"
 
-df <- df[df$CMPLNT_NUM != "243170965",]
-df <- df[df$CMPLNT_NUM != "245874611",]
 ```
 
 ##Creating a new column to bucket crimes
@@ -65,9 +63,14 @@ df <- df %>%
     OFNS_DESC %in% c("RAPE", "SEX CRIMES", "HARRASSMENT 2", "FELONY SEX CRIMES", "PROSTITUTION & RELATED OFFENSES") ~ "SEX CRIMES",
     OFNS_DESC %in% c("DANGEROUS DRUGS","CANNABIS RELATED OFFENSES","INTOXICATED & IMPAIRED DRIVING","ALCOHOLIC BEVERAGE CONTROL LAW","INTOXICATED/IMPAIRED DRIVING") ~ "DRUG AND ALCOHOL RELATED",
     OFNS_DESC %in% c("ROBBERY","GRAND LARCENY","THEFT-FRAUD","PETIT LARCENY","BURGLARY","GRAND LARCENY OF MOTOR VEHICLE","POSSESSION OF STOLEN PROPERTY","THEFT OF SERVICES","BURGLAR'S TOOLS","PETIT LARCENY OF MOTOR VEHICLE","OTHER OFFENSES RELATED TO THEF") ~ "THEFT OR BURGLARY",
-    OFNS_DESC %in% c("DANGEROUS WEAPONS","MURDER & NON-NEGL. MANSLAUGHTER","KIDNAPPING & RELATED OFFENSES","HOMICIDE-NEGLIGENT,UNCLASSIFIE","HOMICIDE-NEGLIGENT-VEHICLE","KIDNAPPING","FELONY ASSAULT","ARSON","ASSAULT 3 & RELATED OFFENSES","UNLAWFUL POSS. WEAP. ON SCHOOL") ~ "MAJOR VIOLENT CRIMES",
+    OFNS_DESC %in% c("DANGEROUS WEAPONS","MURDER & NON-NEGL. MANSLAUGHTER","KIDNAPPING & RELATED OFFENSES","HOMICIDE-NEGLIGENT,UNCLASSIFIE","HOMICIDE-NEGLIGENT-VEHICLE","KIDNAPPING","FELONY ASSAULT","ARSON","ASSAULT 3 & RELATED OFFENSES","UNLAWFUL POSS. WEAP. ON SCHOOL","MURDER & NON-NEGL. MANSLAUGHTER") ~ "MAJOR VIOLENT CRIMES",
     OFNS_DESC %in% c("CRIMINAL MISCHIEF & RELATED OF","UNAUTHORIZED USE OF A VEHICLE","FRAUDS","OFFENSES AGAINST PUBLIC SAFETY","DISORDERLY CONDUCT","JOSTLING","DISRUPTION OF A RELIGIOUS SERV","ESCAPE 3","OFF. AGNST PUB ORD SENSBLTY &","CRIMINAL TRESPASS","VEHICLE AND TRAFFIC LAWS","GAMBLING","OFFENSES AGAINST THE PERSON","OFFENSES INVOLVING FRAUD","FRAUDULENT ACCOSTING","ANTICIPATORY OFFENSES","LOITERING/GAMBLING (CARDS, DIC") ~ "FRAUD/GAMBLING AND MISC",
     OFNS_DESC %in% c("NYS LAWS-UNCLASSIFIED FELONY","MISCELLANEOUS PENAL LAW","FORGERY","OFFENSES AGAINST PUBLIC ADMINI","CHILD ABANDONMENT/NON SUPPORT","NYS LAWS-UNCLASSIFIED VIOLATION","OTHER STATE LAWS","OTHER STATE LAWS (NON PENAL LAW)","NEW YORK CITY HEALTH CODE","ADMINISTRATIVE CODE","OTHER STATE LAWS (NON PENAL LA","AGRICULTURE & MRKTS LAW-UNCLASSIFIED","ENDAN WELFARE INCOMP","OFFENSES RELATED TO CHILDREN") ~"OTHER"))
+
+df$CRIME_CAT[df$CMPLNT_NUM %in% c("243170965", "245874611")] <- "OTHER"
+
+#No Nulls
+#View(df[is.na(df$CRIME_CAT),])
 
 ```
 
@@ -122,7 +125,11 @@ CU_Longitude = -73.963036
 #df_test = df[1:10,]
 #df_test$dist_to_CU <- apply(df_test, 1, function(x)distm(c(x[which( colnames(df)=="Longitude")],x[which(colnames(df)=="Latitude")]),c(x[which( colnames(df)=="CU_Longitude")],x[which( colnames(df)=="CU_Latitude")]),fun = distGeo))
 
-df$dist_to_CU <- apply(df, 1, function(x)distm(c(x[which( colnames(df)=="Longitude")],x[which(colnames(df)=="Latitude")]),c(CU_Longitude,CU_Latitude),fun = distGeo))
+df$dist_to_CU <- apply(df, 1, function(x)distm(
+   c(x[which( colnames(df)=="Longitude")],x[which(colnames(df)=="Latitude")])
+  ,c(CU_Longitude,CU_Latitude)
+  ,fun = distGeo)
+  )
 
 ```
 --#TODO can we speed this up? Takes about 5 mins to run
@@ -135,6 +142,9 @@ Here we will add additional fields for more classification
 --#TODO add more description
 
 ```{r DataPrep4_MoreFields}
+
+df$LOC_OF_OCCUR_DESC[df$LOC_OF_OCCUR_DESC=="(null)"]<-NA
+
 df <- df %>% 
       mutate(
          #get a flag for outside vs inside
@@ -170,15 +180,27 @@ df <- df %>%
 --#TODO add more description
 
 ```{r DataPrep5_Renaming}
-
+#Not required
 ```
 
 
 #Filter Table for Relevance
 
 --#TODO add more description
-
+Date - We only have crimes that took place (as defined by derived field above) in 1/1/2022 onward (this should remove 5%) (Devan)
+  Crime Type - Use the derived field from above 
+  Location? - Tentative, only look within 3.2km of Columbia (per derived field above)
+  
 ```{r DataPrep6_Filter}
+df_filter <- df %>% filter(  Incident_Date >= as.Date('2022/01/01')  ) %>%
+  filter (
+    !CRIME_CAT %in% c("OTHER")
+  )
+
+#TODO- distance filter?
+
+#View(df_filter)
+#unique(df_filter$CRIME_CAT)
 
 ```
 
