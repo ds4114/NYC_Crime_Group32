@@ -1,6 +1,11 @@
 # Results
 
+```{r}
+library(scales)
+```
 
+
+##Planning Notes
 ```{r}
 #What Graphs Do We Want?
 
@@ -46,4 +51,130 @@ df_counts <- agg_tbl %>% as.data.frame()
 plt <- ggplot(df_counts) + geom_bar(aes(y=CRIME_CAT, x=total_count), stat="identity")
 plt
 ```
+
+
+
+
+
+
+##Time Series
+To begin the analysis on time, first we would like to justify why we filtered the data for only crimes that took place in 2022. 
+```{r}
+ts_year_all <- df %>% 
+  #filter(year(Incident_Date) >= 2022) %>%
+  group_by(year(Incident_Date))  %>%
+  summarize(Complaint_Count = n() ) %>% rename( Incident_Year = `year(Incident_Date)`)
+
+ggplot(ts_year_all, aes(x=Incident_Year, y=Complaint_Count )) + geom_line() +
+  scale_y_continuous(label=comma) +
+  scale_x_continuous(limits= c(2000,2023) ) +
+  labs(
+    title = "Date of Incident (Reported in 2022)",
+    x = "Incident Year (raw data)",
+    y = "Number of Reports",
+  )
+
+```
+From this we see that there is a large drop off in historic reports. This make sense as it is more likely that someone would report a crime in the same year that it occurs. Although NYPD allows people to report crimes that occurred in 2020, there will be much fewer of them reported in 2022. If we wanted to use data prior to 2022 we should include the old crime reports for prior years. Also there are some quality issues with historic data as we see very old crimes (year 1500) which indicate some human error or a record-keeping issue.  
+
+So focusing on incidents in 2022, we can look at the overall trend during the year.
+```{r}
+ggplot(df_filter, aes(x=Incident_Month)) +
+      geom_line(aes(fill=..count..),stat="bin",binwidth=1) +
+      scale_x_continuous(limits = c(1,9), n.breaks=12) +
+      scale_y_continuous(limits = c(0,50000), label=comma) +
+      labs(
+        title = "2022 Crimes Per Month (Q1-Q3)",
+        x = "Month (as a number)",
+        y = "Total Reports",
+      )
+#TODO make graph prettier
+```
+We can see there are more crimes reported in the summer months, presumably it is warmer. Let's facet this:
+
+```{r}
+ggplot(df_filter, aes(x=Incident_Month, color=
+                        fct_infreq(CRIME_CAT)
+                      )) +
+      geom_line(aes(fill=..count..),stat="bin",binwidth=1) +
+      scale_x_continuous(limits = c(1,9), n.breaks=12) +
+      scale_y_continuous(limits = c(0,20000), label=comma) +
+      #facet_grid((CRIME_CAT) ~ .) +
+      labs(
+        title = "2022 Crimes Per Month (Q1-Q3)",
+        x = "Month (as a number)",
+        y = "Total Reports",
+        color = "Crime Category"
+      ) 
+```
+Maybe, the trend is dominated by theft crimes but it does seem like there is a hump over summer. Uniquely there is a dip for drug crimes. 
+
+Let's now look at some other time related charts
+```{r}
+#ggplot(df_filter, aes(x = Incident_DayOfWeek, fill=fct_infreq(CRIME_CAT))) + 
+#  geom_bar(stat='count', position='dodge')
+
+ggplot(df_filter, aes(y=CRIME_CAT , fill=fct_rev(Incident_DayOfWeek)) ) + 
+  geom_bar(stat='count', position='dodge') +
+  scale_x_continuous(label=comma) +
+  scale_fill_discrete(breaks=c('Sun','Mon','Tue','Wed','Thu','Fri','Sat')) +
+  labs(
+      title = "2022 Crimes By Day of Week (Q1-Q3)",
+      x = "Total Reports",
+      y = "",
+      fill = "Day"
+      ) 
+```
+We see some interesting trends here - Theft is lower on weekends, gambling up on weekends, sex crimes high on Wednesdays surprisingly.
+
+Let's also look at the time of the day:
+```{r}
+ggplot(df_filter, aes(x = Incident_HourTime, y=fct_rev(Incident_DayOfWeek) )) +
+  geom_density_ridges() +
+  scale_x_continuous(limits = c(0,24), breaks = seq(0, 24, by = 1)) +
+  labs(
+      title = "Hourly Breakdown (Total Q1-Q3 2022)",
+      x = "Time of Day (24 Clock)",
+      y = "Day of Week"
+      ) #+ theme_classic(18)
+#TODO change theme to look better?
+#not quite sure why hour 24 does not equal hour 0...
+```
+The raw data is rounded to the nearest minute but there is likely binning happening with time  reported on the nearest hour. There also appears to be a peak at 12:00 which is likely a data quality issue in that reports may default to that time when not specified exactly. Otherwise this graph shows that crimes seems to peak at night around 6pm. But is this related to individual crimes and in/around parks?
+
+```{r}
+ggplot(df_filter, aes(x = Incident_HourTime, y=Premise_Derived )) +
+  geom_density_ridges() +
+  scale_x_continuous(limits = c(0,24), breaks = seq(0, 24, by = 1)) +
+  facet_grid((VIC_Individual_Flag) ~ .) +
+  labs(
+      title = "Crimes by Premise and Time",
+      subtitle = "Y = Indivuals, N = Entities/Businesses/NY State",
+      x = "Time of Day (24 Clock)",
+      y = "Premise Category"
+      )
+#TODO Show counts for each of these groups since not representative (ex what is a crime against and entity in a park)? Refer back to moaisic plot
+```
+From prior charts, we know that the number of crimes is skewed toward those occurring in "Inside". This does not represent the magnitude but we can see that for individuals, parks are more 'dangerous' at night - more so than other locations. However, it is somewhat comforting to know that this starts to drop off quickly after about 7-8pm. 
+
+
+```{r}
+#--Let's specifically look at crime around Columbia for Individuals
+
+#ts_filter <- df_filter %>% filter(VIC_Individual_Flag == 'Y') %>% 
+#  filter(dist_to_CU <= 2000) %>% #only 10k rows
+#  filter(Premise_Derived == "PARK") #only 73 rows, not helpful
+
+#--Box plot by time of day? TBD
+```
+
+
+
+
+
+
+
+#Location Analysis
+
+
 
