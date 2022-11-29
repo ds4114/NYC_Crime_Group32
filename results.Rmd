@@ -9,7 +9,7 @@ library(scales)
 ```
 
 
-##Planning Notes
+## Planning Notes
 ```{r}
 #What Graphs Do We Want?
 
@@ -61,7 +61,7 @@ plt
 
 
 
-##Time Series
+## Time Series
 To begin the analysis on time, first we would like to justify why we filtered the data for only crimes that took place in 2022. 
 ```{r}
 ts_year_all <- df %>% 
@@ -178,7 +178,7 @@ From prior charts, we know that the number of crimes is skewed toward those occu
 
 
 
-#Location Analysis
+# Location Analysis
 
 
 

@@ -21,7 +21,7 @@ library(redav) #remotes::install_github("jtr13/redav")
 ## Sources
 TODO - WRITEUP/repeate proposal
 
-###Data Loading
+### Data Loading
 ```{r DataLoading}
 #Group32 - This file has been added to gitignore so it will not be uploaded. So we are on the same page and can run the same code, add the csv to your local project folder in a new subfolder "data". 
 #df_raw <- read_csv('./data/NYPD_Complaint_Data_Current__Year_To_Date_.csv')
@@ -43,9 +43,9 @@ df_raw <- read_csv('./data/NYPD_Complaint_Data_Current__Year_To_Date_.csv'
 
 
 
-####Offense Type
+#### Offense Type
 
-####Imputing null values 
+#### Imputing null values 
 
 For crime type (Abhi) - There are 5 values with missing "OFNS_DESC". Since they have valid PD_CD and PD_DESC, we can impute these values from other columns with the same PD_CD
       two values are for obscenity - 594 PD_CD. categorized as sex crimes
@@ -61,7 +61,7 @@ df$OFNS_DESC[df$CMPLNT_NUM %in% ("246605653")] <- "DANGEROUS WEAPONS"
 
 ```
 
-###Creating a new column to bucket crimes
+### Creating a new column to bucket crimes
 
 ```{r DataPrep1_CrimeType_Buckets}
 df <- df %>% 
@@ -83,9 +83,9 @@ df$CRIME_CAT[df$CMPLNT_NUM %in% c("243170965", "245874611")] <- "OTHER"
 
 
 
-###Date/Time
+### Date/Time
 
-####Cleaning null values/ranges
+#### Cleaning null values/ranges
 Per the data dictionary, there is both a "from_date" and a "to_date" when the exact time is unknown. There is also a "report date" for when the crime was reported. Using these fields in conjunction, we can derive a new clean field that is the assumed date of the incident. Assumptions: When there is a range, we will use the "from" date only because is populated well and will on average approximate the frequency of crime over time; when from_date is null, we will use the report_date (does not occur often, see Missing Data Analysis below). 
 
 ```{r DataPrep2_DateTimeFields}
@@ -121,7 +121,7 @@ df <- df %>%
 
 ```
 
-###GeoLocation Fields
+### GeoLocation Fields
 
 ```{r DataPrep3_DistanceFields}
 #add column for Columbia location
@@ -142,7 +142,7 @@ df$dist_to_CU <- apply(df, 1, function(x)distm(
 
 
 
-###Other Derivations
+### Other Derivations
 
 Here we will add additional fields for more classification
 --#TODO add more description
@@ -182,7 +182,7 @@ df <- df %>%
 
 
 
-###Filter Table for Relevance
+### Filter Table for Relevance
 
 --#TODO add more description
 Date - We only have crimes that took place (as defined by derived field above) in 1/1/2022 onward (this should remove 5%) (Devan)
@@ -204,7 +204,7 @@ df_filter <- df %>% filter(  Incident_Date >= as.Date('2022/01/01')  ) %>%
 This improves the results as we will show in the chapter. There are not many records that are excluded (396978 - 364298)
 
 
-###Select and Rename Columns in a Usuable Table
+### Select and Rename Columns in a Usuable Table
 
 --#TODO add more description
 
