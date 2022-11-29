@@ -4,26 +4,26 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Results | Data Preparation</title>
-  <meta name="description" content="Chapter 4 Results | Data Preparation" />
+  <title>Chapter 4 Results | NYC Crime</title>
+  <meta name="description" content="Chapter 4 Results | NYC Crime" />
   <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 Results | Data Preparation" />
+  <meta property="og:title" content="Chapter 4 Results | NYC Crime" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Results | Data Preparation" />
+  <meta name="twitter:title" content="Chapter 4 Results | NYC Crime" />
   
   
   
 
-<meta name="author" content="Group32" />
+<meta name="author" content="Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant" />
 
 
-<meta name="date" content="2022-11-18" />
+<meta name="date" content="2022-11-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -156,7 +156,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a></li>
-<li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
+<li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="interactive-component.html"><a href="interactive-component.html#test"><i class="fa fa-check"></i><b>5.1</b> Test</a></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -169,7 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data Preparation</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">NYC Crime</a>
           </h1>
         </div>
 
@@ -179,6 +182,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="results" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Results<a href="results.html#results" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>##Planning Notes</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>##Time Series
+To begin the analysis on time, first we would like to justify why we filtered the data for only crimes that took place in 2022.
+<img src="finalproj_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+From this we see that there is a large drop off in historic reports. This make sense as it is more likely that someone would report a crime in the same year that it occurs. Although NYPD allows people to report crimes that occurred in 2020, there will be much fewer of them reported in 2022. If we wanted to use data prior to 2022 we should include the old crime reports for prior years. Also there are some quality issues with historic data as we see very old crimes (year 1500) which indicate some human error or a record-keeping issue.</p>
+<p>So focusing on incidents in 2022, we can look at the overall trend during the year.
+<img src="finalproj_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+We can see there are more crimes reported in the summer months, presumably it is warmer. Let’s facet this:</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+Maybe, the trend is dominated by theft crimes but it does seem like there is a hump over summer. Uniquely there is a dip for drug crimes.</p>
+<p>Let’s now look at some other time related charts
+<img src="finalproj_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+We see some interesting trends here - Theft is lower on weekends, gambling up on weekends, sex crimes high on Wednesdays surprisingly.</p>
+<p>Let’s also look at the time of the day:
+<img src="finalproj_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+The raw data is rounded to the nearest minute but there is likely binning happening with time reported on the nearest hour. There also appears to be a peak at 12:00 which is likely a data quality issue in that reports may default to that time when not specified exactly. Otherwise this graph shows that crimes seems to peak at night around 6pm. But is this related to individual crimes and in/around parks?</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-15-1.png" width="672" />
+From prior charts, we know that the number of crimes is skewed toward those occurring in “Inside”. This does not represent the magnitude but we can see that for individuals, parks are more ‘dangerous’ at night - more so than other locations. However, it is somewhat comforting to know that this starts to drop off quickly after about 7-8pm.</p>
+<p>#Location Analysis</p>
 
 </div>
             </section>

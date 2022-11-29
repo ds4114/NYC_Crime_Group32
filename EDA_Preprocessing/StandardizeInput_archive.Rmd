@@ -4,6 +4,15 @@ author: "Group32"
 date: "2022-11-18"
 ---
 
+
+
+MOVED THIS CODE TO THE DATA.RMD FILES SO THIS IS OUTDATED
+
+
+
+
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo= TRUE, warning = TRUE, message = TRUE)
 #knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)

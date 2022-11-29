@@ -1,3 +1,30 @@
 # Interactive component
 
+Test 123
 
+<script src="https://d3js.org/d3.v7.js"></script>
+
+## Test
+
+<div id="mysvg">
+<svg width="300" height="200">
+  <rect width="300" height="200" fill="lightblue"></rect>
+  <circle cx="50" cy="75" r="20" fill="blue"></circle>
+  <ellipse cx="175" cy="100" rx="45" ry="30" fill="green"></ellipse>
+  <text x="100" y="150">(100, 150)</text>
+  <line x1="250" y1="150" x2="275" y2="175" stroke="red" stroke-width="5"></line>
+</svg>
+</div>
+
+<script src="myjs.js"></script>
+
+<script>
+d3.select("svg")
+  .on("click", function () {
+    d3.select("svg")
+      .append("text")
+        .attr("x", "100")
+        .attr("y", "40")
+        .text("Hello World");
+        });
+</script>
