@@ -23,6 +23,7 @@ library(ggridges)
 For crime type (Abhi) - There are 5 values with missing "OFNS_DESC". Since they have valid PD_CD and PD_DESC, we can impute these values from other columns with the same PD_CD
       two values are for obscenity - 594 PD_CD. categorized as sex crimes
       one values for crime pos weap - 797 PD_CD. categorized as dangerous weapons 
+      #OTHER
       one value for "place false bomb" - 648 PD_CD. No other examples of this crime. Ignore?
       one value for "noise" -  872 PD_CD. No other examples of this crime. Ignore?
       
@@ -64,14 +65,17 @@ agg_tbl <- df %>% group_by(CRIME_CAT) %>%
             .groups = 'drop')
 df_counts <- agg_tbl %>% as.data.frame()
 df_counts
-
+View(df_counts)
 
 #x <- c(4, 5, 6, 7, 8, 9, 10)
 #counts <- c(78, 45, 50, 12, 30, 50)
 #df <- data.frame(x=x, counts=counts)
-
-plt <- ggplot(df_counts) + geom_bar(aes(x=CRIME_CAT, y=total_count), stat="identity")
-print(plt)
+#new_DF <- df[is.na(df$CRIME_CAT),]
+#df_test <- read_csv('/Users/abhiramgaddam21/Desktop/EDAV/NYPD_Complaint_Data_Current__Year_To_Date_.csv')
+#df_test <- df_test[is.na(df_test$CMPLNT_NUM),]
+#View(df_test)
+#plt <- ggplot(df_counts) + geom_bar(aes(x=CRIME_CAT, y=total_count), stat="identity")
+#print(plt)
 ```
 
 
