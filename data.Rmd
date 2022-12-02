@@ -205,12 +205,8 @@ df <- df %>%
 
 
 ## Filter Table for Relevance
-The raw data only contains crimes that were reported in 2022 even if they took place earlier. As we will show in data took place
-
-(as defined by derived field above) in 1/1/2022 onward (this should remove 5%) (Devan)
-  Crime Type - Use the derived field from above 
-  Location? - Tentative, only look within 3.2km of Columbia (per derived field above)
-  
+The raw data only contains crimes that were reported in 2022 even if they took place earlier. As we will show in the Results, this create a bias in the time series and this section creates a new data frame to filter out old records (as defined by derived field above; before 1/1/2022).
+We also filter for only "relevant" crimes - i.e. excluding parking violations, noise compliants (those in the "Other" category)
 ```{r DataPrep6_Filter}
 df_filter <- df %>% filter(  Incident_Date >= as.Date('2022/01/01')  ) %>%
   filter (
@@ -218,18 +214,14 @@ df_filter <- df %>% filter(  Incident_Date >= as.Date('2022/01/01')  ) %>%
   )
 
 #TODO- distance filter?
-
 #View(df_filter)
 #unique(df_filter$CRIME_CAT)
-
 ```
-This improves the results as we will show in the chapter. There are not many records that are excluded (396978 - 364298)
+This improves the results as we will show in the next chapter. There are not many records that are excluded (396978 - 364298)
 
 
-### Select and Rename Columns in a Usuable Table
-
---#TODO add more description
-
+## Select and Rename Columns in a Usuable Table
+This section simply chooses fields that are used in our analysis to simplify and reduce the overall size of the working data frame. 
 ```{r DataPrep5_Renaming}
 #Not required
 df_key_fields <- df_filter %>% 
@@ -292,24 +284,25 @@ df_key_fields <- df_filter %>%
       ,VIC_RACE_short
       ,VIC_SEX
 )
-
 ```
 
 
+
 ## Missing value analysis
-First we can look at the raw data to see what things look like.
+--TODO - update this section, maybe create a table with # of nulls vs "(null)" for each field
+
+First let us look at the raw data to see what things look like.
 ```{r, fig.height=4, fig.width=15}
 plot_missing(df, percent = FALSE)
 #View(df[!is.na(df$TRANSIT_DISTRICT),])
 plot_missing( df[ , !colnames(df) %in% c("TRANSIT_DISTRICT","HOUSING_PSA") ] , percent = FALSE)
 ```
-These charts are hard to read given the number of columns but it shows that most data is actually populated very well. There are two problem fields causing all of nulls but we can regraph this without those and see that complete cases are at the top. However, this is still not accurate because there are string values in the data that say "(null)" which would appear as populated. In any case, we do not need to clean and evaluate all columns, so let us work off of the new, filtered dataset (see below).
-Side Note: We initially noticed the Complaint_Num was null often but this was due to containing alphanumeric characters but readr loaded it as a number only 
+These charts are hard to read given the number of columns but it shows that most data is actually populated very well. There are two problem fields causing all of nulls but we can re-graph this without those and see that complete cases are at the top. However, this is still not accurate because there are string values in the data that say "(null)" or "Unknown" which would appear as populated. In any case, we do not need to clean and evaluate all columns, so let us work off of the new, filtered dataset (see below).
+Side Note: We initially noticed the Complaint_Num was null often but this was due to containing alphanumeric characters but R loaded it as a number only.
 
 ```{r, fig.height=4, fig.width=15}
 plot_missing(df_key_fields, percent = FALSE)
 #View(df_key_fields[is.na(df_key_fields$CMPLNT_NUM),])
-
 ```
-The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We see there are a few blanks for lat/long and thus the related derived field, but otherwise we have a good dataframe to use.
+The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We see there are a few blanks for lat/long and thus the related derived field, but otherwise we have a good data frame to use in the next chapter.
 
