@@ -81,7 +81,11 @@ df_key_fields %>%
   xlab("Counts") +
   ylab("Type of Crime")
 ```
+
+--COLOR NOT WORKING
 ```{r}
+df_key_fields$FCT_CRIME_CAT <- as.factor(df_key_fields$CRIME_CAT)
+
 df_key_fields %>%
   group_by(OFNS_DESC) %>%
   summarise(freq = n()) %>%
@@ -90,7 +94,7 @@ df_key_fields %>%
   
   ggplot(aes(x = freq, y = fct_reorder(OFNS_DESC, freq))) +
   geom_segment(aes(yend = OFNS_DESC), xend = 0, colour = "grey50") +
-  geom_point(color = "blue", size = 3) +
+  geom_point(color = "blue", size = 3, aes(colour = FCT_CRIME_CAT)) +
   ggtitle("Top 10 Most Common Types of Crime") +
   xlab("Counts") +
   ylab("Type of Crime")
