@@ -86,10 +86,11 @@ df_key_fields %>%
   arrange(desc(freq)) %>%
   slice(1:10) %>%
   
-  ggplot(aes(x = freq, y = fct_reorder(OFNS_DESC, freq))) +
+  ggplot(aes(x = freq, y = fct_reorder(OFNS_DESC, freq), color = CRIME_CAT)) +
   geom_point(color = "blue") +
-  ggtitle("Avg. IQ for US states") +
-  ylab("") +
+  ggtitle("Top 10 Most Common Types of Crime") +
+  xlab("Counts") +
+  ylab("Type of Crime")+
   theme_linedraw()
 ```
 Here, we can see the crime incident that has happened the most frequently is “Petit Larceny”, a form of larceny in which the value of the property taken is generally less than $50. Further, five of the top 10 crimes are theft or burglary related, which explains why the most common crime category reported is theft.
