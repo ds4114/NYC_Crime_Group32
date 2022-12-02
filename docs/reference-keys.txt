@@ -1,7 +1,4 @@
 introduction
-outlineworknotes
-tasks
-next-steps-note-2022-11-13
 proposal
 research-topic
 data-availability
@@ -11,13 +8,11 @@ format-and-importation
 updates
 expected-challenges
 data
-sources
+source
+data-transformation-and-cleaning
 data-loading
-cleaning-transformation
-offense-type
-imputing-null-values
-creating-a-new-column-to-bucket-crimes
-datetime
+bucket-crime-types
+datetime-transformation
 cleaning-null-valuesranges
 geolocation-fields
 other-derivations

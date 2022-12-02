@@ -31,7 +31,7 @@ https://www.kaggle.com/code/spoons/nyc-crime-complaints-guided-eda-with-shiny-ap
 
 Data Cleaning
 need a metric count of crimes
-derived field of the distance from morningside park center to the row's coordinate (ie. radius nearby --need another package)
+derived field of the distance from morningside park center to the rows coordinate (ie. radius nearby --need another package)
   derived field about the severity or relcassify crime - (ex parking tickets). To reduce distinct number down to something managble.
   derive day of week from the datetime field
   date cleanups using data dictionary and maybe some assumptions so that we have a more accurate point in time (just use start) 
@@ -107,6 +107,44 @@ Analyses
       -how to represent overlapping lat/long points differently? Color (Faizan)
   --------
   Interactive - TBD, depends on complexity - Maybe user will enter address and then it will show a map that is shown around columbia and that location and basically plots heat map but allows user to add filters to make more specific and change the heatmap (ex change time or day or gender)
+
+
+
+## Planning Notes
+--To delete
+```{r}
+#What Graphs Do We Want?
+
+#Data Prep Graphs
+#1) Missing data patterns by row (using redav library or mi library) --heatmap
+
+
+#Demographic Related Chart
+#1) Bar Chart - CRIME_CAT by VIC Gender and/or SUSPECT Gender
+#2) Mosaic Plot - TBD (CRIME CAT, VIC Gender, and Premise, +)
+#3) Count by Premise (or use as a cut)
+#--see ideas below
+
+#Time Series Charts
+#1) Line Chart - Overall 2022 Trend by Count
+#2) Bar Chart - CRIME CAT by Day of Week
+#3) Density Plot - Count by Time of Day (maybe with facets)
+#4) (TBD more CRIME CAT by Time or Premise by Time of Day/Park)
+#5) Look at box plot by time of day?
+
+#Maps & Distance Info
+#1) Counts By Borough (bar chart) (consider faceting by another dimension that looks good)
+#2) Map of count in Columbia Area
+#3) Line Graph of Density At Diff Points (x is distance from CU and y is total counts)
+#4) Heat Map/Choropleth - Count by Precinct Code (may require addl data? --look into if feasible)
+
+#Other Potential
+#x) Parallel Coordinates Plot - not enough continuous vars
+#x) Stacked Bar Chart?
+#x) Scatter Plot (of Distance from CU vs Time of Day?)
+#x) Cleveland Dot Plot - TBD
+
+```
 
 
 

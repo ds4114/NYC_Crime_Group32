@@ -7,12 +7,18 @@ knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
 
 ```{r libraries}
 library(tidyverse)
-library(ggplot2)
 library(dplyr)
 library(lubridate)
-library(ggridges)
 library(geosphere)
 library(redav) #remotes::install_github("jtr13/redav")
+
+library(ggridges)
+library(ggplot2)
+library(scales)
+library(forcats)
+library(Lock5withR) 
+library(tidyr)
+library(vcdExtra)
 ```
 
 ## Source
@@ -83,8 +89,6 @@ df$OFNS_DESC[df$CMPLNT_NUM %in% ("246605653")] <- "DANGEROUS WEAPONS"
 ```
 
 ### Date/Time Transformation
-
-#### Cleaning null values/ranges
 Per the data dictionary, there is both a "from_date" and a "to_date" when the exact time is unknown. There is also a "report date" for when the crime was reported. Using these fields in conjunction, we can derive a new clean field that is the assumed date of the incident. Assumptions: When there is a range, we will use the "from" date only because is populated well and will on average approximate the frequency of crime over time; when from_date is null, we will use the report_date (does not occur often, see Missing Data Analysis below). 
 
 ```{r DataPrep2_DateTimeFields}
@@ -293,8 +297,9 @@ df_key_fields <- df_filter %>%
 
 First let us look at the raw data to see what things look like.
 ```{r, fig.height=4, fig.width=15}
-plot_missing(df, percent = FALSE)
+#View(df_key_fields[is.na(df_key_fields$CMPLNT_NUM),])
 #View(df[!is.na(df$TRANSIT_DISTRICT),])
+plot_missing(df, percent = FALSE)
 plot_missing( df[ , !colnames(df) %in% c("TRANSIT_DISTRICT","HOUSING_PSA") ] , percent = FALSE)
 ```
 These charts are hard to read given the number of columns but it shows that most data is actually populated very well. There are two problem fields causing all of nulls but we can re-graph this without those and see that complete cases are at the top. However, this is still not accurate because there are string values in the data that say "(null)" or "Unknown" which would appear as populated. In any case, we do not need to clean and evaluate all columns, so let us work off of the new, filtered dataset (see below).
@@ -302,7 +307,6 @@ Side Note: We initially noticed the Complaint_Num was null often but this was du
 
 ```{r, fig.height=4, fig.width=15}
 plot_missing(df_key_fields, percent = FALSE)
-#View(df_key_fields[is.na(df_key_fields$CMPLNT_NUM),])
 ```
 The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We see there are a few blanks for lat/long and thus the related derived field, but otherwise we have a good data frame to use in the next chapter.
 
