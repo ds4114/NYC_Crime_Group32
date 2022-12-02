@@ -97,7 +97,7 @@ df_key_fields %>%
   
   ggplot(aes(x = freq, y = fct_reorder(OFNS_DESC, freq))) +
   geom_segment(aes(yend = OFNS_DESC), xend = 0, colour = "grey50") +
-  geom_point(color = "blue", size = 3, aes(colour = FCT_CRIME_CAT)) +
+  geom_point(color = "blue", size = 3, aes(color = FCT_CRIME_CAT)) +
   ggtitle("Top 10 Most Common Types of Crime") +
   xlab("Counts") +
   ylab("Type of Crime")
@@ -139,6 +139,13 @@ While there is a lot of null and unknown data, presumably for the sake of anonym
 --nulls are on suspects so maybe because we dont know who committed the crime rather than anonimity. 
 --is there a way we can put these two graphs side by side? Maybe a heatmap with x and y axis being race (same common values) and color being how many.
 
+```{r}
+ggplot(df_key_fields, aes(VIC_RACE, SUSP_RACE)) + 
+  geom_bin2d()+
+  scale_fill_viridis_c()+
+  scale_x_discrete(guide = guide_axis(n.dodge=3))
+
+```
 
 ```{r}
 df_key_fields %>%
@@ -190,9 +197,38 @@ vcd::mosaic(CRIME_CAT ~ BORO_NM + VIC_Individual_Flag, counts3, direction = c("v
 
 --add other charts about borough or jurisdiction? Age group? Might need to try a bunch but we'll only include the ones we think look interesting (ie. where there is a pattern or anomaly/skew or something we can tie to real life)
 ```{r}
+df_key_fields %>%
+  group_by(VIC_AGE_GROUP) %>%
+  summarise(freq = n()) %>%
+  arrange(desc(freq)) %>%
+  slice(1:6) %>%
+  ggplot(aes(x=fct_reorder(VIC_AGE_GROUP,freq,.desc = TRUE),y=freq)) +
+  geom_bar(stat = "identity",fill = "cornflowerblue") +
+  scale_x_discrete(guide = guide_axis(n.dodge=3))+
+  ggtitle("Victim Age vs Total Count") +
+  xlab("Age") +
+  ylab("Count")
 
+df_key_fields %>%
+  group_by(SUSP_AGE_GROUP) %>%
+  summarise(freq = n()) %>%
+  arrange(desc(freq)) %>%
+  slice(1:6) %>%
+  ggplot(aes(x=fct_reorder(SUSP_AGE_GROUP,freq,.desc = TRUE),y=freq)) +
+  geom_bar(stat = "identity",fill = "cornflowerblue") +
+  scale_x_discrete(guide = guide_axis(n.dodge=3))+
+  ggtitle("Victim Age vs Total Count") +
+  xlab("Age") +
+  ylab("Count")
 ```
 
+Heat map version:
+--need to clean these columns?
+```{r}
+ggplot(df_key_fields, aes(VIC_AGE_GROUP, SUSP_AGE_GROUP)) + 
+  geom_bin2d()+
+  scale_fill_viridis_c()
+```
 
 
 
