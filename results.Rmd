@@ -208,19 +208,21 @@ df_key_fields %>%
   group_by(VIC_AGE_GROUP) %>%
   summarise(freq = n()) %>%
   arrange(desc(freq)) %>%
-  slice(1:6) %>%
+  slice(1:10) %>%
   ggplot(aes(x=fct_reorder(VIC_AGE_GROUP,freq,.desc = TRUE),y=freq)) +
   geom_bar(stat = "identity",fill = "cornflowerblue") +
   scale_x_discrete(guide = guide_axis(n.dodge=3))+
   ggtitle("Victim Age vs Total Count") +
   xlab("Age") +
   ylab("Count")
+```
 
+```{r}
 df_key_fields %>%
   group_by(SUSP_AGE_GROUP) %>%
   summarise(freq = n()) %>%
   arrange(desc(freq)) %>%
-  slice(1:6) %>%
+  slice(1:10) %>%
   ggplot(aes(x=fct_reorder(SUSP_AGE_GROUP,freq,.desc = TRUE),y=freq)) +
   geom_bar(stat = "identity",fill = "cornflowerblue") +
   scale_x_discrete(guide = guide_axis(n.dodge=3))+

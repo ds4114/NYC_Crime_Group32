@@ -150,6 +150,8 @@ Here we will add additional fields for more classification
 ```{r DataPrep4_MoreFields}
 
 df$LOC_OF_OCCUR_DESC[df$LOC_OF_OCCUR_DESC=="(null)"]<-NA
+df$SUSP_RACE[df$SUSP_RACE=="(null)"]<-"UNKNOWN"
+df$VIC_RACE[df$VIC_RACE=="(null)"]<-"UNKNOWN"
 
 df <- df %>% 
       mutate(
@@ -165,6 +167,19 @@ df <- df %>%
                   VIC_SEX %in% c("M","F","L") ~ 'Y'
                   ,TRUE ~ 'N'
                   )
+         ,SUSP_AGE_GROUP = case_when (
+            SUSP_AGE_GROUP %in% c('<18','18-24','25-44','45-64') ~ SUSP_AGE_GROUP
+            ,TRUE ~ 'UNKNOWN'
+         )
+        ,VIC_AGE_GROUP = case_when (
+            VIC_AGE_GROUP %in% c('<18','18-24','25-44','45-64') ~ VIC_AGE_GROUP
+            ,TRUE ~ 'UNKNOWN'
+        )
+        ,SUSP_RACE = case_when (
+            
+        )
+        ,VIC_RACE = case_when (
+        )
       ) %>% 
       mutate(
          Complaint_Count = 1     #maybe want to add like a intensity value or something?
@@ -288,5 +303,6 @@ plot_missing(df_key_fields, percent = FALSE)
 
 ```
 The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We see there are a few blanks for lat/long and thus the related derived field, but otherwise we have a good dataframe to use.
---TODO, make suspect race actually null. "unknown" to null?. Same for Borough when (null)?
+
+--TODO, make suspect race actually null. "unknown" to null?. Same for Borough when (null)? and age group (clean values)
 
