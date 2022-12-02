@@ -90,14 +90,13 @@ df_key_fields %>%
 df_key_fields$FCT_CRIME_CAT <- as.factor(df_key_fields$CRIME_CAT)
 
 df_key_fields %>%
-  group_by(OFNS_DESC) %>%
+  group_by(OFNS_DESC,FCT_CRIME_CAT) %>%
   summarise(freq = n()) %>%
   arrange(desc(freq)) %>%
-  slice(1:10) %>%
-  
-  ggplot(aes(x = freq, y = fct_reorder(OFNS_DESC, freq))) +
+  filter(freq>2750) %>%
+  ggplot(aes(x = freq, y = fct_reorder(OFNS_DESC, freq), color = FCT_CRIME_CAT)) +
   geom_segment(aes(yend = OFNS_DESC), xend = 0, colour = "grey50") +
-  geom_point(color = "blue", size = 3, aes(color = FCT_CRIME_CAT)) +
+  geom_point(size = 3, aes(color = FCT_CRIME_CAT)) +
   ggtitle("Top 10 Most Common Types of Crime") +
   xlab("Counts") +
   ylab("Type of Crime")
@@ -177,6 +176,14 @@ df_key_fields %>%
 Clearly most of the crimes committed are by men, and most of the victims are female.
 
 
+```{r}
+ggplot(df_key_fields, aes(SUSP_SEX,VIC_SEX)) + 
+  geom_bin2d()+
+  scale_x_discrete(guide = guide_axis(n.dodge=3))
+
+```
+
+
 --ATTEMPT AT MOSAIC PLOT 
 ```{r}
 counts2 <- df_key_fields %>%
@@ -217,13 +224,13 @@ df_key_fields %>%
   ggplot(aes(x=fct_reorder(SUSP_AGE_GROUP,freq,.desc = TRUE),y=freq)) +
   geom_bar(stat = "identity",fill = "cornflowerblue") +
   scale_x_discrete(guide = guide_axis(n.dodge=3))+
-  ggtitle("Victim Age vs Total Count") +
+  ggtitle("Suspect Age vs Total Count") +
   xlab("Age") +
   ylab("Count")
 ```
 
 Heat map version:
---need to clean these columns?
+--need to clean these columns? add garbage values to unknown
 ```{r}
 ggplot(df_key_fields, aes(VIC_AGE_GROUP, SUSP_AGE_GROUP)) + 
   geom_bin2d()+
