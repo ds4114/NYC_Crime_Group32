@@ -55,7 +55,8 @@ library(tidyr)
 
 ## Crime category and Demographic analysis
 
-We start our analysis of crime types by observing that theft or burglary related crimes are the most common by far (more than 2x the next highest category). This category is followed by sex crimes, violent crimes, and fraud/gambling related crimes all of which are relatively close in number. The lowest crime category by far is drug and alcohol related crimes.
+We start our analysis of crime types by investigating which crime categories occur in what frequencies. We bucketed the numerous crimes that are listed into logical categories.
+
 ```{r}
 agg_tbl <- df_key_fields%>% group_by(CRIME_CAT) %>% 
   summarise(total_count=n(),
@@ -67,25 +68,10 @@ ggplot(df_counts) + geom_bar(aes(y=CRIME_CAT, x=total_count), stat="identity",fi
   xlab("Count") +
   ylab("Category")
 ```
-
-We can investigate the data to see the top 10 kinds of crimes before we bucket them into categories.
-```{r}
-df_key_fields %>%
-  group_by(OFNS_DESC) %>%
-  summarise(freq = n()) %>%
-  arrange(desc(freq)) %>%
-  slice(1:10) %>%
-  ggplot(aes(y=fct_reorder(OFNS_DESC,freq,.desc = FALSE),x=freq)) +
-  geom_bar(stat = "identity",fill = "cornflowerblue") +
-  ggtitle("Top 10 Most Common Types of Crime") +
-  xlab("Counts") +
-  ylab("Type of Crime")
-```
----Maybe we make this chart a clevland dot plot with all original crimes categories and colored by crime_cat? Maybe facet, idk. Just to show what we group and show it was reasonable.
+We observe that theft or burglary related crimes are the most common by far (more than 2x the next highest category). This category is followed by sex crimes, violent crimes, and fraud/gambling related crimes all of which are relatively close in number. The lowest  category by far is drug and alcohol related crimes, perhaps because the policing of these crimes has been relaxed over the last few years.
 
 
-
---COLOR NOT WORKING
+We can further investigate the data to see the top 15 kinds of crimes and what categories they belong to.
 ```{r}
 df_key_fields$FCT_CRIME_CAT <- as.factor(df_key_fields$CRIME_CAT)
 
@@ -102,10 +88,13 @@ df_key_fields %>%
   ylab("Type of Crime")
 ```
 
-Here, we can see the crime incident that has happened the most frequently is “Petit Larceny”, a form of larceny in which the value of the property taken is generally less than $50. Further, five of the top 10 crimes are theft or burglary related, which explains why the most common crime category reported is theft.
+Here, we can see the crime incident that has happened the most frequently is “Petit Larceny”, a form of larceny in which the value of the property taken is generally less than $50. 
+
+As expected, 5 of the top 10 crimes are theft or burglary related, which explains why the most common crime category reported is theft. Also, we only see one incident type corresponding to drug and alcohol related crimes.
 
 
 We can start our demographic analysis by digging further into the race, age, and gender of both suspects and victims. 
+Lets begin by diving into trends between the race of the suspects and victims.
 ```{r}
 df_key_fields %>%
   group_by(SUSP_RACE) %>%
@@ -133,19 +122,23 @@ df_key_fields %>%
   xlab("Race") +
   ylab("Count")
 ```
-While there is a lot of null and unknown data, presumably for the sake of anonymity, we notice that there are trends between the race of the suspect and victim. Lets see if we observe something similar for the sex of a victim and suspect
-
---nulls are on suspects so maybe because we dont know who committed the crime rather than anonimity. 
---is there a way we can put these two graphs side by side? Maybe a heatmap with x and y axis being race (same common values) and color being how many.
+While there is a lot of null and unknown data, we notice that there are clear patterns between the race of the suspect and victim. Visualizing this using a heatmap convinces us of this.  
 
 ```{r}
 ggplot(df_key_fields, aes(VIC_RACE, SUSP_RACE)) + 
   geom_bin2d()+
   scale_fill_viridis_c()+
-  scale_x_discrete(guide = guide_axis(n.dodge=3))
+  scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+  xlab("Suspect Race") +
+  ylab("Victim Race") +
+  ggtitle("Victim Race vs Suspect Race")
 
 ```
 
+We see from the bar charts that most of the victims are black and also that most of the suspects are black. Logically, the intersection of these two fields is also the highest. 
+
+
+Next, lets do a gender focused analysis.
 ```{r}
 df_key_fields %>%
   group_by(SUSP_SEX) %>%
@@ -173,7 +166,7 @@ df_key_fields %>%
   xlab("Sex") +
   ylab("Count")
 ```
-Clearly most of the crimes committed are by men, and most of the victims are female.
+Most of the victims are female, followed closely by males. However, there is a large discrepancy in the counts of suspect genders. Males are by far the highest category, more than 4x the count for females.
 
 
 ```{r}
@@ -238,7 +231,6 @@ ggplot(df_key_fields, aes(VIC_AGE_GROUP, SUSP_AGE_GROUP)) +
   geom_bin2d()+
   scale_fill_viridis_c()
 ```
-
 
 
 ## Time Series
