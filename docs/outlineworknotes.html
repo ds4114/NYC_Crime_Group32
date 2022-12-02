@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>NYC Crime</title>
-  <meta name="description" content="NYC Crime" />
+  <title>Chapter 2 Outline/Work/Notes | NYC Crime</title>
+  <meta name="description" content="Chapter 2 Outline/Work/Notes | NYC Crime" />
   <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="NYC Crime" />
+  <meta property="og:title" content="Chapter 2 Outline/Work/Notes | NYC Crime" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="NYC Crime" />
+  <meta name="twitter:title" content="Chapter 2 Outline/Work/Notes | NYC Crime" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="outlineworknotes.html"/>
+<link rel="prev" href="index.html"/>
+<link rel="next" href="tasks.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -200,21 +200,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">NYC Crime</h1>
-<p class="author"><em>Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant</em></p>
-<p class="date"><em>2022-12-02</em></p>
-</div>
-<div id="introduction" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="outlineworknotes" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Outline/Work/Notes<a href="outlineworknotes.html#outlineworknotes" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Introduction - “Explain why you chose this topic, and the questions you are interested in studying. Provide context for readers who are not familiar with the topic.”</p>
+<p>Data
+copy proposal wording back into data section
+–Focus: Just around Upper Manhattan (if enough data)</p>
+<p>Profiling
+Describe any issues / problems with the data, either known or that you discover.
+NULL values -
+Binning for dates
+Potential date mismatch of when crime happened vs when crime was reported
+Recreate some basic statistics about the data we have using bar charts or whatever
+Google to see how others used dataset
+<a href="https://towardsdatascience.com/analysis-of-nyc-reported-crime-data-using-pandas-821753cd7e22" class="uri">https://towardsdatascience.com/analysis-of-nyc-reported-crime-data-using-pandas-821753cd7e22</a>
+<a href="https://www.kaggle.com/datasets/adamschroeder/crimes-new-york-city" class="uri">https://www.kaggle.com/datasets/adamschroeder/crimes-new-york-city</a>
+<a href="https://jingjing-ge.medium.com/analysis-of-crime-data-in-new-york-city-in-2020-e6a65edf4429" class="uri">https://jingjing-ge.medium.com/analysis-of-crime-data-in-new-york-city-in-2020-e6a65edf4429</a>
+<a href="https://www.kaggle.com/code/spoons/nyc-crime-complaints-guided-eda-with-shiny-app" class="uri">https://www.kaggle.com/code/spoons/nyc-crime-complaints-guided-eda-with-shiny-app</a></p>
+<p>Data Cleaning
+need a metric count of crimes
+derived field of the distance from morningside park center to the row’s coordinate (ie. radius nearby –need another package)
+derived field about the severity or relcassify crime - (ex parking tickets). To reduce distinct number down to something managble.
+derive day of week from the datetime field
+date cleanups using data dictionary and maybe some assumptions so that we have a more accurate point in time (just use start)</p>
+<p>Results / Graph Ideas
+Univariate/Multivariate Categorical Ideas:
+crime frequency vs gender/age group/borough –maybe bar charts or mosaics</p>
+<p>Continuous Variable Ideas:
+(Interactive) changing radius from (morningside) park to see impact on crime rate density (frequency/area of radius). Take snapshots at like .25mi, .5mi, .75 etc as x-axis and plot density on y
+Time series (over months/days of week) - look at changes over time/seasonality
+(interactive) - control time lapse of heatmap of NYC or something
+Time (during the day) -</p>
+<p>Map:</p>
+<p>Ideas:
+compare NYU vs Columbia
+Compare walking vs subway (using premise)</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="outlineworknotes.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="tasks.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -1,6 +1,6 @@
 # Data 
 
-```{r setup, include=FALSE}
+```{r setup_data, include=FALSE}
 knitr::opts_chunk$set(echo= TRUE, warning = TRUE, message = TRUE)
 #knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
 ```
@@ -257,7 +257,7 @@ df_key_fields <- df_filter %>%
       #,`New Georeferenced Column`
     #Crime Info 
       ,CRIME_CAT  #derived
-      #,VIC_Individual_Flag #derived
+      ,VIC_Individual_Flag #derived
       #,KY_CD
       ,LAW_CAT_CD
       ,OFNS_DESC
@@ -288,5 +288,5 @@ plot_missing(df_key_fields, percent = FALSE)
 
 ```
 The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We see there are a few blanks for lat/long and thus the related derived field, but otherwise we have a good dataframe to use.
-
+--TODO, make suspect race actually null. "unknown" to null?. Same for Borough when (null)?
 

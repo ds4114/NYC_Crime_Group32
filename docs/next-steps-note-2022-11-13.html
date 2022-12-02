@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>NYC Crime</title>
-  <meta name="description" content="NYC Crime" />
+  <title>Chapter 4 Next Steps Note 2022-11-13 | NYC Crime</title>
+  <meta name="description" content="Chapter 4 Next Steps Note 2022-11-13 | NYC Crime" />
   <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="NYC Crime" />
+  <meta property="og:title" content="Chapter 4 Next Steps Note 2022-11-13 | NYC Crime" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="NYC Crime" />
+  <meta name="twitter:title" content="Chapter 4 Next Steps Note 2022-11-13 | NYC Crime" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="outlineworknotes.html"/>
+<link rel="prev" href="tasks.html"/>
+<link rel="next" href="proposal.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -200,21 +200,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">NYC Crime</h1>
-<p class="author"><em>Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant</em></p>
-<p class="date"><em>2022-12-02</em></p>
-</div>
-<div id="introduction" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="next-steps-note-2022-11-13" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Next Steps Note 2022-11-13<a href="next-steps-note-2022-11-13.html#next-steps-note-2022-11-13" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Agree on Data Prep Steps
+Derived Fields
+- a few for time series (Devan)
+- day night
+- was time estimated or not
+- crime category (Abhi)
+- distance from XYZ location - Columbia, NYU?, tbd (Faizan)
+- Aggregate Field for Premise (3-4 values, simple to use) - like street/park/inside/subway?
+- Combines inside/outside and premise and anythign else nee(incl. something for subway)
+- “Relevant Crime for EDAV”
+- victim is an individual and crime type is relevant or some aggregate of the two
+–Abhi to look at percentages and determine how to filter. May need to recategorize and/or use the victim sex field
+- (Other flags as needed)
+–
+Missing Value Analysis - Need to satisfy requirement for project
+- Describe any missing values in fields
+For date (Devan) - Look at difference between date reported and date of incident if anything interesting</p>
+<pre><code>  For crime type (Abhi) - There are 5 values with missing &quot;OFNS_DESC&quot;. Since they have valid PD_CD and PD_DESC, we can impute these values from other columns with the same PD_CD
+  two values are for obscenity - 594 PD_CD. categorized as sex crimes
+  one values for crime pos weap - 797 PD_CD. categorized as dangerous weapons 
+  one value for &quot;place false bomb&quot; - 648 PD_CD. No other examples of this crime. Ignore?
+  one value for &quot;noise&quot; -  872 PD_CD. No other examples of this crime. Ignore?
+  
+  Placeholder for anything else </code></pre>
+<p>Data Filtration Justification (missing and not relevant)
+Date - We only have crimes that took place (as defined by derived field above) in 1/1/2022 onward (this should remove 5%) (Devan)
+Crime Type - Use the derived field from above
+Location? - Tentative, only look within 3.2km of Columbia (per derived field above)</p>
+<p>Guiding Questions to keep in mind
+What is the safest route back home, - interactive component?
+Is cutting through the park bad? -
+what is a dangerous time to be out?
+Is there a difference by gender/race/age for safety?</p>
+<p>Analyses
+Demographics - 3+ (mosaic, ) –tbd to see what is interesting (All)
+Time - 3 graphs (line graph, ridge plot, bar chart/split?)
+Location - 2 graphs (map, crime density at different radiaii, routes to uptown?)
+-how to represent overlapping lat/long points differently? Color (Faizan)
+——–
+Interactive - TBD, depends on complexity - Maybe user will enter address and then it will show a map that is shown around columbia and that location and basically plots heat map but allows user to add filters to make more specific and change the heatmap (ex change time or day or gender)</p>
+
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="outlineworknotes.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="tasks.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="proposal.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

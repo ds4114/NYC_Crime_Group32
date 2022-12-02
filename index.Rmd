@@ -9,7 +9,7 @@ site: bookdown::bookdown_site
 
 
 
-#Outline/Work/Notes
+# Outline/Work/Notes
 Introduction - "Explain why you chose this topic, and the questions you are interested in studying. Provide context for readers who are not familiar with the topic."
   
 Data
@@ -54,14 +54,14 @@ Results / Graph Ideas
     Compare walking vs subway (using premise)
     
   
-#Tasks
+# Tasks
 1. Get coordinates data for a specific location and use that calculate the distance from each complaint --Faizan
 2. We need to assign categories to crimes --Abhi
 3. Look into how best to use the time variables for various time series analyses
 4. General exploration of data (via online viz or R) / take notes on missing value cleanup/interesting findings --All
 
 
-#Next Steps Note 2022-11-13
+# Next Steps Note 2022-11-13
 Agree on Data Prep Steps
 Derived Fields
   - a few for time series (Devan)

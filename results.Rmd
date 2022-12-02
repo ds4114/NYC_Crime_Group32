@@ -1,6 +1,6 @@
 # Results
 
-```{r setup, include=FALSE}
+```{r setup_results, include=FALSE}
 knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
 ```
 
@@ -17,6 +17,7 @@ library(tidyr)
 
 
 ## Planning Notes
+--To delete
 ```{r}
 #What Graphs Do We Want?
 
@@ -53,20 +54,19 @@ library(tidyr)
 
 
 ## Crime category and Demographic analysis
+
+We start our analysis of crime types by observing that theft or burglary related crimes are the most common by far (more than 2x the next highest category). This category is followed by sex crimes, violent crimes, and fraud/gambling related crimes all of which are relatively close in number. The lowest crime category by far is drug and alcohol related crimes.
 ```{r}
 agg_tbl <- df_key_fields%>% group_by(CRIME_CAT) %>% 
   summarise(total_count=n(),
             .groups = 'drop')
 df_counts <- agg_tbl %>% as.data.frame()
 
-plt <- ggplot(df_counts) + geom_bar(aes(y=CRIME_CAT, x=total_count), stat="identity",fill = "cornflowerblue")+
+ggplot(df_counts) + geom_bar(aes(y=CRIME_CAT, x=total_count), stat="identity",fill = "cornflowerblue")+
   ggtitle("Number of crimes per category ") +
   xlab("Count") +
   ylab("Category")
-plt
 ```
-
-We start our analysis of crime types by observing that theft or burglary related crimes are the most common by far (more than 2x the next highest category). This category is followed by sex crimes, violent crimes, and fraud/gambling related crimes all of which are relatively close in number. The lowest crime category by far is drug and alcohol related crimes.
 
 We can investigate the data to see the top 10 kinds of crimes before we bucket them into categories.
 ```{r}
@@ -81,6 +81,9 @@ df_key_fields %>%
   xlab("Counts") +
   ylab("Type of Crime")
 ```
+---Maybe we make this chart a clevland dot plot with all original crimes categories and colored by crime_cat? Maybe facet, idk. Just to show what we group and show it was reasonable.
+
+
 
 --COLOR NOT WORKING
 ```{r}
@@ -133,6 +136,10 @@ df_key_fields %>%
 ```
 While there is a lot of null and unknown data, presumably for the sake of anonymity, we notice that there are trends between the race of the suspect and victim. Lets see if we observe something similar for the sex of a victim and suspect
 
+--nulls are on suspects so maybe because we dont know who committed the crime rather than anonimity. 
+--is there a way we can put these two graphs side by side? Maybe a heatmap with x and y axis being race (same common values) and color being how many.
+
+
 ```{r}
 df_key_fields %>%
   group_by(SUSP_SEX) %>%
@@ -145,7 +152,9 @@ df_key_fields %>%
   ggtitle("Suspect Sex vs Total Count") +
   xlab("Sex") +
   ylab("Count")
+```
 
+```{r}
 df_key_fields %>%
   group_by(VIC_SEX) %>%
   summarise(freq = n()) %>%
@@ -160,6 +169,7 @@ df_key_fields %>%
 ```
 Clearly most of the crimes committed are by men, and most of the victims are female.
 
+
 --ATTEMPT AT MOSAIC PLOT 
 ```{r}
 counts2 <- df_key_fields %>%
@@ -167,6 +177,23 @@ counts2 <- df_key_fields %>%
   summarize(Freq = n())
 vcd::mosaic(VIC_RACE ~ SUSP_RACE, counts2, direction = c("v", "h"),)
 ```
+--perhaps we can rename some values as a new field in the data.Rmd so that this shows a little cleaner? 
+
+--try mixing and matching more fields in different moasics to see if anything pops? Open to other ideas but pretty sure we need a graph with 3+ categorical vars given this dataset.  Try mosaic pair plots too.
+```{r}
+counts3 <- df_key_fields %>%
+  group_by(VIC_RACE, SUSP_RACE, CRIME_CAT, BORO_NM, VIC_Individual_Flag) %>%
+  summarize(Freq = n())
+vcd::mosaic(VIC_Individual_Flag ~ BORO_NM + CRIME_CAT, counts3, direction = c("v","v","h"),)
+vcd::mosaic(CRIME_CAT ~ BORO_NM + VIC_Individual_Flag, counts3, direction = c("v","v","h"),)
+```
+
+--add other charts about borough or jurisdiction? Age group? Might need to try a bunch but we'll only include the ones we think look interesting (ie. where there is a pattern or anomaly/skew or something we can tie to real life)
+```{r}
+
+```
+
+
 
 
 ## Time Series
