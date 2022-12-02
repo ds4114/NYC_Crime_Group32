@@ -1,8 +1,8 @@
 # Data 
 
 ```{r setup_data, include=FALSE}
-knitr::opts_chunk$set(echo= TRUE, warning = TRUE, message = TRUE)
-#knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
+#knitr::opts_chunk$set(echo= TRUE, warning = TRUE, message = TRUE)
+knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
 ```
 
 ```{r libraries}
@@ -13,18 +13,29 @@ library(lubridate)
 library(ggridges)
 library(geosphere)
 library(redav) #remotes::install_github("jtr13/redav")
-
-#Unused Libraries:
-#library(readr)
 ```
 
-## Sources
-TODO - WRITEUP/repeate proposal
+## Source
+As discussed in the Proposal section, the data for this project comes from published crime reports. NYC Open Data (NYC Office of Technology and Innovation (OTI)) in conjunction with New York City Police Department (NYPD) makes public safety data available for anyone online. In particular they publish Complaint Data which contains felony, misdemeanor, and violation crimes reported to the NYPD from 2006 till present.
+
+Year-to-Date (YTD) (2022-01 to 2022-09): https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Current-Year-To-Date-/5uac-w243
+
+The dataset contains mostly categorical variables and dates with each row indicating a crime/violation. As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. A data dictionary is provided by NYC Open Data at the link above.
+
+Additional details can be found in the Proposal: https://ds4114.github.io/NYC_Crime_Group32/proposal.html#data-availability
+
+
+## Data Transformation and Cleaning
+This .Rmd file contains the following sections:
+-Data Loading - To show data was ingested into the environment
+-Bucketing
+-Date Transformations
+
+
 
 ### Data Loading
 ```{r DataLoading}
 #Group32 - This file has been added to gitignore so it will not be uploaded. So we are on the same page and can run the same code, add the csv to your local project folder in a new subfolder "data". 
-#df_raw <- read_csv('./data/NYPD_Complaint_Data_Current__Year_To_Date_.csv')
 df_raw <- read_csv('./data/NYPD_Complaint_Data_Current__Year_To_Date_.csv'
                    , col_types= cols(
                                 CMPLNT_NUM = col_character() #was loading as number so numbers with letters were showing as null
@@ -34,16 +45,6 @@ df_raw <- read_csv('./data/NYPD_Complaint_Data_Current__Year_To_Date_.csv'
 #head(df_raw)
 ```
 
-## Cleaning / transformation
-
---TODO
-1) Re-categorize and clean Offense Type
-2) Derive Date/Time fields
-3) 
-
-
-
-#### Offense Type
 
 #### Imputing null values 
 
@@ -149,7 +150,9 @@ Here we will add additional fields for more classification
 
 ```{r DataPrep4_MoreFields}
 
+#Update certain null fields. Setting race to null because there is already an "Unknown" category 
 df$LOC_OF_OCCUR_DESC[df$LOC_OF_OCCUR_DESC=="(null)"]<-NA
+df$BORO_NM[df$BORO_NM=="(null)"]<-NA
 df$SUSP_RACE[df$SUSP_RACE=="(null)"]<-"UNKNOWN"
 df$VIC_RACE[df$VIC_RACE=="(null)"]<-"UNKNOWN"
 
@@ -159,7 +162,7 @@ df <- df %>%
          Inside_Outside = case_when ( 
                    LOC_OF_OCCUR_DESC %in% c("FRONT OF" , "OPPOSITE OF" , "REAR OF") ~ "OUTSIDE"
                   ,LOC_OF_OCCUR_DESC %in% c("INSIDE") ~ "INSIDE"
-                  #,LOC_OF_OCCUR_DESC == "(null)" ~ NULL #TODO -cant figure this out error
+                  #,LOC_OF_OCCUR_DESC == "(null)" ~ NULL #doesnt run so added statement above
                   ,TRUE ~ LOC_OF_OCCUR_DESC  
                   )
          #if victim was a person (not a business/govt)
@@ -175,10 +178,23 @@ df <- df %>%
             VIC_AGE_GROUP %in% c('<18','18-24','25-44','45-64') ~ VIC_AGE_GROUP
             ,TRUE ~ 'UNKNOWN'
         )
-        ,SUSP_RACE = case_when (
-            
+        ,SUSP_RACE_short = case_when (
+             SUSP_RACE == 'AMERICAN INDIAN/ALASKAN NATIVE' ~ 'AI'
+            ,SUSP_RACE == 'ASIAN / PACIFIC ISLANDER' ~ 'AP'
+            ,SUSP_RACE == 'BLACK' ~ 'B'
+            ,SUSP_RACE == 'BLACK HISPANIC' ~ 'BH'
+            ,SUSP_RACE == 'UNKNOWN' ~ 'U'
+            ,SUSP_RACE == 'WHITE' ~ 'W'
+            ,SUSP_RACE == 'WHITE HISPANIC' ~ 'WH'
         )
-        ,VIC_RACE = case_when (
+        ,VIC_RACE_short = case_when (
+             VIC_RACE == 'AMERICAN INDIAN/ALASKAN NATIVE' ~ 'AI'
+            ,VIC_RACE == 'ASIAN / PACIFIC ISLANDER' ~ 'AP'
+            ,VIC_RACE == 'BLACK' ~ 'B'
+            ,VIC_RACE == 'BLACK HISPANIC' ~ 'BH'
+            ,VIC_RACE == 'UNKNOWN' ~ 'U'
+            ,VIC_RACE == 'WHITE' ~ 'W'
+            ,VIC_RACE == 'WHITE HISPANIC' ~ 'WH'
         )
       ) %>% 
       mutate(
@@ -278,9 +294,11 @@ df_key_fields <- df_filter %>%
       ,OFNS_DESC
       ,SUSP_AGE_GROUP
       ,SUSP_RACE
+      ,SUPS_RACE_short
       ,SUSP_SEX
       ,VIC_AGE_GROUP
       ,VIC_RACE
+      ,VIC_RACE_short
       ,VIC_SEX
 )
 
@@ -303,6 +321,4 @@ plot_missing(df_key_fields, percent = FALSE)
 
 ```
 The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We see there are a few blanks for lat/long and thus the related derived field, but otherwise we have a good dataframe to use.
-
---TODO, make suspect race actually null. "unknown" to null?. Same for Borough when (null)? and age group (clean values)
 
