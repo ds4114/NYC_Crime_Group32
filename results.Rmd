@@ -360,5 +360,188 @@ From prior charts, we know that the number of crimes is skewed toward those occu
 
 # Location Analysis
 
+```{r}
+# Plottting columbia data on a map
+library(ggmap)
+columbia <- df_filter[df_filter$dist_to_CU <= 2000,]
+
+register_google(key = "AIzaSyDUVtOF3qSoJEcQAZ9mU0E1rGKQDqcuNGw")
+map = get_googlemap(center = c(lon = -73.963036, lat = 40.807384),zoom = 15)
+ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
+```
+
+```{r}
+library(gridExtra)
+# Displaying all the crime categories within 2 kilometers of columbia
+columbia_vc <- columbia[columbia$CRIME_CAT == "MAJOR VIOLENT CRIMES",]
+columbia_tb <- columbia[columbia$CRIME_CAT == "THEFT OR BURGLARY",]
+columbia_fg <- columbia[columbia$CRIME_CAT == "FRAUD/GAMBLING AND MISC",]
+columbia_sc <- columbia[columbia$CRIME_CAT == "SEX CRIMES",]
+columbia_da <- columbia[columbia$CRIME_CAT == "DRUG AND ALCOHOL RELATEDS",]
+
+vc_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_vc, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.1, size = 1)
+
+tb_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_tb, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
+
+fg_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_fg, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
+
+sc_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_sc, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
+
+da_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_da, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
+
+#grid.arrange(vc_map,tb_map,fg_map,sc_map, da_map, ncol=1)
+#ggmap(map, base_layer = ggplot(aes(x = Longitude, y = Latitude), data = columbia, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), size = 1))
+```
+
+```{r}
+# Map of different crime types around Columbia
+
+map = get_googlemap(center = c(lon = -73.963036, lat = 40.807384),zoom = 15)
+ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1) + facet_wrap(~CRIME_CAT)
+```
+
+```{r}
+# Line graph of density at different points
+
+ggplot(columbia, aes(dist_to_CU)) +
+  ggtitle("Histogram of crime counts wrt to distance from columbia") +
+  geom_histogram(color = "blue", fill = "lightBlue", binwidth = 100)
+```
+
+```{r}
+# Line graph of density at different points away from Columbia
+library(tidyverse)
+#columbia[, Radius := cut(dist_to_CU, breaks = c(0, 101, 201, 301, 401, 501, 601, 701, 801, 901, 1001, 1101, 1201, 1301, 1401, 1501, 1601, 1701, 1801, 1901, 2001), labels = c("0-100", "100-200", "3001-400", "10001-20000"))]
+
+ggplot(columbia, aes(dist_to_CU)) +
+  ggtitle("Histogram of cumulative crime counts wrt to distance from columbia") + stat_ecdf(color = "blue", fill = "lightBlue", binwidth = 100)
+
+
+```
+
+```{r}
+# Making dataset to help plot density graphs
+
+#Your code
+factordist <- factor(cut(columbia$dist_to_CU, breaks=c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100)))
+#Tabulate and turn into data.frame
+xout <- as.data.frame(table(factordist))
+#Add cumFreq and proportions
+xout <- transform(xout, cumFreq = cumsum(Freq))
+xout$factordist <- as.numeric(xout$factordist)
+
+density <- xout %>% 
+  mutate(dist = case_when(factordist==1 ~ 100,
+                          factordist==2 ~ 200,
+                          factordist==3 ~ 300,
+                          factordist==4 ~ 400,
+                          factordist==5 ~ 500,
+                          factordist==6 ~ 600,
+                          factordist==7 ~ 700,
+                          factordist==8 ~ 800,
+                          factordist==9 ~ 900,
+                          factordist==10 ~ 1000,
+                          factordist==11 ~ 1100,
+                          factordist==12 ~ 1200,
+                          factordist==13 ~ 1300,
+                          factordist==14 ~ 1400,
+                          factordist==15 ~ 1500,
+                          factordist==16 ~ 1600,
+                          factordist==17 ~ 1700,
+                          factordist==18 ~ 1800,
+                          factordist==19 ~ 1900,
+                          factordist==20 ~ 2000))
+
+density$cum_density <- density$cumFreq/(density$dist * density$dist)
+density <- density %>%  mutate(incremental_area = dist*dist - lag(dist*dist, default = first(dist*dist)))
+density$incremental_area[density$incremental_area == 0] <- 100*100
+
+density$inc_density <- density$Freq/(density$incremental_area)
+
+```
+
+```{r}
+# Making density graphs
+cum_density_plt <- ggplot(density, aes(dist, cum_density)) + geom_line()
+
+inc_density_plt <- ggplot(density, aes(dist, inc_density)) + geom_line()
+
+cum_density_plt
+inc_density_plt
+```
+
+
+1. Around Columbia, density drops - potentially cause of more policing or less reporting to NYPD. 
+
+```{r}
+# Counts by Boroughs
+
+library(vcdExtra)
+library(ggplot2)
+library(forcats)
+library(dplyr)
+
+
+boroughs_cts <- ggplot(df_filter) +  geom_bar(aes(x=BORO_NM))
+
+borough_cts_ctype <- ggplot(df_filter) +  geom_bar(aes(x=BORO_NM)) + facet_wrap(~CRIME_CAT)
+
+
+boroughs_cts
+borough_cts_ctype
+
+
+```
+
+```{r}
+lat_long_data = data.frame( # Making a dataframe that has the lat/long coordinates of our point of interest. In this case, it is Times Square, NYC.
+    ID = as.numeric(c(1:1)),
+    longitude = as.numeric(c(-73.963036)),
+    latitude = as.numeric(c(40.807384))
+)
+
+```
+
+The following function uses the approximation that each degree of latitude represents 40075 / 360 kilometers and that each degree of longitude represents (40075 / 360) * cos(latitude) kilomemters. 
+
+```{r}
+circles_data <- function(centers, radius, nPoints = 100){
+    # centers: the data frame that has the lat/long coordinate of our point of interest
+    # radius: radius measured in kilometer
+    # nPoints: Defines the number of points on the circumference of the circle. The more the number of points, the smoother your circle will be
+    meanLat <- mean(centers$latitude)
+    # length per longitude changes with lattitude, so need correction
+    radiusLon <- radius /111 / cos(meanLat/57.3) 
+    radiusLat <- radius / 111
+    circleDF <- data.frame(ID = rep(centers$ID, each = nPoints))
+    angle <- seq(0,2*pi,length.out = nPoints)
+    circleDF$lon <- unlist(lapply(centers$longitude, function(x) x + radiusLon * cos(angle)))
+    circleDF$lat <- unlist(lapply(centers$latitude, function(x) x + radiusLat * sin(angle)))
+    return(circleDF)
+}
+```
+
+Now making the data for two circles with 350 meter and 750 meter radii. 
+```{r}
+circle_100m <- circles_data(lat_long_data, 0.1)
+circle_200m <- circles_data(lat_long_data, 0.2)
+circle_300m <- circles_data(lat_long_data, 0.3)
+circle_400m <- circles_data(lat_long_data, 0.4)
+circle_500m <- circles_data(lat_long_data, 0.5)
+circle_600m <- circles_data(lat_long_data, 0.6)
+circle_700m <- circles_data(lat_long_data, 0.7)
+circle_800m <- circles_data(lat_long_data, 0.8)
+circle_900m <- circles_data(lat_long_data, 0.9)
+circle_1000m <- circles_data(lat_long_data, 1)
+```
+
+
+```{r}
+map = get_googlemap(center = c(lon = -73.963036, lat = 40.807384),zoom = 15)
+
+ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = df_filter, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.1, size = 1) + geom_polygon(data = circle_100m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_200m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_300m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_400m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_500m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_600m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_700m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_800m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_900m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_1000m, aes(lon, lat), color = "red", alpha = 0)
+```
+
+
 
 
