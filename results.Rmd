@@ -304,6 +304,10 @@ From prior charts, we know that the number of crimes is skewed toward those occu
 
 ## Location Analysis
 
+1. Spatial distribution of all crime around Columbia University
+
+Motivation: Since a component of our research is to analyze how crime is spread out around Columbia University, a visual analysis of spatial distribution of all crime around Columbia is useful. Following is a map centered around columbia university that shows where crime is distributed around Columbia University. 
+
 ```{r}
 # Plottting columbia data on a map
 library(ggmap)
@@ -311,38 +315,39 @@ columbia <- df_filter[df_filter$dist_to_CU <= 2000,]
 
 register_google(key = "AIzaSyDUVtOF3qSoJEcQAZ9mU0E1rGKQDqcuNGw")
 map = get_googlemap(center = c(lon = -73.963036, lat = 40.807384),zoom = 15)
-ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
+ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1) + 
+  theme(axis.text.x=element_blank(),
+      axis.ticks.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank(),
+      axis.title.x=element_blank(),
+      axis.title.y=element_blank()) + ggtitle("Spatial distribution of crime around Columbia University")
 ```
+Interpretation: 
 
-```{r}
-library(gridExtra)
-# Displaying all the crime categories within 2 kilometers of columbia
-columbia_vc <- columbia[columbia$CRIME_CAT == "MAJOR VIOLENT CRIMES",]
-columbia_tb <- columbia[columbia$CRIME_CAT == "THEFT OR BURGLARY",]
-columbia_fg <- columbia[columbia$CRIME_CAT == "FRAUD/GAMBLING AND MISC",]
-columbia_sc <- columbia[columbia$CRIME_CAT == "SEX CRIMES",]
-columbia_da <- columbia[columbia$CRIME_CAT == "DRUG AND ALCOHOL RELATEDS",]
+- The above map is useful to see how geographical location of a crime is coded in the dataset - for example, all crimes happening on a particular street (or residences on a particular street) between two avenues is assigned to the lat-long coordinates of the center of that street (See W 111th St to W 124th St for instance). 
 
-vc_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_vc, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.1, size = 1)
+- Another thing the above map shows is around which subway station there is more crime. For example, out of the 2 125th st stations, the one on the right has noticeably more crime concentrated around it than the one on the left. Note that the way data is recorded, all crimes that happen inside a subway station are coded to the location of the subway station. So this result could also mean that one station is safer than the other. 
 
-tb_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_tb, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
+- This map could also be used to plan one's route to and from Columbia depending if safety is a concern. For example, one could see which streets and avenues have less crime concentrated on them and so could indicate which routes are generally safer to travel on.
 
-fg_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_fg, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
-
-sc_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_sc, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
-
-da_map <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia_da, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1)
-
-#grid.arrange(vc_map,tb_map,fg_map,sc_map, da_map, ncol=1)
-#ggmap(map, base_layer = ggplot(aes(x = Longitude, y = Latitude), data = columbia, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), size = 1))
-```
 
 ```{r}
 # Map of different crime types around Columbia
 
 map = get_googlemap(center = c(lon = -73.963036, lat = 40.807384),zoom = 15)
-ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1) + facet_wrap(~CRIME_CAT)
+ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.05, size = 1) + 
+  theme(axis.text.x=element_blank(),
+      axis.ticks.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank(),
+      axis.title.x=element_blank(),
+      axis.title.y=element_blank()) + facet_wrap(~CRIME_CAT)
 ```
+
+2. Histogram of crime frequency with respect to increasing radius from Columbia
+
+Motivation: Following histogram was produced to check how the crime frequency increases with increasing radius.
 
 ```{r}
 # Line graph of density at different points
@@ -351,6 +356,12 @@ ggplot(columbia, aes(dist_to_CU)) +
   ggtitle("Histogram of crime counts wrt to distance from columbia") +
   geom_histogram(color = "blue", fill = "lightBlue", binwidth = 100)
 ```
+
+Interpretation: This graph shows that within each 100m radius (up to 2000m away from Columbia), the crime frequency increases. The explanation is that because the increase in area considered within each 100m bin increases polynomially (with the power of 2), it's only natural that we see more crimes in buckets farther away from Columbia than those closer to columbia because the area considered within each bucket increases more than linearly. It is still interesting to note however that for some buckets the crime frequency goes down even though the area considered goes up. The next plots further investigate this issue using the concept of density of crime. 
+
+3. Cumulative crime counts with respect to distance from Columbia University
+
+Motivation: The previous plot motivated us to try to confirm whether the crime frequency follows a quadratic relationship with respect to radius from Columbia University. Note that this would imply that crime scales linearly with the area considered. 
 
 ```{r}
 # Line graph of density at different points away from Columbia
@@ -362,6 +373,11 @@ ggplot(columbia, aes(dist_to_CU)) +
 
 
 ```
+
+Interpretaion: Note that the curve roughly follows the shape of the quadratic curve confirming that the crime does increase linearly with area and quadratically with the radius considered. So then, what explains the decline in crime frequency observed in some of the buckets in the previous histogram? (For instance, the bucket that shows the crime frequency to drop between 1100m and 1200m as compared to the bucket that shows the crime frequency within 1000m and 1100m). We further explore this issue in our next plots. 
+
+4. Cumulative and incremental density of crime with respect to distance from Columbia
+Motivation: Since in the earlier histogram we saw that within some buckets the crime count was decreasing, we wanted to see how the density of crime changes as move away from Columbia generally and also specifically as we move from a bucket of 100m radius to the next bucket of the incremental 100m radius.
 
 ```{r}
 # Making dataset to help plot density graphs
@@ -406,43 +422,25 @@ density$inc_density <- density$Freq/(density$incremental_area)
 
 ```{r}
 # Making density graphs
-cum_density_plt <- ggplot(density, aes(dist, cum_density)) + geom_line()
+cum_density_plt <- ggplot(density, aes(dist, cum_density)) + geom_line() + ggtitle("Cumulative density of crime with respect to distance from Columbia")
 
-inc_density_plt <- ggplot(density, aes(dist, inc_density)) + geom_line()
+inc_density_plt <- ggplot(density, aes(dist, inc_density)) + geom_line() + ggtitle("Incremental density of crime with respect to distance from Columbia")
 
 cum_density_plt
 inc_density_plt
 ```
 
+Interpretation: 
 
-1. Around Columbia, density drops - potentially cause of more policing or less reporting to NYPD. 
+- Note that the cumulative density plot shows that crime is less dense within 750m of Columbia after which it becomes more dense. Potential explanations are that there could be extra policing around the campus area, or an increase in crime density due to an increase in population density as we move beyond 750m from Columbia. 
 
-```{r}
-# Counts by Boroughs
-
-boroughs_cts <- ggplot(df_filter) +  geom_bar(aes(x=BORO_NM))
-
-borough_cts_ctype <- ggplot(df_filter) +  geom_bar(aes(x=BORO_NM)) + facet_wrap(~CRIME_CAT)
+- The incremental density plot shows the increase (or decrease) in density as we move from a bucket of 100m to radius to the bucket of next 100m radius around Columbia. Note that this graph also shows what the earlier histogram showed, i.e., for some buckets the density of crime goes down. 
 
 
-boroughs_cts
-borough_cts_ctype
-
-
-```
 
 ```{r}
-lat_long_data = data.frame( # Making a dataframe that has the lat/long coordinates of our point of interest. In this case, it is Times Square, NYC.
-    ID = as.numeric(c(1:1)),
-    longitude = as.numeric(c(-73.963036)),
-    latitude = as.numeric(c(40.807384))
-)
+# The following function uses the approximation that each degree of latitude represents 40075 / 360 kilometers and that each degree of longitude represents (40075 / 360) * cos(latitude) kilomemters. 
 
-```
-
-The following function uses the approximation that each degree of latitude represents 40075 / 360 kilometers and that each degree of longitude represents (40075 / 360) * cos(latitude) kilomemters. 
-
-```{r}
 circles_data <- function(centers, radius, nPoints = 100){
     # centers: the data frame that has the lat/long coordinate of our point of interest
     # radius: radius measured in kilometer
@@ -457,10 +455,8 @@ circles_data <- function(centers, radius, nPoints = 100){
     circleDF$lat <- unlist(lapply(centers$latitude, function(x) x + radiusLat * sin(angle)))
     return(circleDF)
 }
-```
 
-Now making the data for two circles with 350 meter and 750 meter radii. 
-```{r}
+
 circle_100m <- circles_data(lat_long_data, 0.1)
 circle_200m <- circles_data(lat_long_data, 0.2)
 circle_300m <- circles_data(lat_long_data, 0.3)
@@ -474,12 +470,56 @@ circle_1000m <- circles_data(lat_long_data, 1)
 ```
 
 
+5. Visualizing incremental density of crime within 1000m of Columbia
+
+Motivation: To finally see why we see buckets of incremental 100m radius away from Columbia with decreasing density of crime, we decided to plot these buckets visually on a google map of the area around Columbia overlapped with the spatial density of crime. 
+
 ```{r}
 map = get_googlemap(center = c(lon = -73.963036, lat = 40.807384),zoom = 15)
 
-ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = df_filter, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.1, size = 1) + geom_polygon(data = circle_100m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_200m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_300m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_400m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_500m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_600m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_700m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_800m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_900m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_1000m, aes(lon, lat), color = "red", alpha = 0)
+ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = df_filter, , color = 'red', position=position_jitter(h=0.0001, w=0.0001), alpha = 0.1, size = 1) + geom_polygon(data = circle_100m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_200m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_300m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_400m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_500m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_600m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_700m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_800m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_900m, aes(lon, lat), color = "red", alpha = 0) +  geom_polygon(data = circle_1000m, aes(lon, lat), color = "red", alpha = 0) + theme(axis.text.x=element_blank(),
+      axis.ticks.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank(),
+      axis.title.x=element_blank(),
+      axis.title.y=element_blank()) + ggtitle("Spatial distribution of crime wrt incremental radius of 100m away from Columbia")
 ```
 
+Interpretation: We speculate that we see up and down jumps in incremental crime density due to the following reasons: 
 
+1. While we increase the area in a circular fashion as we move away from Columbia, the lat/long coordinates of crime are recorded with the grid structure of Manhattan in mind. Therefore, some incremental radius/area buckets circles end up having way less crime reported if they contain parts of a park in them (since the crimes within parks are reported as happening on the streets outside the parks). 
+
+2. Another reason is that many crimes are just reported to the center of the streets (as discussed in the spatial distribution map earlier). What ends up happening is that some incremental radius/area buckets end up including a straight line of all these concentrated crimes which lead to their crime density shooting up- see for example the area between the third last and the second last circle that ends up having majority of the crimes reported on streets W 112th to W 120th.
+
+6. Counts of crime by borough
+
+Motivation: When one decides to attend Columbia University, one may ask themselves which borough should they live in depending on the relative safety of living in each borough. Therefore, following are the plots of count of total crimes and different types of crimes by the boroughs.
+
+```{r}
+# Counts by Boroughs
+
+df_filter <- df_filter %>% 
+  mutate(Borough = case_when(
+    BORO_NM %in% c("BRONX") ~ "BX",
+    BORO_NM %in% c("BROOKLYN") ~ "BK",
+    BORO_NM %in% c("MANHATTAN") ~ "MH",
+    BORO_NM %in% c("QUEENS") ~ "QN",
+    BORO_NM %in% c("STATEN ISLAND") ~ "SI"))
+
+boroughs_cts <- ggplot(df_filter) +  geom_bar(aes(x=Borough)) + ggtitle("Overall crime counts by boroughs")
+
+borough_cts_ctype <- ggplot(df_filter) +  geom_bar(aes(x=Borough)) + facet_wrap(~CRIME_CAT) + ggtitle("Counts of different types of crimes by boroughs")
+
+
+boroughs_cts
+borough_cts_ctype
+
+
+```
+Interpretation: 
+
+1. Note that with respect to overall crime, Brooklyn has the most crime followed by Manhattan. 
+
+2. It's interesting to note that while Brooklyn has more crime of typeS "SEX CRIMES", "MAJOR VIOLENT CRIMES", AND "FRAUD/GAMBLING AND MISC" compared to Manhattan while Manhattan has more crime of type "THEFT OR BURGLARY" and "DRUG AND ALCOHOL RELATED" compared to Brooklyn. 
 
 
