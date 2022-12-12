@@ -312,20 +312,36 @@ df_key_fields$SUSP_SEX <- fct_relevel(df_key_fields$SUSP_SEX, c('M','F','L','E',
 
 
 ## Missing value analysis
---TODO - update this section, maybe create a table with # of nulls vs "(null)" for each field
+First let us look at the raw data to see what things look like originally. We can categorize nulls as real (i.e. true NA) vs "fake" (i.e. "null" in the data or similar). Then show which fields and what percent of each may have an issue.
+```{r NullCalc1}
+df_nulls <- df %>% 
+  #head(1000) %>% 
+  mutate_all(as.character) %>%
+  pivot_longer(cols = !CMPLNT_NUM, names_to = "field", values_to = "value") %>% 
+  mutate(
+    Real_Null = case_when(is.na(value) ~ 1, TRUE ~ 0)
+    ,Fake_Null = case_when( value == "(null)" ~ 1, TRUE ~ 0)
+  ) %>% filter( Real_Null + Fake_Null >= 1) %>%
+  group_by(field) %>%  summarize(total_real_null=sum(Real_Null),total_fake_null=sum(Fake_Null), total_null=sum(Real_Null)+sum(Fake_Null)) %>%
+  mutate(total_null_percent = total_null/396978) %>% 
+  arrange(desc(total_null))
 
-First let us look at the raw data to see what things look like.
+print(df_nulls, n=50)
+```
+So we see we have mostly missing data for 5 fields. Location and its derived field is also missing a good portion which is likely due to masking for privacy reasons per the data source notes. 
+Let us look at missing patterns now:
+
 ```{r, fig.height=4, fig.width=15}
 #View(df_key_fields[is.na(df_key_fields$CMPLNT_NUM),])
 #View(df[!is.na(df$TRANSIT_DISTRICT),])
 plot_missing(df, percent = FALSE)
 plot_missing( df[ , !colnames(df) %in% c("TRANSIT_DISTRICT","HOUSING_PSA") ] , percent = FALSE)
 ```
-These charts are hard to read given the number of columns but it shows that most data is actually populated very well. There are two problem fields causing all of nulls but we can re-graph this without those and see that complete cases are at the top. However, this is still not accurate because there are string values in the data that say "(null)" or "Unknown" which would appear as populated. In any case, we do not need to clean and evaluate all columns, so let us work off of the new, filtered dataset (see below).
-Side Note: We initially noticed the Complaint_Num was null often but this was due to containing alphanumeric characters but R loaded it as a number only.
+These charts are hard to read given the number of columns but it shows that most data is actually populated very well as we saw above. There are two problem fields causing all of the real nulls but we can re-graph this without those and see that complete cases are at the top. However, this is still not accurate because there are string values in the data that say "(null)" or "Unknown" which would appear as populated. In any case, we do not need to clean and evaluate all columns, so let us work off of the new, filtered dataset (see below).
+Side Note: We initially noticed the Complaint_Num was null often but this was due to it containing alphanumeric characters and R loading it as a number only. It has been corrected and serves as a primary key for the data frame.
 
 ```{r, fig.height=4, fig.width=15}
 plot_missing(df_key_fields, percent = FALSE)
 ```
-The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We see there are a few blanks for lat/long and thus the related derived field, but otherwise we have a good data frame to use in the next chapter.
+The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We have recoded some values to "Unknown" as that appears in the raw data is is reasonable (e.g. if the suspect was not found, we have no information on them). We see there are a few blanks for Borough and lat/long and thus the related derived field, but otherwise we have a good data frame to use in the next chapter.
 
