@@ -19,6 +19,10 @@ library(forcats)
 library(Lock5withR) 
 library(tidyr)
 library(vcdExtra)
+
+library(ggmap)
+ #  D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161. URL http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf
+library(RColorBrewer)
 ```
 
 ## Source
@@ -75,14 +79,14 @@ df <- df %>%
 
 There are 5 values with missing "OFNS_DESC". Since they have valid PD_CD and PD_DESC, we can impute these values from other columns with the same PD_CD. 
   -Two values are for obscenity - 594 PD_CD (categorized as sex crimes)
-  -One values for crime pos weap - 797 PD_CD (categorized as dangerous weapons)
+  -One values for crime pos weap - 797 PD_CD (categorized as major violent crimes/dangerous weapons)
   -One value for "place false bomb" - 648 PD_CD (categorized as other)
   -One value for "noise" - 872 PD_CD (categorized as other)
 ```{r}
 
 df$CRIME_CAT[df$CMPLNT_NUM %in% c("243170965", "245874611")] <- "OTHER"
-df$OFNS_DESC[df$CMPLNT_NUM %in% c("248613125", "248290778")] <- "SEX CRIMES"
-df$OFNS_DESC[df$CMPLNT_NUM %in% ("246605653")] <- "DANGEROUS WEAPONS"
+df$CRIME_CAT[df$CMPLNT_NUM %in% c("248613125", "248290778")] <- "SEX CRIMES"
+df$CRIME_CAT[df$CMPLNT_NUM %in% ("246605653")] <- "MAJOR VIOLENT CRIMES" #"DANGEROUS WEAPONS"
 
 #No Nulls now
 #View(df[is.na(df$CRIME_CAT),])
@@ -125,7 +129,7 @@ df <- df %>%
 ```
 
 
-### GeoLocation Fields
+### Geo-Location Fields
 This section uses a new package to calcluate the distance between two points in Lat/Long format. Here we are finding the distance from each crime to the center of the main Columbia campus to use later. 
 
 ```{r DataPrep3_DistanceFields}
@@ -150,6 +154,7 @@ df$LOC_OF_OCCUR_DESC[df$LOC_OF_OCCUR_DESC=="(null)"]<-NA
 df$BORO_NM[df$BORO_NM=="(null)"]<-NA
 df$SUSP_RACE[df$SUSP_RACE=="(null)"]<-"UNKNOWN"
 df$VIC_RACE[df$VIC_RACE=="(null)"]<-"UNKNOWN"
+df$SUSP_SEX[df$SUSP_SEX=="(null)"]<-"U"
 
 df <- df %>% 
       mutate(
@@ -202,7 +207,14 @@ df <- df %>%
            ,PREM_TYP_DESC %in% c("TRANSIT - NYC SUBWAY","BUS (NYC TRANSIT)","TRANSIT FACILITY (OTHER)") ~ 'SUBWAY'
            ,TRUE ~ 'STREET'
          )
-      )
+      ) %>%
+      mutate(Borough_short = case_when(
+        BORO_NM %in% c("BRONX") ~ "BX",
+        BORO_NM %in% c("BROOKLYN") ~ "BK",
+        BORO_NM %in% c("MANHATTAN") ~ "MH",
+        BORO_NM %in% c("QUEENS") ~ "QN",
+        BORO_NM %in% c("STATEN ISLAND") ~ "SI")
+        )
 
 ```
 
@@ -288,6 +300,13 @@ df_key_fields <- df_filter %>%
       ,VIC_RACE_short
       ,VIC_SEX
 )
+
+df_key_fields$FCT_CRIME_CAT <- as.factor(df_key_fields$CRIME_CAT)
+df_key_fields$FCT_CRIME_CAT <- fct_infreq(df_key_fields$CRIME_CAT)
+df_key_fields$VIC_SEX <- as.factor(df_key_fields$VIC_SEX) 
+df_key_fields$VIC_SEX <- fct_relevel(df_key_fields$VIC_SEX, c('M','F','L','E','D'))
+df_key_fields$SUSP_SEX <- as.factor(df_key_fields$SUSP_SEX)
+df_key_fields$SUSP_SEX <- fct_relevel(df_key_fields$SUSP_SEX, c('M','F','L','E','D'))
 ```
 
 

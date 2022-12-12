@@ -1,30 +1,89 @@
 # Interactive component
 
-Test 123
+The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the "Data" section).
 
-<script src="https://d3js.org/d3.v7.js"></script>
+## Interactive Visualization of Crime Around Columbia
+  <title>My Google Map</title>
+  <style>
+    #map{
+      height:400px;
+      width:100%;
+    }
+  </style>
+  
+  <p>(select an option below to filter) </p>
+  <p>TODO - make this work by changing which dataset is used for the map </p>
+  <input type="radio" name="gender" value="M" checked="true">Male
+  <input type="radio" name="gender" value="F">Female
+    
+  <div id="map"></div>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+  
+  
+  <script type="text/javascript">
+    
+    var gender = "M"
+    d3.selectAll("input")
+      .on("click", function(event) { 
+        var gender = event.currentTarget.value; 
+          if (gender == "M") {
+              
+          } else {
 
-## Test
+          }
+      })
 
-<div id="mysvg">
-<svg width="300" height="200">
-  <rect width="300" height="200" fill="lightblue"></rect>
-  <circle cx="50" cy="75" r="20" fill="blue"></circle>
-  <ellipse cx="175" cy="100" rx="45" ry="30" fill="green"></ellipse>
-  <text x="100" y="150">(100, 150)</text>
-  <line x1="250" y1="150" x2="275" y2="175" stroke="red" stroke-width="5"></line>
-</svg>
-</div>
-
-<script src="myjs.js"></script>
-
-<script>
-d3.select("svg")
-  .on("click", function () {
-    d3.select("svg")
-      .append("text")
-        .attr("x", "100")
-        .attr("y", "40")
-        .text("Hello World");
+    async function getData(){
+    const rep= await fetch("./NYC_Crime_Group32/data/columbia_short.csv")
+    const data= await rep.text();
+    let fin=[]
+    const table=data.split('\n').slice(1)
+    table.forEach(row=>{
+        const colums=row.split(',');
+        tab=[parseFloat(colums[0]), parseFloat(colums[1])]
+        //console.log(tab)
+        //locations.push(tab)
+        fin.push(tab)  
         });
-</script>
+        //console.log(fin)
+        return fin
+    }
+    
+    function initMap() {
+    
+    points =
+    getData().then(values => {
+    // Print the values of the resolved promise
+    values.forEach(value => {
+    
+    marker = new google.maps.Marker({
+        position: new google.maps.LatLng(value[0], value[1]),
+        map: map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillColor: 'red',
+          fillOpacity: 0.2,
+          strokeColor: '#00A',
+          strokeOpacity: 0.2,
+          strokeWeight: 1,
+          scale: 3.25
+        }
+      });
+    
+    
+      } );
+     });
+  
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 14,
+      center: new google.maps.LatLng(40.807384,-73.963036)
+    });
+    
+    }
+
+  </script>
+  
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUVtOF3qSoJEcQAZ9mU0E1rGKQDqcuNGw&callback=initMap">
+  </script>
