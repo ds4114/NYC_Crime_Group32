@@ -77,11 +77,12 @@ df <- df %>%
     OFNS_DESC %in% c("NYS LAWS-UNCLASSIFIED FELONY","MISCELLANEOUS PENAL LAW","FORGERY","OFFENSES AGAINST PUBLIC ADMINI","CHILD ABANDONMENT/NON SUPPORT","NYS LAWS-UNCLASSIFIED VIOLATION","OTHER STATE LAWS","OTHER STATE LAWS (NON PENAL LAW)","NEW YORK CITY HEALTH CODE","ADMINISTRATIVE CODE","OTHER STATE LAWS (NON PENAL LA","AGRICULTURE & MRKTS LAW-UNCLASSIFIED","ENDAN WELFARE INCOMP","OFFENSES RELATED TO CHILDREN") ~"OTHER"))
 ```
 
-There are 5 values with missing "OFNS_DESC". Since they have valid PD_CD and PD_DESC, we can impute these values from other columns with the same PD_CD. 
+There are 5 values with missing Offense category. Since they have valid PD_CD (Crime ID) and PD_DESC, we can impute these values from other columns with the same PD_CD. 
   -Two values are for obscenity - 594 PD_CD (categorized as sex crimes)
   -One values for crime pos weap - 797 PD_CD (categorized as major violent crimes/dangerous weapons)
   -One value for "place false bomb" - 648 PD_CD (categorized as other)
   -One value for "noise" - 872 PD_CD (categorized as other)
+  
 ```{r}
 
 df$CRIME_CAT[df$CMPLNT_NUM %in% c("243170965", "245874611")] <- "OTHER"
@@ -146,7 +147,7 @@ df$dist_to_CU <- apply(df, 1, function(x)distm(
 ```
 
 ### Other Derivations
-In this section, we add additional fields for more classification (explain more in the Results section), reclassify "null" to Unknown in specific instances, shorten values, and combine informaiton to simplify categories. 
+In this section, we add additional fields for more classification (explained more in the Results section), reclassify "null" to Unknown in specific instances, shorten values, and combine information to simplify categories. 
 
 ```{r DataPrep4_MoreFields}
 #Update certain null fields. Setting race to null because there is already an "Unknown" category 
