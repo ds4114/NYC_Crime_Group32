@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>My Google Map</title>
+  <style>
+    #map{
+      height:400px;
+      width:100%;
+    }
+        
+  </style>
+</head>
+<body>
+
+  <h1>Interactive Visualization of Crime Around Columbia</h1>
+  <div id="map"></div>
+  
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  
+  <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+  
+  <script type="text/javascript">
+    
+    async function getData(){
+    const rep= await fetch("./NYC_Crime_Group32/data/columbia_short.csv")
+    const data= await rep.text();
+    let fin=[]
+    const table=data.split('\n').slice(1)
+    table.forEach(row=>{
+        const colums=row.split(',');
+        tab=[parseFloat(colums[0]), parseFloat(colums[1])]
+        //console.log(tab)
+        //locations.push(tab)
+        fin.push(tab)  
+        });
+        //console.log(fin)
+        return fin
+    }
+    
+    
+    function initMap() {
+    
+    
+    points =
+    getData().then(values => {
+    // Print the values of the resolved promise
+    values.forEach(value => {
+    
+    marker = new google.maps.Marker({
+        position: new google.maps.LatLng(value[0], value[1]),
+        map: map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillColor: 'red',
+          fillOpacity: 0.2,
+          strokeColor: '#00A',
+          strokeOpacity: 0.2,
+          strokeWeight: 1,
+          scale: 3.25
+        }
+      });
+    
+    
+      } );
+     });
+      
+
+    
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 14,
+      center: new google.maps.LatLng(40.807384,-73.963036)
+    });
+    
+    
+
+    }
+
+    
+    
+  
+  </script>
+  
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUVtOF3qSoJEcQAZ9mU0E1rGKQDqcuNGw&callback=initMap">
+  </script>
+    
+</body>
+</html>
