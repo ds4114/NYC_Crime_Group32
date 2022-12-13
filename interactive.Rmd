@@ -2,7 +2,7 @@
 
 The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the "Data" chapter).
 
-Please be patient while the data renders.
+The motivation for this component is to allow a user to select features through a series of buttons and view what crime statistics look like geographically.
 
 
 ## Interactive Map of Crime Around Columbia
@@ -14,7 +14,8 @@ Please be patient while the data renders.
     }
   </style>
   
-  <p>Please select an option below to filter points on the map and refresh the page to reset</p>
+  <p>Instructions: Please select an option below to filter points on the map and refresh the page to reset. Please be patient while the data renders.</p>
+  
   Victim Gender: 
   <input type="radio" name="gender" value="M">Male
   <input type="radio" name="gender" value="F">Female

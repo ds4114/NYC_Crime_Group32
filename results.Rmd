@@ -196,6 +196,7 @@ We see here that more crime occurs inside compared to outside (which aligns with
 
 ## Time Series Analysis
 
+### Motivation for Filtering Data
 To begin the analysis on time, first we would like to justify why we filtered the data for only crimes that took place in 2022. 
 ```{r}
 ts_year_all <- df %>% 
@@ -226,7 +227,6 @@ ggplot(df_filter, aes(x=Incident_Month)) +
         x = "Month (as a number)",
         y = "Total Reports",
       )
-#TODO make graph prettier
 ```
 We can see there are more crimes reported in the summer months, presumably it is warmer. Let's facet this:
 
@@ -282,6 +282,7 @@ ggplot(df_filter, aes(x = Incident_HourTime, y=fct_rev(Incident_DayOfWeek), fill
 The raw data is rounded to the nearest minute but there is likely binning happening with time reported on the nearest hour. There appears to be a peak at 12:00pm (12 of 24) which is likely a data quality issue in that reports may default to that time when not specified exactly. This also happens as 12:00am (0 of 24) though it is harder to see due to how the ridge plot extrapolates at the boundary. That said, this graph shows that crimes seems to peak at night around 6pm. But is this related to individual crimes and in/around parks?
 
 ```{r}
+#Consider counts for each of these groups below (ex how often is there a crime against and entity in a park)? Refer back to demographic plots.
 ggplot(df_filter, aes(x = Incident_HourTime, y=Premise_Derived )) +
   geom_density_ridges() +
   scale_x_continuous(limits = c(0,24), breaks = seq(0, 24, by = 1)) +
@@ -292,7 +293,6 @@ ggplot(df_filter, aes(x = Incident_HourTime, y=Premise_Derived )) +
       x = "Time of Day (24 Clock)",
       y = "Premise Category"
       )
-#TODO Show counts for each of these groups since not representative (ex what is a crime against and entity in a park)? Refer back to moaisic plot
 ```
 From prior charts, we know that the number of crimes is skewed toward those occurring in "Inside". This does not represent the magnitude but we can see that for individuals, parks are more 'dangerous' at night - more so than other locations. However, it is somewhat comforting to know that this starts to drop off quickly after about 7-8pm. 
 
