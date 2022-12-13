@@ -5,7 +5,7 @@ knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
 ```
 
 
-## Crime category and Demographic analysis
+## Crime Category and Demographic Analysis
 
 We start our analysis of crime types by investigating what types of crimes occur in what frequencies. We bucketed the numerous crimes from the raw data into logical categories. Note that in the pre-processing stage, we removed a small "Other" category of parking violations and noise complaints. 
 
@@ -49,7 +49,7 @@ Here we can see the crime incident that has happened the most frequently is “P
 
 As expected, 5 of the top 15 crimes are theft or burglary related, which explains why the most common crime category reported is theft. Also, we only see one incident type corresponding to drug and alcohol related crimes.
 
-### Race Analysis
+### Race
 
 We can start our demographic analysis by digging further into the race and gender of both the suspects and victims. 
 Let us begin by diving into trends between the race of the suspects and victims.
@@ -101,7 +101,7 @@ ggplot(df_key_fields, aes(VIC_RACE_short, SUSP_RACE_short)) +
 We see from the bar charts that most of the victims are black and also that most of the suspects are black. Logically, the intersection of these two fields is also the highest. This is made evident in the heatmap.
 
 
-### Gender Analysis
+### Gender
 Next, lets do a gender focused analysis.
 ```{r, eval=TRUE}
 df_key_fields %>%
@@ -154,7 +154,7 @@ ggplot(df_key_fields, aes(SUSP_SEX,VIC_SEX)) +
 --TODO, do we need 3 charts above that show the same thing?
 --Just the heatmap is sufficient I think (Abhi)
 
-### Counts of crime by borough
+### Crime by Borough
 When one decides to attend Columbia University, one may ask themselves which borough should they live in depending on the relative safety of living in each borough. Therefore, following are the plots of count of total crimes and different types of crimes by the boroughs.
 
 ```{r}
@@ -194,7 +194,8 @@ We see here that more crime occurs inside compared to outside (which aligns with
 
 
 
-## Time Series
+## Time Series Analysis
+
 To begin the analysis on time, first we would like to justify why we filtered the data for only crimes that took place in 2022. 
 ```{r}
 ts_year_all <- df %>% 
@@ -246,6 +247,7 @@ ggplot(df_filter, aes(x=Incident_Month, color=
 ```
 Maybe, the trend is dominated by theft crimes but it does seem like there is a hump over summer. Uniquely there is a dip for drug crimes. 
 
+### Day of Week
 Let's now look at some other time related charts
 ```{r}
 ggplot(df_filter, aes(y=CRIME_CAT , fill=fct_rev(Incident_DayOfWeek)) ) + 
@@ -262,6 +264,7 @@ ggplot(df_filter, aes(y=CRIME_CAT , fill=fct_rev(Incident_DayOfWeek)) ) +
 ```
 We see some interesting trends here - Theft is lower on weekends, gambling up on weekends, sex crimes high on Wednesdays surprisingly.
 
+### Time of Day
 Let's also look at the time of the day:
 ```{r}
 ggplot(df_filter, aes(x = Incident_HourTime, y=fct_rev(Incident_DayOfWeek), fill=fct_rev(Incident_DayOfWeek) )) +
@@ -298,7 +301,7 @@ From prior charts, we know that the number of crimes is skewed toward those occu
 
 ## Location Analysis
 
-### Spatial distribution of all crime around Columbia University
+### Spatial Distribution Around Columbia
 
 Since a component of our research is to analyze how crime is spread out around Columbia University, a visual analysis of spatial distribution of all crime around Columbia is useful. The following is a map centered around Columbia University (CU) that shows where crime is distributed. 
 
@@ -338,7 +341,7 @@ ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , col
       axis.title.y=element_blank()) + facet_wrap(~CRIME_CAT)
 ```
 
-### Histogram of crime frequency with respect to increasing radius from Columbia
+### Increasing Radius from Columbia
 
 The following histogram was produced to check how the crime frequency increases with increasing radius away from school.
 
@@ -358,7 +361,7 @@ ggplot(columbia, aes(dist_to_CU)) +
 
 This graph shows that within each 100m radius (up to 2000m away from Columbia), the crime frequency increases. The explanation is that because the increase in area considered within each 100m bin increases polynomially (with the power of 2), it's only natural that we see more crimes in buckets farther away from Columbia than those closer to columbia because the area considered within each bucket increases more than linearly. It is still interesting to note however that for some buckets the crime frequency goes down even though the area considered goes up. The next plots further investigate this issue using the concept of density of crime. 
 
-### Cumulative crime counts with respect to distance from Columbia University
+### Cumulative Crime Near CU
 
 The previous plot motivated us to try to confirm whether the crime frequency follows a quadratic relationship with respect to radius from Columbia University. Note that this would imply that crime scales linearly with the area considered. 
 
@@ -381,7 +384,7 @@ ggplot(columbia, aes(dist_to_CU)) +
 
 Note that the curve roughly follows the shape of the quadratic curve confirming that the crime does increase linearly with area and quadratically with the radius considered. So then, what explains the decline in crime frequency observed in some of the buckets in the previous histogram? (For instance, the bucket that shows the crime frequency to drop between 1100m and 1200m as compared to the bucket that shows the crime frequency within 1000m and 1100m). We further explore this issue in our next plots. 
 
-### Cumulative and incremental density of crime with respect to distance from Columbia
+### Crime Density
 Since in the earlier histogram we saw that within some buckets the crime count was decreasing, we wanted to see how the density of crime changes as move away from Columbia generally and also specifically as we move from a bucket of 100m radius to the next bucket of the incremental 100m radius.
 
 ```{r}
@@ -485,9 +488,9 @@ circle_1000m <- circles_data(lat_long_data, 1)
 ```
 
 
-### Visualizing incremental density of crime within 1000m of Columbia
+### Deeper Dive of Crime Density
 
-Motivation: To finally see why we see buckets of incremental 100m radius away from Columbia with decreasing density of crime, we decided to plot these buckets visually on a google map of the area around Columbia overlapped with the spatial density of crime. 
+To finally see why we see buckets of incremental 100m radius away from Columbia with decreasing density of crime, we decided to plot these buckets visually on a google map of the area around Columbia overlapped with the spatial density of crime. 
 
 ```{r}
 map = get_googlemap(center = c(lon = -73.963036, lat = 40.807384),zoom = 15)
@@ -511,8 +514,6 @@ We speculate that we see up and down jumps in incremental crime density due to t
 
 
 
-
-===========================================
 ## Various Other Plots (To Revise/Delete)
 --ATTEMPT AT MOSAIC PLOT 
 ```{r, echo=FALSE, eval=FALSE}

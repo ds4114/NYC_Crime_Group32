@@ -54,6 +54,70 @@
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -97,31 +161,35 @@
 <li class="chapter" data-level="3.2.5" data-path="data.html"><a href="data.html#other-derivations"><i class="fa fa-check"></i><b>3.2.5</b> Other Derivations</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#filter-table-for-relevance"><i class="fa fa-check"></i><b>3.3</b> Filter Table for Relevance</a></li>
-<li class="chapter" data-level="3.4" data-path="data.html"><a href="data.html#select-and-rename-columns-in-a-usuable-table"><i class="fa fa-check"></i><b>3.4</b> Select and Rename Columns in a Usuable Table</a></li>
-<li class="chapter" data-level="3.5" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.5</b> Missing value analysis</a></li>
+<li class="chapter" data-level="3.4" data-path="data.html"><a href="data.html#select-and-rename-columns"><i class="fa fa-check"></i><b>3.4</b> Select and Rename Columns</a></li>
+<li class="chapter" data-level="3.5" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.5</b> Missing Value Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#crime-category-and-demographic-analysis"><i class="fa fa-check"></i><b>4.1</b> Crime category and Demographic analysis</a>
+<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#crime-category-and-demographic-analysis"><i class="fa fa-check"></i><b>4.1</b> Crime Category and Demographic Analysis</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="results.html"><a href="results.html#race-analysis"><i class="fa fa-check"></i><b>4.1.1</b> Race Analysis</a></li>
-<li class="chapter" data-level="4.1.2" data-path="results.html"><a href="results.html#gender-analysis"><i class="fa fa-check"></i><b>4.1.2</b> Gender Analysis</a></li>
-<li class="chapter" data-level="4.1.3" data-path="results.html"><a href="results.html#counts-of-crime-by-borough"><i class="fa fa-check"></i><b>4.1.3</b> Counts of crime by borough</a></li>
+<li class="chapter" data-level="4.1.1" data-path="results.html"><a href="results.html#race"><i class="fa fa-check"></i><b>4.1.1</b> Race</a></li>
+<li class="chapter" data-level="4.1.2" data-path="results.html"><a href="results.html#gender"><i class="fa fa-check"></i><b>4.1.2</b> Gender</a></li>
+<li class="chapter" data-level="4.1.3" data-path="results.html"><a href="results.html#crime-by-borough"><i class="fa fa-check"></i><b>4.1.3</b> Crime by Borough</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#time-series"><i class="fa fa-check"></i><b>4.2</b> Time Series</a></li>
+<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#time-series-analysis"><i class="fa fa-check"></i><b>4.2</b> Time Series Analysis</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="results.html"><a href="results.html#day-of-week"><i class="fa fa-check"></i><b>4.2.1</b> Day of Week</a></li>
+<li class="chapter" data-level="4.2.2" data-path="results.html"><a href="results.html#time-of-day"><i class="fa fa-check"></i><b>4.2.2</b> Time of Day</a></li>
+</ul></li>
 <li class="chapter" data-level="4.3" data-path="results.html"><a href="results.html#location-analysis"><i class="fa fa-check"></i><b>4.3</b> Location Analysis</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="results.html"><a href="results.html#spatial-distribution-of-all-crime-around-columbia-university"><i class="fa fa-check"></i><b>4.3.1</b> Spatial distribution of all crime around Columbia University</a></li>
-<li class="chapter" data-level="4.3.2" data-path="results.html"><a href="results.html#histogram-of-crime-frequency-with-respect-to-increasing-radius-from-columbia"><i class="fa fa-check"></i><b>4.3.2</b> Histogram of crime frequency with respect to increasing radius from Columbia</a></li>
-<li class="chapter" data-level="4.3.3" data-path="results.html"><a href="results.html#cumulative-crime-counts-with-respect-to-distance-from-columbia-university"><i class="fa fa-check"></i><b>4.3.3</b> Cumulative crime counts with respect to distance from Columbia University</a></li>
-<li class="chapter" data-level="4.3.4" data-path="results.html"><a href="results.html#cumulative-and-incremental-density-of-crime-with-respect-to-distance-from-columbia"><i class="fa fa-check"></i><b>4.3.4</b> Cumulative and incremental density of crime with respect to distance from Columbia</a></li>
-<li class="chapter" data-level="4.3.5" data-path="results.html"><a href="results.html#visualizing-incremental-density-of-crime-within-1000m-of-columbia"><i class="fa fa-check"></i><b>4.3.5</b> Visualizing incremental density of crime within 1000m of Columbia</a></li>
+<li class="chapter" data-level="4.3.1" data-path="results.html"><a href="results.html#spatial-distribution-around-columbia"><i class="fa fa-check"></i><b>4.3.1</b> Spatial Distribution Around Columbia</a></li>
+<li class="chapter" data-level="4.3.2" data-path="results.html"><a href="results.html#increasing-radius-from-columbia"><i class="fa fa-check"></i><b>4.3.2</b> Increasing Radius from Columbia</a></li>
+<li class="chapter" data-level="4.3.3" data-path="results.html"><a href="results.html#cumulative-crime-near-cu"><i class="fa fa-check"></i><b>4.3.3</b> Cumulative Crime Near CU</a></li>
+<li class="chapter" data-level="4.3.4" data-path="results.html"><a href="results.html#crime-density"><i class="fa fa-check"></i><b>4.3.4</b> Crime Density</a></li>
+<li class="chapter" data-level="4.3.5" data-path="results.html"><a href="results.html#deeper-dive-of-crime-density"><i class="fa fa-check"></i><b>4.3.5</b> Deeper Dive of Crime Density</a></li>
 </ul></li>
 <li class="chapter" data-level="4.4" data-path="results.html"><a href="results.html#various-other-plots-to-revisedelete"><i class="fa fa-check"></i><b>4.4</b> Various Other Plots (To Revise/Delete)</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a>
+<li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive Component</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="interactive-component.html"><a href="interactive-component.html#interactive-visualization-of-crime-around-columbia"><i class="fa fa-check"></i><b>5.1</b> Interactive Visualization of Crime Around Columbia</a></li>
+<li class="chapter" data-level="5.1" data-path="interactive-component.html"><a href="interactive-component.html#interactive-map-of-crime-around-columbia"><i class="fa fa-check"></i><b>5.1</b> Interactive Map of Crime Around Columbia</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
 <li class="divider"></li>

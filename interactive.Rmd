@@ -1,11 +1,27 @@
-# Interactive component
+# Interactive Component
+
+```{r, echo=TRUE}
+#Code to create CSV files for use in interactive data
+#Data has been pre-filtered to keep the overall size small and manageable when plotting
+columbia_short <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% select(Latitude, Longitude)
+columbia_short_1 <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "M") %>% select(Latitude, Longitude)
+columbia_short_2 <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "F") %>% select(Latitude, Longitude)
+
+#write.csv(columbia_short, "./data/columbia_short.csv", row.names=FALSE)
+write.csv(columbia_short_1, "./data/columbia_short_1.csv", row.names=FALSE)
+write.csv(columbia_short_2, "./data/columbia_short_2.csv", row.names=FALSE)
+```
+
 
 The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the "Data" section).
 
 Please be patient while the data renders.
 
 
-## Interactive Visualization of Crime Around Columbia
+## Interactive Map of Crime Around Columbia
   <title>My Google Map</title>
   <style>
     #map{
@@ -14,9 +30,9 @@ Please be patient while the data renders.
     }
   </style>
   
-  <p>(Select an option below to filter points on the map) </p>
+  <p>Please select an option below to filter points on the map and refresh the page to reset</p>
   Victim Gender: 
-  <input type="radio" name="gender" value="M" checked="true">Male
+  <input type="radio" name="gender" value="M">Male
   <input type="radio" name="gender" value="F">Female
     
   <div id="map"></div>

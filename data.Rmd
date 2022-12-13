@@ -237,7 +237,7 @@ df_filter <- df %>% filter(  Incident_Date >= as.Date('2022/01/01')  ) %>%
 This improves the results as we will show in the next chapter. There are not many records that are excluded (396978 - 364298)
 
 
-## Select and Rename Columns in a Usuable Table
+## Select and Rename Columns
 This section simply chooses fields that are used in our analysis to simplify and reduce the overall size of the working data frame. 
 ```{r DataPrep5_Renaming}
 #Not required
@@ -282,8 +282,8 @@ df_key_fields <- df_filter %>%
       #,TRANSIT_DISTRICT
       #,X_COORD_CD
       #,Y_COORD_CD
-      #,Latitude
-      #,Longitude
+      ,Latitude
+      ,Longitude
       ,Lat_Lon
       #,`New Georeferenced Column`
     #Crime Info 
@@ -312,7 +312,7 @@ df_key_fields$SUSP_SEX <- fct_relevel(df_key_fields$SUSP_SEX, c('M','F','L','E',
 
 
 
-## Missing value analysis
+## Missing Value Analysis
 First let us look at the raw data to see what things look like originally. We can categorize nulls as real (i.e. true NA) vs "fake" (i.e. "null" in the data or similar). Then show which fields and what percent of each may have an issue.
 ```{r NullCalc1}
 df_nulls <- df %>% 
