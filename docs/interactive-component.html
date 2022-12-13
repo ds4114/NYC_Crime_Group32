@@ -23,7 +23,7 @@
 <meta name="author" content="Group 32: Abhiram Gaddam, Faizan Dogar, Devan Samant" />
 
 
-<meta name="date" content="2022-12-12" />
+<meta name="date" content="2022-12-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -146,7 +146,6 @@
 <div id="interactive-component" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Interactive component<a href="interactive-component.html#interactive-component" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the “Data” section).</p>
-<p>–TODO - create a radio button to allow filtering.</p>
 <div id="interactive-visualization-of-crime-around-columbia" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Interactive Visualization of Crime Around Columbia<a href="interactive-component.html#interactive-visualization-of-crime-around-columbia" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <title>
@@ -161,6 +160,9 @@ My Google Map
 <p>
 (select an option below to filter)
 </p>
+<p>
+TODO - make this work by changing which dataset is used for the map
+</p>
 <p><input type="radio" name="gender" value="M" checked="true">Male
 <input type="radio" name="gender" value="F">Female</p>
 <div id="map">
@@ -170,20 +172,35 @@ My Google Map
 <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
 <script type="text/javascript">
     
-    var gender = "M"
+    var gender = "M";
+    var rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short.csv";
+    
     d3.selectAll("input")
       .on("click", function(event) { 
-        var gender = event.currentTarget.value; 
+        console.log("clicked radio")
+        //var gender = event.currentTarget.value;
+        var gender = d3.select('input[name="gender"]:checked').node().value
+        console.log(gender);
           if (gender == "M") {
-              
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_1.csv";
           } else {
-
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_2.csv";
+              
+              initMap()
+              
           }
       })
-
+    console.log("test16")
+    console.log(rep_string)
+    
+    
     async function getData(){
-    const rep= await fetch("./NYC_Crime_Group32/data/columbia_short.csv")
+    //const rep= await fetch("./NYC_Crime_Group32/data/columbia_short.csv")
+    //const rep= await fetch("./data/columbia_short.csv")
+    //const rep = await fetch("https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short.csv")
+    const rep = await fetch(rep_string)
     const data= await rep.text();
+    console.log(rep_string)
     let fin=[]
     const table=data.split('\n').slice(1)
     table.forEach(row=>{

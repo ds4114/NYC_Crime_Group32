@@ -2,6 +2,16 @@
 
 The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the "Data" section).
 
+```{r}
+#mydata <- read_csv('./data/columbia_short.csv'
+#                   , col_types= cols(
+#                                Latitude = col_character() 
+#                                ,Longitude = col_character() 
+#                                )
+#                   )
+```
+
+
 ## Interactive Visualization of Crime Around Columbia
   <title>My Google Map</title>
   <style>
@@ -23,20 +33,36 @@ The following map contains a list of crimes near Columbia (within 1km). Each dot
   
   <script type="text/javascript">
     
-    var gender = "M"
+    var gender = "M";
+    var rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short.csv";
+    
     d3.selectAll("input")
       .on("click", function(event) { 
-        var gender = event.currentTarget.value; 
+        console.log("clicked radio")
+        //var gender = event.currentTarget.value;
+        var gender = d3.select('input[name="gender"]:checked').node().value
+        console.log(gender);
           if (gender == "M") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_1.csv";
+              initMap()
               
           } else {
-
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_2.csv";
+              initMap()
+              
           }
       })
-
+    console.log("test16")
+    console.log(rep_string)
+    
+    
     async function getData(){
-    const rep= await fetch("./NYC_Crime_Group32/data/columbia_short.csv")
+    //const rep= await fetch("./NYC_Crime_Group32/data/columbia_short.csv")
+    //const rep= await fetch("./data/columbia_short.csv")
+    //const rep = await fetch("https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short.csv")
+    const rep = await fetch(rep_string)
     const data= await rep.text();
+    console.log(rep_string)
     let fin=[]
     const table=data.split('\n').slice(1)
     table.forEach(row=>{
