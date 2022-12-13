@@ -163,6 +163,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#filter-table-for-relevance"><i class="fa fa-check"></i><b>3.3</b> Filter Table for Relevance</a></li>
 <li class="chapter" data-level="3.4" data-path="data.html"><a href="data.html#select-and-rename-columns"><i class="fa fa-check"></i><b>3.4</b> Select and Rename Columns</a></li>
 <li class="chapter" data-level="3.5" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.5</b> Missing Value Analysis</a></li>
+<li class="chapter" data-level="3.6" data-path="data.html"><a href="data.html#interactive-component-datasets"><i class="fa fa-check"></i><b>3.6</b> Interactive Component Datasets</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a>
 <ul>
@@ -174,8 +175,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#time-series-analysis"><i class="fa fa-check"></i><b>4.2</b> Time Series Analysis</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="results.html"><a href="results.html#day-of-week"><i class="fa fa-check"></i><b>4.2.1</b> Day of Week</a></li>
-<li class="chapter" data-level="4.2.2" data-path="results.html"><a href="results.html#time-of-day"><i class="fa fa-check"></i><b>4.2.2</b> Time of Day</a></li>
+<li class="chapter" data-level="4.2.1" data-path="results.html"><a href="results.html#motivation-for-filtering-data"><i class="fa fa-check"></i><b>4.2.1</b> Motivation for Filtering Data</a></li>
+<li class="chapter" data-level="4.2.2" data-path="results.html"><a href="results.html#day-of-week"><i class="fa fa-check"></i><b>4.2.2</b> Day of Week</a></li>
+<li class="chapter" data-level="4.2.3" data-path="results.html"><a href="results.html#time-of-day"><i class="fa fa-check"></i><b>4.2.3</b> Time of Day</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="results.html"><a href="results.html#location-analysis"><i class="fa fa-check"></i><b>4.3</b> Location Analysis</a>
 <ul>
@@ -542,6 +544,21 @@ Side Note: We initially noticed the Complaint_Num was null often but this was du
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="data.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_missing</span>(df_key_fields, <span class="at">percent =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p><img src="finalproj_files/figure-html/unnamed-chunk-6-1.png" width="1440" />
 The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where “(null)” will appear as NULL properly. We have recoded some values to “Unknown” as that appears in the raw data is is reasonable (e.g. if the suspect was not found, we have no information on them). We see there are a few blanks for Borough and lat/long and thus the related derived field, but otherwise we have a good data frame to use in the next chapter.</p>
+</div>
+<div id="interactive-component-datasets" class="section level2 hasAnchor" number="3.6">
+<h2><span class="header-section-number">3.6</span> Interactive Component Datasets<a href="data.html#interactive-component-datasets" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The following code is used to create CSV files for use in the interactive component. Data is pre-filtered to keep the overall size small and manageable when plotting.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="data.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Code to create CSV files for use in interactive data</span></span>
+<span id="cb15-2"><a href="data.html#cb15-2" aria-hidden="true" tabindex="-1"></a>columbia_short <span class="ot">&lt;-</span> df_key_fields <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="data.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dist_to_CU <span class="sc">&lt;=</span> <span class="dv">1000</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Latitude, Longitude)</span>
+<span id="cb15-4"><a href="data.html#cb15-4" aria-hidden="true" tabindex="-1"></a>columbia_short_1 <span class="ot">&lt;-</span> df_key_fields <span class="sc">%&gt;%</span> </span>
+<span id="cb15-5"><a href="data.html#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dist_to_CU <span class="sc">&lt;=</span> <span class="dv">1000</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(VIC_SEX <span class="sc">==</span> <span class="st">&quot;M&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Latitude, Longitude)</span>
+<span id="cb15-6"><a href="data.html#cb15-6" aria-hidden="true" tabindex="-1"></a>columbia_short_2 <span class="ot">&lt;-</span> df_key_fields <span class="sc">%&gt;%</span> </span>
+<span id="cb15-7"><a href="data.html#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dist_to_CU <span class="sc">&lt;=</span> <span class="dv">1000</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(VIC_SEX <span class="sc">==</span> <span class="st">&quot;F&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(Latitude, Longitude)</span>
+<span id="cb15-8"><a href="data.html#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="data.html#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#write.csv(columbia_short, &quot;./data/columbia_short.csv&quot;, row.names=FALSE)</span></span>
+<span id="cb15-10"><a href="data.html#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(columbia_short_1, <span class="st">&quot;./data/columbia_short_1.csv&quot;</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb15-11"><a href="data.html#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(columbia_short_2, <span class="st">&quot;./data/columbia_short_2.csv&quot;</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code></pre></div>
 
 </div>
 </div>

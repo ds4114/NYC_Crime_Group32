@@ -2,6 +2,7 @@
 
 ```{r setup_results, include=FALSE}
 knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
+library(dplyr)
 ```
 
 
@@ -65,7 +66,7 @@ df_key_fields %>%
   ggtitle("Reports by Suspect Race") +
   xlab("Suspect Race") +
   ylab("Count") +
-  labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White, BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian/Native") + 
+  labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White,\n BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian") + 
   scale_y_continuous(label=comma)
 ```
 
@@ -84,6 +85,7 @@ df_key_fields %>%
   labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White, BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian/Native") + 
   scale_y_continuous(label=comma)
 ```
+
 While there is a lot of null/unknown data, we notice that there are clear patterns between the race of the suspect and victim. Visualizing this using a heatmap convinces us of this.  
 
 ```{r}
@@ -245,7 +247,7 @@ ggplot(df_filter, aes(x=Incident_Month, color=
         color = "Crime Category"
       ) 
 ```
-Maybe, the trend is dominated by theft crimes but it does seem like there is a hump over summer. Uniquely there is a dip for drug crimes. 
+This graph shows us that the overall trend is dominated by theft crimes. It does seem like there is a hump over summer which may align to more human activity and thus more crime. Uniquely, there is a dip for drug crimes in the summer. 
 
 ### Day of Week
 Let's now look at some other time related charts
@@ -262,7 +264,7 @@ ggplot(df_filter, aes(y=CRIME_CAT , fill=fct_rev(Incident_DayOfWeek)) ) +
       fill = "Day"
       ) 
 ```
-We see some interesting trends here - Theft is lower on weekends, gambling up on weekends, sex crimes high on Wednesdays surprisingly.
+There are a few interesting trends here. For one, theft appears to be lower on weekends whereas violent crimes are the opposite. We also see that fraud/gambling ramps up over the week and peaks on Fridays. Sex crimes are highest on Wednesdays surprisingly.
 
 ### Time of Day
 Let's also look at the time of the day:
