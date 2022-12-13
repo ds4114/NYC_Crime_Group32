@@ -2,14 +2,7 @@
 
 The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the "Data" section).
 
-```{r}
-#mydata <- read_csv('./data/columbia_short.csv'
-#                   , col_types= cols(
-#                                Latitude = col_character() 
-#                                ,Longitude = col_character() 
-#                                )
-#                   )
-```
+Please be patient while the data renders.
 
 
 ## Interactive Visualization of Crime Around Columbia
@@ -21,8 +14,8 @@ The following map contains a list of crimes near Columbia (within 1km). Each dot
     }
   </style>
   
-  <p>(select an option below to filter) </p>
-  <p>TODO - make this work by changing which dataset is used for the map </p>
+  <p>(Select an option below to filter points on the map) </p>
+  Victim Gender: 
   <input type="radio" name="gender" value="M" checked="true">Male
   <input type="radio" name="gender" value="F">Female
     

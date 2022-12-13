@@ -146,6 +146,7 @@
 <div id="interactive-component" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Interactive component<a href="interactive-component.html#interactive-component" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the “Data” section).</p>
+<p>Please be patient while the data renders.</p>
 <div id="interactive-visualization-of-crime-around-columbia" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Interactive Visualization of Crime Around Columbia<a href="interactive-component.html#interactive-visualization-of-crime-around-columbia" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <title>
@@ -158,12 +159,10 @@ My Google Map
     }
   </style>
 <p>
-(select an option below to filter)
+(Select an option below to filter points on the map)
 </p>
-<p>
-TODO - make this work by changing which dataset is used for the map
-</p>
-<p><input type="radio" name="gender" value="M" checked="true">Male
+<p>Victim Gender:
+<input type="radio" name="gender" value="M" checked="true">Male
 <input type="radio" name="gender" value="F">Female</p>
 <div id="map">
 
@@ -183,9 +182,10 @@ TODO - make this work by changing which dataset is used for the map
         console.log(gender);
           if (gender == "M") {
               rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_1.csv";
+              initMap()
+              
           } else {
               rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_2.csv";
-              
               initMap()
               
           }
