@@ -36,3 +36,4 @@ various-other-plots-to-revisedelete
 interactive-component
 interactive-map-of-crime-around-columbia
 conclusion
+interactive-component-datasets

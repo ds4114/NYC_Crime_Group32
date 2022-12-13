@@ -346,3 +346,19 @@ plot_missing(df_key_fields, percent = FALSE)
 ```
 The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We have recoded some values to "Unknown" as that appears in the raw data is is reasonable (e.g. if the suspect was not found, we have no information on them). We see there are a few blanks for Borough and lat/long and thus the related derived field, but otherwise we have a good data frame to use in the next chapter.
 
+
+## Interactive Component Datasets
+The following code is used to create CSV files for use in the interactive component. Data is pre-filtered to keep the overall size small and manageable when plotting.
+```{r, echo=TRUE}
+#Code to create CSV files for use in interactive data
+columbia_short <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% select(Latitude, Longitude)
+columbia_short_1 <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "M") %>% select(Latitude, Longitude)
+columbia_short_2 <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "F") %>% select(Latitude, Longitude)
+
+#write.csv(columbia_short, "./data/columbia_short.csv", row.names=FALSE)
+write.csv(columbia_short_1, "./data/columbia_short_1.csv", row.names=FALSE)
+write.csv(columbia_short_2, "./data/columbia_short_2.csv", row.names=FALSE)
+```

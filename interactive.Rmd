@@ -1,22 +1,6 @@
 # Interactive Component
 
-```{r, echo=TRUE}
-#Code to create CSV files for use in interactive data
-#Data has been pre-filtered to keep the overall size small and manageable when plotting
-columbia_short <- df_key_fields %>% 
-  filter(dist_to_CU <= 1000) %>% select(Latitude, Longitude)
-columbia_short_1 <- df_key_fields %>% 
-  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "M") %>% select(Latitude, Longitude)
-columbia_short_2 <- df_key_fields %>% 
-  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "F") %>% select(Latitude, Longitude)
-
-#write.csv(columbia_short, "./data/columbia_short.csv", row.names=FALSE)
-write.csv(columbia_short_1, "./data/columbia_short_1.csv", row.names=FALSE)
-write.csv(columbia_short_2, "./data/columbia_short_2.csv", row.names=FALSE)
-```
-
-
-The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the "Data" section).
+The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the "Data" chapter).
 
 Please be patient while the data renders.
 
@@ -111,7 +95,7 @@ Please be patient while the data renders.
      });
   
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 14,
+      zoom: 14.5,
       center: new google.maps.LatLng(40.807384,-73.963036)
     });
     
