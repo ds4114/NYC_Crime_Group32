@@ -11,25 +11,6 @@ library(dplyr)
 We start our analysis of crime types by investigating what types of crimes occur in what frequencies. We bucketed the numerous crimes from the raw data into logical categories. Note that in the pre-processing stage, we removed a small "Other" category of parking violations and noise complaints. 
 
 ```{r}
-#moved factor releveling to data.Rmd
-
-df_counts <- df_key_fields %>% group_by(CRIME_CAT) %>% 
-  summarize(total_count=n(),
-            .groups = 'drop') %>% as.data.frame()
-
-ggplot(df_counts) + 
-  geom_bar(aes(y=CRIME_CAT, x=total_count),
-           stat="identity", fill = "cornflowerblue") +
-  ggtitle("Number of Reports Per Crime Category ") +
-  xlab("Count") +
-  ylab("Category") +
-  scale_x_continuous(label=comma)
-```
-We observe that theft or burglary related crimes are the most common by far (more than 2x the next highest category). This category is followed by sex crimes, violent crimes, and fraud/gambling related crimes all of which are relatively close in number. The lowest  category by far is drug and alcohol related crimes, perhaps because the policing of these crimes has been relaxed over the last few years.
-
-
-We can further investigate the data to see the top 15 kinds of crimes and what categories they belong to.
-```{r}
 df_key_fields %>%
   group_by(OFNS_DESC,FCT_CRIME_CAT) %>%
   summarize(freq = n()) %>%
@@ -46,16 +27,17 @@ df_key_fields %>%
   scale_x_continuous(label=comma)
 ```
 
-Here we can see the crime incident that has happened the most frequently is “Petit Larceny”, a form of larceny in which the value of the property taken is generally less than $50. 
+Here we can see the crime incident that has happened the most frequently is “Petit Larceny”, a form of larceny in which the value of the property taken is generally less than $50. We also observe that theft or burglary related crimes are the most common by far. This category is followed by sex crimes, violent crimes, and fraud/gambling related crimes all of which are relatively close in number. The lowest  category by far is drug and alcohol related crimes, perhaps because the policing of these crimes has been relaxed over the last few years.
 
-As expected, 5 of the top 15 crimes are theft or burglary related, which explains why the most common crime category reported is theft. Also, we only see one incident type corresponding to drug and alcohol related crimes.
 
 ### Race
 
 We can start our demographic analysis by digging further into the race and gender of both the suspects and victims. 
 Let us begin by diving into trends between the race of the suspects and victims.
 ```{r}
-df_key_fields %>%
+require(gridExtra)
+
+p1 <- df_key_fields %>%
   group_by(SUSP_RACE, SUSP_RACE_short) %>%
   summarize(freq = n()) %>%
   arrange(desc(freq)) %>%
@@ -68,10 +50,8 @@ df_key_fields %>%
   ylab("Count") +
   labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White,\n BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian") + 
   scale_y_continuous(label=comma)
-```
 
-```{r}
-df_key_fields %>%
+p2 <- df_key_fields %>%
   group_by(VIC_RACE, VIC_RACE_short) %>%
   summarize(freq = n()) %>%
   arrange(desc(freq)) %>%
@@ -84,7 +64,10 @@ df_key_fields %>%
   ylab("Count") + 
   labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White, BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian/Native") + 
   scale_y_continuous(label=comma)
+
+grid.arrange(p1, p2, ncol=2)
 ```
+
 
 While there is a lot of null/unknown data, we notice that there are clear patterns between the race of the suspect and victim. Visualizing this using a heatmap convinces us of this.  
 
@@ -105,40 +88,6 @@ We see from the bar charts that most of the victims are black and also that most
 
 ### Gender
 Next, lets do a gender focused analysis.
-```{r, eval=TRUE}
-df_key_fields %>%
-  group_by(SUSP_SEX) %>%
-  summarize(freq = n()) %>%
-  arrange(desc(freq)) %>%
-  #slice(1:6) %>%
-  ggplot(aes(x=fct_reorder(SUSP_SEX,freq,.desc = TRUE),y=freq)) +
-  geom_bar(stat = "identity",fill = "cornflowerblue") +
-  #scale_x_discrete(guide = guide_axis(n.dodge=3))+
-  labs(
-   x ="Suspect Sex"
-  ,y ="Count"
-  ,title = "Reports by Suspect Sex"
-  ,subtitle = "M=Male, F=Female, L=Law Enforcement, E=Corporation, D=NY State", fill="Count") +
-  scale_y_continuous(lim=c(0,175000), label=comma)
-```
-
-```{r, eval=TRUE}
-df_key_fields %>%
-  group_by(VIC_SEX) %>%
-  summarize(freq = n()) %>%
-  arrange(desc(freq)) %>%
-  #slice(1:6) %>%
-  ggplot(aes(x=fct_reorder(VIC_SEX,freq,.desc = TRUE),y=freq)) +
-  geom_bar(stat = "identity",fill = "cornflowerblue") +
-  #scale_x_discrete(guide = guide_axis(n.dodge=3))+
-  labs(
-   x ="Victim Sex"
-  ,y ="Count"
-  ,title = "Reports by Victim Sex"
-  ,subtitle = "M=Male, F=Female, L=Law Enforcement, E=Corporation, D=NY State", fill="Count") +
-  scale_y_continuous(lim=c(0,175000), label=comma)
-```
-Most of the victims are female, followed closely by males. However, there is a large discrepancy in the counts of suspect genders. Males are by far the highest category, more than 4x the count for females.
 
 ```{r}
 ggplot(df_key_fields, aes(SUSP_SEX,VIC_SEX)) + 
@@ -152,9 +101,7 @@ ggplot(df_key_fields, aes(SUSP_SEX,VIC_SEX)) +
 
 ```
 
-
---TODO, do we need 3 charts above that show the same thing?
---Just the heatmap is sufficient I think (Abhi)
+We see that most of the victims are female and most of the suspects are male. Most concerning is that most of the crimes seemed to be committed by men towards women.
 
 ### Crime by Borough
 When one decides to attend Columbia University, one may ask themselves which borough should they live in depending on the relative safety of living in each borough. Therefore, following are the plots of count of total crimes and different types of crimes by the boroughs.
@@ -179,6 +126,7 @@ labs(
   ,subtitle = "BK=Brooklyn, BX=Bronx, MH=Manhattan, QN=Queens, SI=Staten Island")+
 scale_y_continuous(label=comma)
 ```
+
 From these graphs, we note that with respect to overall crime, Brooklyn has the most crime followed by Manhattan. Secondly, it's interesting to see that while Brooklyn has more crime of type "SEX CRIMES", "MAJOR VIOLENT CRIMES", AND "FRAUD/GAMBLING AND MISC" compared to Manhattan while Manhattan has more crime of type "THEFT OR BURGLARY" and "DRUG AND ALCOHOL RELATED" compared to Brooklyn. 
 
 
@@ -216,6 +164,7 @@ ggplot(ts_year_all, aes(x=Incident_Year, y=Complaint_Count )) + geom_line() +
   )
 
 ```
+
 From this we see that there is a large drop off in historic reports. This make sense as it is more likely that someone would report a crime in the same year that it occurs. Although NYPD allows people to report crimes that occurred in 2020, there will be much fewer of them reported in 2022. If we wanted to use data prior to 2022 we should include the old crime reports for prior years. Also there are some quality issues with historic data as we see very old crimes (year 1500) which indicate some human error or a record-keeping issue.  
 
 So focusing on incidents in 2022, we can look at the overall trend during the year.
@@ -230,6 +179,7 @@ ggplot(df_filter, aes(x=Incident_Month)) +
         y = "Total Reports",
       )
 ```
+
 We can see there are more crimes reported in the summer months, presumably it is warmer. Let's facet this:
 
 ```{r}
@@ -247,6 +197,7 @@ ggplot(df_filter, aes(x=Incident_Month, color=
         color = "Crime Category"
       ) 
 ```
+
 This graph shows us that the overall trend is dominated by theft crimes. It does seem like there is a hump over summer which may align to more human activity and thus more crime. Uniquely, there is a dip for drug crimes in the summer. 
 
 ### Day of Week
@@ -264,6 +215,7 @@ ggplot(df_filter, aes(y=CRIME_CAT , fill=fct_rev(Incident_DayOfWeek)) ) +
       fill = "Day"
       ) 
 ```
+
 There are a few interesting trends here. For one, theft appears to be lower on weekends whereas violent crimes are the opposite. We also see that fraud/gambling ramps up over the week and peaks on Fridays. Sex crimes are highest on Wednesdays surprisingly.
 
 ### Time of Day
@@ -281,6 +233,7 @@ ggplot(df_filter, aes(x = Incident_HourTime, y=fct_rev(Incident_DayOfWeek), fill
       theme(legend.position="none")
       #+ theme_classic(18)
 ```
+
 The raw data is rounded to the nearest minute but there is likely binning happening with time reported on the nearest hour. There appears to be a peak at 12:00pm (12 of 24) which is likely a data quality issue in that reports may default to that time when not specified exactly. This also happens as 12:00am (0 of 24) though it is harder to see due to how the ridge plot extrapolates at the boundary. That said, this graph shows that crimes seems to peak at night around 6pm. But is this related to individual crimes and in/around parks?
 
 ```{r}
@@ -296,6 +249,7 @@ ggplot(df_filter, aes(x = Incident_HourTime, y=Premise_Derived )) +
       y = "Premise Category"
       )
 ```
+
 From prior charts, we know that the number of crimes is skewed toward those occurring in "Inside". This does not represent the magnitude but we can see that for individuals, parks are more 'dangerous' at night - more so than other locations. However, it is somewhat comforting to know that this starts to drop off quickly after about 7-8pm. 
 
 
@@ -323,6 +277,7 @@ ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , col
       axis.title.x=element_blank(),
       axis.title.y=element_blank()) + ggtitle("Spatial distribution of crime around Columbia University")
 ```
+
 - The above map is useful to see how geographical location of a crime is coded in the dataset - for example, all crimes happening on a particular street (or residences on a particular street) between two avenues is assigned to the lat-long coordinates of the center of that street (See W 111th St to W 124th St for instance). 
 
 - Another thing this shows is around which subway station there is more crime. For example, out of the 2 125th st stations, the one on the right has noticeably more crime concentrated around it than the one on the left. Note that the way data is recorded, all crimes that happen inside a subway station are coded to the location of the subway station. So this result could also mean that one station is safer than the other. 
@@ -517,14 +472,7 @@ We speculate that we see up and down jumps in incremental crime density due to t
 
 
 ## Various Other Plots (To Revise/Delete)
---ATTEMPT AT MOSAIC PLOT 
-```{r, echo=FALSE, eval=FALSE}
-counts2 <- df_key_fields %>%
-  group_by(VIC_RACE_short, SUSP_RACE_short) %>%
-  summarize(Freq = n())
-vcd::mosaic(VIC_RACE_short ~ SUSP_RACE_short, counts2, direction = c("v", "h"),)
-```
---perhaps we can rename some values as a new field in the data.Rmd so that this shows a little cleaner? 
+
 
 --try mixing and matching more fields in different moasics to see if anything pops? Open to other ideas but pretty sure we need a graph with 3+ categorical vars given this dataset.  Try mosaic pair plots too.
 ```{r, echo=FALSE, eval=FALSE}
