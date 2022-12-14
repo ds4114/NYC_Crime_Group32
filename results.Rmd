@@ -3,6 +3,7 @@
 ```{r setup_results, include=FALSE}
 knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
 library(dplyr)
+library(ggplot2)
 ```
 
 
@@ -107,17 +108,6 @@ We see that most of the victims are female and most of the suspects are male. Mo
 When one decides to attend Columbia University, one may ask themselves which borough should they live in depending on the relative safety of living in each borough. Therefore, following are the plots of count of total crimes and different types of crimes by the boroughs.
 
 ```{r}
-# Counts by Boroughs
-ggplot(df_filter) +  geom_bar(aes(x=fct_infreq(Borough_short))) + 
-labs(
-   x ="Borough"
-  ,y ="Count"
-  ,title = "Crime by Borough"
-  ,subtitle = "BK=Brooklyn, BX=Bronx, MH=Manhattan, QN=Queens, SI=Staten Island")+
-scale_y_continuous(label=comma)
-```
-
-```{r}
 ggplot(df_filter) +  geom_bar(aes(x=Borough_short)) + facet_wrap(~CRIME_CAT) + 
 labs(
    x ="Borough"
@@ -126,6 +116,7 @@ labs(
   ,subtitle = "BK=Brooklyn, BX=Bronx, MH=Manhattan, QN=Queens, SI=Staten Island")+
 scale_y_continuous(label=comma)
 ```
+
 
 From these graphs, we note that with respect to overall crime, Brooklyn has the most crime followed by Manhattan. Secondly, it's interesting to see that while Brooklyn has more crime of type "SEX CRIMES", "MAJOR VIOLENT CRIMES", AND "FRAUD/GAMBLING AND MISC" compared to Manhattan while Manhattan has more crime of type "THEFT OR BURGLARY" and "DRUG AND ALCOHOL RELATED" compared to Brooklyn. 
 
@@ -278,12 +269,15 @@ ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , col
       axis.title.y=element_blank()) + ggtitle("Spatial distribution of crime around Columbia University")
 ```
 
-- The above map is useful to see how geographical location of a crime is coded in the dataset - for example, all crimes happening on a particular street (or residences on a particular street) between two avenues is assigned to the lat-long coordinates of the center of that street (See W 111th St to W 124th St for instance). 
+The above map is useful to see how geographical location of a crime is coded in the dataset - for example, all crimes happening on a particular street (or residences on a particular street) between two avenues is assigned to the lat-long coordinates of the center of that street (See W 111th St to W 124th St for instance). 
 
-- Another thing this shows is around which subway station there is more crime. For example, out of the 2 125th st stations, the one on the right has noticeably more crime concentrated around it than the one on the left. Note that the way data is recorded, all crimes that happen inside a subway station are coded to the location of the subway station. So this result could also mean that one station is safer than the other. 
+Another thing this shows is around which subway station there is more crime. For example, out of the 2 125th st stations, the one on the right has noticeably more crime concentrated around it than the one on the left. Note that the way data is recorded, all crimes that happen inside a subway station are coded to the location of the subway station. So this result could also mean that one station is safer than the other. 
 
-- This map could also be used to plan one's route to and from Columbia depending if safety is a concern. For example, one could see which streets and avenues have less crime concentrated on them and so could indicate which routes are generally safer to travel on.
+This map could also be used to plan one's route to and from Columbia depending if safety is a concern. For example, one could see which streets and avenues have less crime concentrated on them and so could indicate which routes are generally safer to travel on. Stay tuned for our interactive component that makes it easier for you to zoom in and out while planning your route! 
 
+### Spatial Distribution Around Columbia by Crime Category
+
+Following maps show the spatial distribution of crime around Columbia University by crime categories.
 
 ```{r}
 # Map of different crime types around Columbia
@@ -297,6 +291,9 @@ ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , col
       axis.title.x=element_blank(),
       axis.title.y=element_blank()) + facet_wrap(~CRIME_CAT)
 ```
+
+The above maps clearly show that the most prevalent kind of crime around Columbia University is "THEFT OR BURGLARY" and "DRUG AND ALCOHOL RELATED" crimes are the least prevalent. Another interesting pattern to note is that for the categories "SEX CRIMES", "FRAUD/GAMBLING AND MISC", and "MAJRO VIOLENT CRIMES", the crime is concentrated most around 125th st. 
+
 
 ### Increasing Radius from Columbia
 
@@ -387,23 +384,23 @@ density$inc_density <- density$Freq/(density$incremental_area)
 
 ```{r}
 # Making density graphs
-ggplot(density, aes(dist, cum_density)) + geom_line() + 
+cum_density_plot <- ggplot(density, aes(dist, cum_density)) + geom_line() + 
       scale_x_continuous(label=comma) +
       labs(
         title = "Cumulative Crime Density",
         x = "Distance to CU (meters)",
         y = "Density of Crime (# reports/m^2)",
       ) 
-```
 
-```{r}
-ggplot(density, aes(dist, inc_density)) + geom_line() +
+inc_density_plot <- ggplot(density, aes(dist, inc_density)) + geom_line() +
       scale_x_continuous(label=comma) +
       labs(
         title = "Incremental Crime Density",
         x = "Distance to CU (meters)",
         y = "Density of Crime (# reports/m^2)",
       ) 
+
+grid.arrange(cum_density_plot, inc_density_plot, ncol=2)
 
 ```
 
@@ -414,6 +411,8 @@ ggplot(density, aes(dist, inc_density)) + geom_line() +
 
 
 ```{r}
+# Using community contribution regarding making concentric circles around one's point of interest on a google map (concentric_circles_ggmap_ggplot)
+
 # The following function uses the approximation that each degree of latitude represents 40075 / 360 kilometers and that each degree of longitude represents (40075 / 360) * cos(latitude) kilomemters. 
 
 circles_data <- function(centers, radius, nPoints = 100){
