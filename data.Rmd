@@ -350,7 +350,7 @@ df_key_fields <- df_filter %>%
       #,Incident_Date_Estimated_Flag #derived
       #,Incident_Date #derived
       #,Incident_Datetime #derived
-      #,Incident_HourTime #derived
+      ,Incident_HourTime #derived
       #,Incident_Month #derived
       #,Incident_DayOfWeek #derived
       ,CMPLNT_FR_DT
@@ -455,12 +455,30 @@ The following code is used to create CSV files for use in the interactive compon
 #Code to create CSV files for use in interactive data
 columbia_short <- df_key_fields %>% 
   filter(dist_to_CU <= 1000) %>% select(Latitude, Longitude)
-columbia_short_1 <- df_key_fields %>% 
+columbia_short_M <- df_key_fields %>% 
   filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "M") %>% select(Latitude, Longitude)
-columbia_short_2 <- df_key_fields %>% 
+columbia_short_F <- df_key_fields %>% 
   filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "F") %>% select(Latitude, Longitude)
+columbia_short_Day <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(Incident_HourTime < 6 | Incident_HourTime > 18) %>% select(Latitude, Longitude)
+columbia_short_Night <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(Incident_HourTime >= 6 | Incident_HourTime <= 18) %>% select(Latitude, Longitude)
+columbia_short_MDay <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "M") %>% filter(Incident_HourTime < 6 | Incident_HourTime > 18) %>% select(Latitude, Longitude)
+columbia_short_FDay <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "F") %>% filter(Incident_HourTime < 6 | Incident_HourTime > 18) %>% select(Latitude, Longitude)
+columbia_short_MNight <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "M") %>% filter(Incident_HourTime >= 6 | Incident_HourTime <= 18) %>% select(Latitude, Longitude)
+columbia_short_FNight <- df_key_fields %>% 
+  filter(dist_to_CU <= 1000) %>% filter(VIC_SEX == "F") %>% filter(Incident_HourTime >= 6 | Incident_HourTime <= 18) %>% select(Latitude, Longitude)
 
 #write.csv(columbia_short, "./data/columbia_short.csv", row.names=FALSE)
-write.csv(columbia_short_1, "./data/columbia_short_1.csv", row.names=FALSE)
-write.csv(columbia_short_2, "./data/columbia_short_2.csv", row.names=FALSE)
+write.csv(columbia_short_M, "./data/columbia_short_M.csv", row.names=FALSE)
+write.csv(columbia_short_F, "./data/columbia_short_F.csv", row.names=FALSE)
+write.csv(columbia_short_Day, "./data/columbia_short_Day.csv", row.names=FALSE)
+write.csv(columbia_short_Night, "./data/columbia_short_Night.csv", row.names=FALSE)
+write.csv(columbia_short_MDay, "./data/columbia_short_MDay.csv", row.names=FALSE)
+write.csv(columbia_short_FDay, "./data/columbia_short_FDay.csv", row.names=FALSE)
+write.csv(columbia_short_MNight, "./data/columbia_short_MNight.csv", row.names=FALSE)
+write.csv(columbia_short_FNight, "./data/columbia_short_FNight.csv", row.names=FALSE)
 ```

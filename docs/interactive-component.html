@@ -111,9 +111,9 @@
 <ul>
 <li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#crime-category-and-demographic-analysis"><i class="fa fa-check"></i><b>4.1</b> Crime Category and Demographic Analysis</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="results.html"><a href="results.html#race"><i class="fa fa-check"></i><b>4.1.1</b> Race</a></li>
-<li class="chapter" data-level="4.1.2" data-path="results.html"><a href="results.html#gender"><i class="fa fa-check"></i><b>4.1.2</b> Gender</a></li>
-<li class="chapter" data-level="4.1.3" data-path="results.html"><a href="results.html#crime-by-borough"><i class="fa fa-check"></i><b>4.1.3</b> Crime by Borough</a></li>
+<li class="chapter" data-level="4.1.1" data-path="results.html"><a href="results.html#crime-by-borough"><i class="fa fa-check"></i><b>4.1.1</b> Crime by Borough</a></li>
+<li class="chapter" data-level="4.1.2" data-path="results.html"><a href="results.html#race"><i class="fa fa-check"></i><b>4.1.2</b> Race</a></li>
+<li class="chapter" data-level="4.1.3" data-path="results.html"><a href="results.html#gender"><i class="fa fa-check"></i><b>4.1.3</b> Gender</a></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#time-series-analysis"><i class="fa fa-check"></i><b>4.2</b> Time Series Analysis</a>
 <ul>
@@ -135,7 +135,10 @@
 <li class="chapter" data-level="5.1" data-path="interactive-component.html"><a href="interactive-component.html#interactive-map-of-crime-around-columbia"><i class="fa fa-check"></i><b>5.1</b> Interactive Map of Crime Around Columbia</a></li>
 <li class="chapter" data-level="5.2" data-path="interactive-component.html"><a href="interactive-component.html#future-work"><i class="fa fa-check"></i><b>5.2</b> Future Work</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
+<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="conclusion.html"><a href="conclusion.html#limitations-and-future-work"><i class="fa fa-check"></i><b>6.1</b> Limitations and Future Work</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -158,7 +161,9 @@
 <div id="interactive-component" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Interactive Component<a href="interactive-component.html#interactive-component" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the “Data” chapter).</p>
-<p>The motivation for this component is to allow a user to select features through a series of buttons and view what crime statistics look like geographically.</p>
+<p>The motivation for this component is to allow a user to select features through a series of buttons and view what crime statistics look like geographically. Try playing with the filters to adjust the amount of reported crime. As shown the previous chapter, more crime occurs at night and when the victim is female.</p>
+<p>This chapter uses a special package, ggmap:</p>
+<p>D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161. URL <a href="http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf" class="uri">http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf</a></p>
 <div id="interactive-map-of-crime-around-columbia" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Interactive Map of Crime Around Columbia<a href="interactive-component.html#interactive-map-of-crime-around-columbia" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <title>
@@ -173,9 +178,18 @@ My Google Map
 <p>
 Instructions: Please select an option below to filter points on the map and refresh the page to reset. Please be patient while the data renders.
 </p>
-<p>Victim Gender:
+<p>Victim Gender: <br>
+<input type="radio" name="gender" value="All" checked="true">All
 <input type="radio" name="gender" value="M">Male
 <input type="radio" name="gender" value="F">Female</p>
+<p>Time of Day: <br>
+<input type="radio" name="timeday" value="All" checked="true">All <br>
+<input type="radio" name="timeday" value="Day">Day (6am-6pm) <br>
+<input type="radio" name="timeday" value="Night">Night (6pm-6am)</p>
+<br>
+<p id="filter_string">
+<b>All Data Points (within 1km):</b>
+</p>
 <div id="map">
 
 </div>
@@ -183,25 +197,38 @@ Instructions: Please select an option below to filter points on the map and refr
 <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
 <script type="text/javascript">
     
-    var gender = "M";
+    var gender = "Blank";
+    var timeday = "Blank";
     var rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short.csv";
+    var filter_string = "All Data Points (within 1km):"
     
     d3.selectAll("input")
       .on("click", function(event) { 
         console.log("clicked radio")
         //var gender = event.currentTarget.value;
-        var gender = d3.select('input[name="gender"]:checked').node().value
+        var gender  = d3.select('input[name="gender"]:checked').node().value;
+        var timeday = d3.select('input[name="timeday"]:checked').node().value;
         console.log(gender);
+        
           if (gender == "M") {
               rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_1.csv";
+              filter_string = "Within 1km, Male Victim:"
+              d3.selectAll("p#filter_string").text(filter_string)
               initMap()
               
-          } else {
+          } 
+          if (gender == "F") {
               rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_2.csv";
+              filter_string = "Within 1km, Female Victim:"
+              d3.selectAll("p#filter_string").text(filter_string)
+              initMap()
+          }
+          else {
               initMap()
               
           }
       })
+      
     console.log("test16")
     console.log(rep_string)
     
@@ -265,7 +292,8 @@ Instructions: Please select an option below to filter points on the map and refr
 </div>
 <div id="future-work" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Future Work<a href="interactive-component.html#future-work" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Test 123</p>
+<p>Test 123
+We had hoped to allow users to select both a “from” and “to” destination but found that was hard to implement.</p>
 
 </div>
 </div>

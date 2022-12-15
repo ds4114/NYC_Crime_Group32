@@ -5,6 +5,7 @@ The following map contains a list of crimes near Columbia (within 1km). Each dot
 The motivation for this component is to allow a user to select features through a series of buttons and view what crime statistics look like geographically. Try playing with the filters to adjust the amount of reported crime. As shown the previous chapter, more crime occurs at night and when the victim is female.   
 
 This chapter uses a special package, ggmap:
+
 D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161. URL http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf
 
 ## Interactive Map of Crime Around Columbia
@@ -18,15 +19,18 @@ D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journa
   
   <p>Instructions: Please select an option below to filter points on the map and refresh the page to reset. Please be patient while the data renders.</p>
   
-  Victim Gender: 
+  Victim Gender: <br>
+  <input type="radio" name="gender" value="All" checked="true">All
   <input type="radio" name="gender" value="M">Male
   <input type="radio" name="gender" value="F">Female
     
-  Time of Day: 
-  <input type="radio" name="timeday" value="Day">Day (6am-6pm)
+  Time of Day: <br>
+  <input type="radio" name="timeday" value="All" checked="true">All <br>
+  <input type="radio" name="timeday" value="Day">Day (6am-6pm) <br>
   <input type="radio" name="timeday" value="Night">Night (6pm-6am)  
-    
-  <p id=filter_string>All Data Points (within 1km)</p>
+  
+  <br>
+  <p id=filter_string><b>All Data Points (within 1km):</b></p>
   
   <div id="map"></div>
   <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -35,28 +39,67 @@ D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journa
   
   <script type="text/javascript">
     
-    var gender = "Blank";
-    var timeday = "Blank";
+    var gender = "All";
+    var timeday = "All";
     var rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short.csv";
-    var filter_string = "ASDF"
-    d3.getElementById("filter_string").textContent = "ASDF:"
+    var filter_string = "All Data Points (within 1km):"
     
     d3.selectAll("input")
       .on("click", function(event) { 
         console.log("clicked radio")
         //var gender = event.currentTarget.value;
-        var gender = d3.select('input[name="gender"]:checked').node().value
+        var gender  = d3.select('input[name="gender"]:checked').node().value;
+        var timeday = d3.select('input[name="timeday"]:checked').node().value;
         console.log(gender);
-          if (gender == "M") {
-              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_1.csv";
+        
+        if (gender == "All" and timeday=="All") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short.csv";
+              d3.selectAll("p#filter_string").text("All Data Points (within 1km):")
               initMap()
-              
-          } else {
-              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_2.csv";
+          } 
+          if (gender == "M" and timeday=="All") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_M.csv";
+              d3.selectAll("p#filter_string").text("Within 1km, Male Victim:")
               initMap()
-              
+          } 
+          if (gender == "F" and timeday=="All") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_F.csv";
+              d3.selectAll("p#filter_string").text("Within 1km, Female Victim:")
+              initMap()
           }
+          if (gender == "All" and timeday=="Day") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_Day.csv";
+              d3.selectAll("p#filter_string").text("Within 1km, Day time:")
+              initMap()
+          }
+          if (gender == "All" and timeday=="Night") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_Night.csv";
+              d3.selectAll("p#filter_string").text("Within 1km, Night time:")
+              initMap()
+          }
+          if (gender == "M" and timeday=="Day") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_MDay.csv";
+              d3.selectAll("p#filter_string").text("Within 1km, Male Victime, Day time:")
+              initMap()
+          }
+          if (gender == "F" and timeday=="Day") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_FDay.csv";
+              d3.selectAll("p#filter_string").text("Within 1km, Female Victim, Day time:")
+              initMap()
+          }
+          if (gender == "M" and timeday=="Night") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_MNight.csv";
+              d3.selectAll("p#filter_string").text("Within 1km, Male Victim, Night time:")
+              initMap()
+          }
+         if (gender == "F" and timeday=="Night") {
+              rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short_FNight.csv";
+              d3.selectAll("p#filter_string").text("Within 1km, Female Victim, Night time:")
+              initMap()
+          }
+
       })
+      
     console.log("test16")
     console.log(rep_string)
     
@@ -120,5 +163,5 @@ D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journa
   </script>
   
 ## Future Work
-Test 123
-We had hoped to allow users to select both a "from" and "to" destination but found that was hard to implement. 
+We had hoped to allow users to select both a "from" and "to" destination but found that was hard to execute and would require some design thinking on how to implement without a user having to type in specific latitude and longitude. We also would like to speed up the efficiency of the program by optimizing how the map draws data points around a location - perhaps down-sampling the data could help. We also would like to clean up some of the warnings produced by the code and ggmap as well as catch potential errors that could be thrown. 
+

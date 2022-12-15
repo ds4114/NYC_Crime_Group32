@@ -25,9 +25,9 @@ missing-value-analysis
 interactive-component-datasets
 results
 crime-category-and-demographic-analysis
+crime-by-borough
 race
 gender
-crime-by-borough
 time-series-analysis
 day-of-week
 time-of-day
@@ -42,3 +42,4 @@ interactive-component
 interactive-map-of-crime-around-columbia
 future-work
 conclusion
+limitations-and-future-work

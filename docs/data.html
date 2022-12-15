@@ -111,9 +111,9 @@
 <ul>
 <li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#crime-category-and-demographic-analysis"><i class="fa fa-check"></i><b>4.1</b> Crime Category and Demographic Analysis</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="results.html"><a href="results.html#race"><i class="fa fa-check"></i><b>4.1.1</b> Race</a></li>
-<li class="chapter" data-level="4.1.2" data-path="results.html"><a href="results.html#gender"><i class="fa fa-check"></i><b>4.1.2</b> Gender</a></li>
-<li class="chapter" data-level="4.1.3" data-path="results.html"><a href="results.html#crime-by-borough"><i class="fa fa-check"></i><b>4.1.3</b> Crime by Borough</a></li>
+<li class="chapter" data-level="4.1.1" data-path="results.html"><a href="results.html#crime-by-borough"><i class="fa fa-check"></i><b>4.1.1</b> Crime by Borough</a></li>
+<li class="chapter" data-level="4.1.2" data-path="results.html"><a href="results.html#race"><i class="fa fa-check"></i><b>4.1.2</b> Race</a></li>
+<li class="chapter" data-level="4.1.3" data-path="results.html"><a href="results.html#gender"><i class="fa fa-check"></i><b>4.1.3</b> Gender</a></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#time-series-analysis"><i class="fa fa-check"></i><b>4.2</b> Time Series Analysis</a>
 <ul>
@@ -135,7 +135,10 @@
 <li class="chapter" data-level="5.1" data-path="interactive-component.html"><a href="interactive-component.html#interactive-map-of-crime-around-columbia"><i class="fa fa-check"></i><b>5.1</b> Interactive Map of Crime Around Columbia</a></li>
 <li class="chapter" data-level="5.2" data-path="interactive-component.html"><a href="interactive-component.html#future-work"><i class="fa fa-check"></i><b>5.2</b> Future Work</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
+<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="conclusion.html"><a href="conclusion.html#limitations-and-future-work"><i class="fa fa-check"></i><b>6.1</b> Limitations and Future Work</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 </ul>
@@ -240,11 +243,11 @@
 </div>
 <div id="data-transformation-and-cleaning" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Data Transformation and Cleaning<a href="data.html#data-transformation-and-cleaning" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>This .Rmd file contains the following sections:
--Data Loading: To show data was ingested into the environment
--Bucketing: To combine values in a derived field for simplifying graphs
--Date Transformations: To make strings into dates and extract time information
--Derived Geo Fields: To calculate distances between points
+<p>This .Rmd file contains the following sections:</p>
+<p>Data Loading: To show data was ingested into the environment
+Bucketing: To combine values in a derived field for simplifying graphs
+Date Transformations: To make strings into dates and extract time information
+Derived Geo Fields: To calculate distances between points
 -Derive Other Fields: To derived other fields and perform minor cleaning operations</p>
 <p>We then filter our data frame to relevant records, and then select key fields for ease-of-use. “Relevant” records are defined by time frame and crime category explained more below.</p>
 <p>There is also a section at the end on missing data.</p>
@@ -288,40 +291,42 @@ We also filter for only “relevant” crimes - i.e. excluding parking violatio
 </div>
 <div id="missing-value-analysis" class="section level2 hasAnchor" number="3.5">
 <h2><span class="header-section-number">3.5</span> Missing Value Analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>First let us look at the raw data to see what things look like originally. We can categorize nulls as real (i.e. true NA) vs “fake” (i.e. the word “null” in the raw data or similar). Then we can show which fields and what percent of each may have an issue.</p>
+<p>First let us look at the raw data to see what things look like originally. We can categorize nulls as real (i.e. true NA) vs “artificial” (i.e. the word “null” in the raw data or similar). Then we can show which fields and what percent of each (out of the 300k rows) may have an issue.</p>
 <pre><code>## # A tibble: 23 × 5
-##    field                    total_real_null total_fake_null total_null total_n…¹
-##    &lt;chr&gt;                              &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
-##  1 HADEVELOPT                             0          395756     395756   9.97e-1
-##  2 PARKS_NM                               0          394295     394295   9.93e-1
-##  3 STATION_NAME                           0          388677     388677   9.79e-1
-##  4 TRANSIT_DISTRICT                  388677               0     388677   9.79e-1
-##  5 HOUSING_PSA                       371512               0     371512   9.36e-1
-##  6 Inside_Outside                     66081               0      66081   1.66e-1
-##  7 LOC_OF_OCCUR_DESC                  66081               0      66081   1.66e-1
-##  8 CMPLNT_TO_DT                       29393               0      29393   7.40e-2
-##  9 CMPLNT_TO_TM                           0           29276      29276   7.37e-2
-## 10 BORO_NM                              657               0        657   1.66e-3
-## 11 Borough_short                        657               0        657   1.66e-3
-## 12 PREM_TYP_DESC                          0             476        476   1.20e-3
-## 13 PD_CD                                440               0        440   1.11e-3
-## 14 PD_DESC                                0             440        440   1.11e-3
-## 15 ADDR_PCT_CD                           20               0         20   5.04e-5
-## 16 Lat_Lon                                9               0          9   2.27e-5
-## 17 Latitude                               9               0          9   2.27e-5
-## 18 Longitude                              9               0          9   2.27e-5
-## 19 New Georeferenced Column               9               0          9   2.27e-5
-## 20 X_COORD_CD                             9               0          9   2.27e-5
-## 21 Y_COORD_CD                             9               0          9   2.27e-5
-## 22 OFNS_DESC                              0               5          5   1.26e-5
-## 23 PATROL_BORO                            0               2          2   5.04e-6
-## # … with abbreviated variable name ¹​total_null_percent</code></pre>
+##    field                    Real_Null Artificial_Null  Total Percent
+##    &lt;chr&gt;                        &lt;dbl&gt;           &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 HADEVELOPT                       0          395756 395756   99.7 
+##  2 PARKS_NM                         0          394295 394295   99.3 
+##  3 STATION_NAME                     0          388677 388677   97.9 
+##  4 TRANSIT_DISTRICT            388677               0 388677   97.9 
+##  5 HOUSING_PSA                 371512               0 371512   93.6 
+##  6 Inside_Outside               66081               0  66081   16.6 
+##  7 LOC_OF_OCCUR_DESC            66081               0  66081   16.6 
+##  8 CMPLNT_TO_DT                 29393               0  29393    7.4 
+##  9 CMPLNT_TO_TM                     0           29276  29276    7.37
+## 10 BORO_NM                        657               0    657    0.17
+## 11 Borough_short                  657               0    657    0.17
+## 12 PREM_TYP_DESC                    0             476    476    0.12
+## 13 PD_CD                          440               0    440    0.11
+## 14 PD_DESC                          0             440    440    0.11
+## 15 ADDR_PCT_CD                     20               0     20    0.01
+## 16 Lat_Lon                          9               0      9    0   
+## 17 Latitude                         9               0      9    0   
+## 18 Longitude                        9               0      9    0   
+## 19 New Georeferenced Column         9               0      9    0   
+## 20 X_COORD_CD                       9               0      9    0   
+## 21 Y_COORD_CD                       9               0      9    0   
+## 22 OFNS_DESC                        0               5      5    0   
+## 23 PATROL_BORO                      0               2      2    0</code></pre>
 <p>So we see we have mostly missing data for 5 fields. Location and its derived field is also missing a good portion which is likely due to masking for privacy reasons per the data source notes found at the NY Open Data Link.</p>
-<p>Let us look at missing patterns now:</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-6-1.png" width="1440" /><img src="finalproj_files/figure-html/unnamed-chunk-6-2.png" width="1440" />
+<p>Let us look at missing patterns now:
+Raw Data, All Columns:
+<img src="finalproj_files/figure-html/unnamed-chunk-6-1.png" width="1440" />
+Raw Data, All Columns (Except Transit_District and Housing_PSA):
+<img src="finalproj_files/figure-html/unnamed-chunk-7-1.png" width="1440" />
 These charts are hard to read given the number of columns but it shows that most data is actually populated very well as we saw above. There are two problem fields causing all of the real nulls but we can re-graph this without those and see that complete cases are at the top. However, this is still not accurate because there are string values in the data that say “(null)” or “Unknown” which would appear as populated. In any case, we do not need to clean and evaluate all columns, so let us work off of the new, filtered dataset we created in a prior section (see below).
 Side Note: We initially noticed the Complaint_Num was null often but this was due to it containing alphanumeric characters and R loading it as a number only. It has been corrected and serves as a primary key for the data frame.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-7-1.png" width="1440" />
+<p><img src="finalproj_files/figure-html/unnamed-chunk-8-1.png" width="1440" />
 The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where “(null)” will appear as NA properly. We have re-coded some values to “Unknown” as that value appears in the raw data is is reasonable (e.g. if the suspect was not found, we have no information on them and can say Unknown). We see there are a few blanks for Borough and lat/long and thus the related derived field, but otherwise we have a good data frame to use in the next chapter.</p>
 </div>
 <div id="interactive-component-datasets" class="section level2 hasAnchor" number="3.6">
