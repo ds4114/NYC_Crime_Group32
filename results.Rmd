@@ -29,9 +29,40 @@ df_key_fields %>%
 Here we can see the crime incident that has happened the most frequently is “Petit Larceny”, a form of larceny in which the value of the property taken is generally less than $50. We also observe that theft or burglary related crimes are the most common by far. This category is followed by sex crimes, violent crimes, and fraud/gambling related crimes all of which are relatively close in number. The lowest  category by far is drug and alcohol related crimes, perhaps because the policing of these crimes has been relaxed over the last few years.
 
 
+### Crime by Borough
+When one decides to attend Columbia University, one may ask themselves which borough should they live in depending on the relative safety of living in each borough. Therefore, following are the plots of count of total crimes and different types of crimes by the boroughs.
+
+```{r}
+ggplot(df_filter) +  geom_bar(aes(x=Borough_short)) + facet_wrap(~CRIME_CAT) + 
+labs(
+   x ="Borough"
+  ,y ="Count"
+  ,title = "Crime by Borough and Type"
+  ,subtitle = "BK=Brooklyn, BX=Bronx, MH=Manhattan, QN=Queens, SI=Staten Island, NA =Missing Data")+
+scale_y_continuous(label=comma)
+```
+
+
+From these graphs, we note that with respect to overall crime, Brooklyn has the most crime followed by Manhattan. Secondly, it's interesting to see that while Brooklyn has more crime of type "SEX CRIMES", "MAJOR VIOLENT CRIMES", AND "FRAUD/GAMBLING AND MISC" compared to Manhattan while Manhattan has more crime of type "THEFT OR BURGLARY" and "DRUG AND ALCOHOL RELATED" compared to Brooklyn. 
+
+
+Let us now take a look at other variables in the dataset. After some trial and error, the following yields some insights (looking at only crimes against individuals):
+```{r}
+counts3 <- df_filter %>%
+  filter(VIC_Individual_Flag == "Y") %>%
+  group_by(VIC_RACE_short, SUSP_RACE_short, CRIME_CAT, BORO_NM, Premise_Derived, VIC_Individual_Flag, fct_rev(VIC_AGE_GROUP), Inside_Outside) %>%
+  rename(VIC_AGE = `fct_rev(VIC_AGE_GROUP)`) %>%
+  summarize(Freq = n())
+
+vcd::mosaic(VIC_AGE ~ BORO_NM + Inside_Outside, counts3, direction = c("v","v", "h"))
+```
+
+We see here that more crime occurs inside compared to outside (which aligns with the fact most crime is larceny/theft). What is interesting there does not seem to be a difference between age groups and boroughs and premise as the divisions are mostly even. Even accounting for uneven age groups in the raw data, it still seems like 25-44 is the largest category. 
+
 ### Race
 
-We can start our demographic analysis by digging further into the race and gender of both the suspects and victims. 
+We can dig further into demographics by looking into the race and gender of both the suspects and victims. Note - this is simply exploratory analysis of data that has been reported and categorized by the NYPD and care should be taken for any extrapolation that may be made.  
+
 Let us begin by diving into trends between the race of the suspects and victims.
 ```{r}
 require(gridExtra)
@@ -68,7 +99,7 @@ grid.arrange(p1, p2, ncol=2, top="Reports by Victim Race", bottom="U=Unknown, B=
 ```
 
 
-While there is a lot of null/unknown data, we notice that there are clear patterns between the race of the suspect and victim. Visualizing this using a heatmap convinces us of this.  
+While there is a lot of null/unknown data, we would like to explore patterns between the race of the suspect and victim. 
 
 ```{r}
 ggplot(df_key_fields, aes(VIC_RACE_short, SUSP_RACE_short)) + 
@@ -82,7 +113,7 @@ ggplot(df_key_fields, aes(VIC_RACE_short, SUSP_RACE_short)) +
 
 ```
 
-We see from the bar charts that most of the victims are black and also that most of the suspects are black. Logically, the intersection of these two fields is also the highest. This is made evident in the heatmap.
+We see from the bar charts that most of the victims are Black and also that most of the suspects are Black. Logically, the intersection of these two fields is also the highest which is made evident in the heatmap. While this graph has its merits, demographically we know that there are much fewer people of say American Indian race than Black. It may also be worth looking at the proportion per suspect race in each horizontal victim race band to account for uneven data classes. 
 
 
 ### Gender
@@ -101,38 +132,7 @@ ggplot(df_key_fields, aes(SUSP_SEX,VIC_SEX)) +
 
 ```
 
-We see that most of the victims are female and most of the suspects are male. Most concerning is that most of the crimes seemed to be committed by men towards women.
-
-### Crime by Borough
-When one decides to attend Columbia University, one may ask themselves which borough should they live in depending on the relative safety of living in each borough. Therefore, following are the plots of count of total crimes and different types of crimes by the boroughs.
-
-```{r}
-ggplot(df_filter) +  geom_bar(aes(x=Borough_short)) + facet_wrap(~CRIME_CAT) + 
-labs(
-   x ="Borough"
-  ,y ="Count"
-  ,title = "Crime by Borough and Type"
-  ,subtitle = "BK=Brooklyn, BX=Bronx, MH=Manhattan, QN=Queens, SI=Staten Island, NA =Missing Data")+
-scale_y_continuous(label=comma)
-```
-
-
-From these graphs, we note that with respect to overall crime, Brooklyn has the most crime followed by Manhattan. Secondly, it's interesting to see that while Brooklyn has more crime of type "SEX CRIMES", "MAJOR VIOLENT CRIMES", AND "FRAUD/GAMBLING AND MISC" compared to Manhattan while Manhattan has more crime of type "THEFT OR BURGLARY" and "DRUG AND ALCOHOL RELATED" compared to Brooklyn. 
-
-
-Let us now take a look at other variables in the dataset. After some trial and error, the following yields some insights (looking at only crimes against individuals):
-```{r}
-counts3 <- df_filter %>%
-  filter(VIC_Individual_Flag == "Y") %>%
-  group_by(VIC_RACE_short, SUSP_RACE_short, CRIME_CAT, BORO_NM, Premise_Derived, VIC_Individual_Flag, fct_rev(VIC_AGE_GROUP), Inside_Outside) %>%
-  rename(VIC_AGE = `fct_rev(VIC_AGE_GROUP)`) %>%
-  summarize(Freq = n())
-
-vcd::mosaic(VIC_AGE ~ BORO_NM + Inside_Outside, counts3, direction = c("v","v", "h"))
-```
-
-We see here that more crime occurs inside compared to outside (which aligns with the fact most crime is larceny/theft). What is interesting there does not seem to be a difference between age groups and boroughs and premise as the divisions are mostly even. Even accounting for uneven age groups in the raw data, it still seems like 25-44 is the largest category. 
-
+We see that most of the victims are female and most of the suspects are male although there is a large unknown category. It is concerning but would fit with the historical paradigm that most of the crime seems to be committed by men towards women.
 
 
 
@@ -261,7 +261,7 @@ ggmap(map) + geom_point(aes(x = Longitude, y = Latitude), data = columbia, , col
       axis.title.y=element_blank()) + facet_wrap(~CRIME_CAT)
 ```
 
-The above maps clearly show that the most prevalent kind of crime around Columbia University is "THEFT OR BURGLARY" and "DRUG AND ALCOHOL RELATED" crimes are the least prevalent. Another interesting pattern to note is that for the categories "SEX CRIMES", "FRAUD/GAMBLING AND MISC", and "MAJRO VIOLENT CRIMES", the crime is concentrated most around 125th st. 
+The above maps clearly show that the most prevalent kind of crime around Columbia University is "THEFT OR BURGLARY" and "DRUG AND ALCOHOL RELATED" crimes are the least prevalent. Another interesting pattern to note is that for the categories "SEX CRIMES", "FRAUD/GAMBLING AND MISC", and "MAJOR VIOLENT CRIMES", the crime is concentrated most around 125th st. 
 
 
 ### Increasing Radius from Columbia

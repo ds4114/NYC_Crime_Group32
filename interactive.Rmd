@@ -2,9 +2,9 @@
 
 The following map contains a list of crimes near Columbia (within 1km). Each dot indicates a reported crime (data filtered per the steps described in the "Data" chapter).
 
-The motivation for this component is to allow a user to select features through a series of buttons and view what crime statistics look like geographically.
+The motivation for this component is to allow a user to select features through a series of buttons and view what crime statistics look like geographically. Try playing with the filters to adjust the amount of reported crime. As shown the previous chapter, more crime occurs at night and when the victim is female.   
 
-This chapter uses a package, ggmap:
+This chapter uses a special package, ggmap:
 D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journal, 5(1), 144-161. URL http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf
 
 ## Interactive Map of Crime Around Columbia
@@ -22,6 +22,12 @@ D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journa
   <input type="radio" name="gender" value="M">Male
   <input type="radio" name="gender" value="F">Female
     
+  Time of Day: 
+  <input type="radio" name="timeday" value="Day">Day (6am-6pm)
+  <input type="radio" name="timeday" value="Night">Night (6pm-6am)  
+    
+  <p id=filter_string>All Data Points (within 1km)</p>
+  
   <div id="map"></div>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
@@ -29,8 +35,11 @@ D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journa
   
   <script type="text/javascript">
     
-    var gender = "M";
+    var gender = "Blank";
+    var timeday = "Blank";
     var rep_string = "https://raw.githubusercontent.com/ds4114/NYC_Crime_Group32/main/data/columbia_short.csv";
+    var filter_string = "ASDF"
+    d3.getElementById("filter_string").textContent = "ASDF:"
     
     d3.selectAll("input")
       .on("click", function(event) { 
@@ -112,3 +121,4 @@ D. Kahle and H. Wickham. ggmap: Spatial Visualization with ggplot2. The R Journa
   
 ## Future Work
 Test 123
+We had hoped to allow users to select both a "from" and "to" destination but found that was hard to implement. 

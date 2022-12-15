@@ -113,10 +113,11 @@ This dataset was first made public on 11/1/2018. It is updated quarterly. It app
 
 ## Data Transformation and Cleaning
 This .Rmd file contains the following sections:
--Data Loading: To show data was ingested into the environment
--Bucketing: To combine values in a derived field for simplifying graphs
--Date Transformations: To make strings into dates and extract time information
--Derived Geo Fields: To calculate distances between points
+
+Data Loading: To show data was ingested into the environment \n
+Bucketing: To combine values in a derived field for simplifying graphs \n
+Date Transformations: To make strings into dates and extract time information \n
+Derived Geo Fields: To calculate distances between points \n
 -Derive Other Fields: To derived other fields and perform minor cleaning operations
 
 We then filter our data frame to relevant records, and then select key fields for ease-of-use. "Relevant" records are defined by time frame and crime category explained more below. 
