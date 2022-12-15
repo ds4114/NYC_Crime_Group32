@@ -1,15 +1,13 @@
 # Results
 
 ```{r setup_results, include=FALSE}
-knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
-library(dplyr)
-library(ggplot2)
+#knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
 ```
 
 
 ## Crime Category and Demographic Analysis
 
-We start our analysis of crime types by investigating what types of crimes occur in what frequencies. We bucketed the numerous crimes from the raw data into logical categories. Note that in the pre-processing stage, we removed a small "Other" category of parking violations and noise complaints. 
+We start our analysis of crime types by investigating what types of crimes occur in what frequencies. We bucketed the numerous crimes from the raw data into logical categories in the last chaptuer. Note that in the pre-processing stage, we removed a small "Other" category of parking violations and noise complaints. 
 
 ```{r}
 df_key_fields %>%
@@ -46,10 +44,10 @@ p1 <- df_key_fields %>%
   ggplot(aes(x=fct_reorder(SUSP_RACE_short,freq,.desc = TRUE),y=freq)) +
   geom_bar(stat = "identity",fill = "cornflowerblue") +
   #scale_x_discrete(guide = guide_axis(n.dodge=3))+
-  ggtitle("Reports by Suspect Race") +
+  #ggtitle("Reports by Suspect Race") +
   xlab("Suspect Race") +
   ylab("Count") +
-  labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White,\n BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian") + 
+  #labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White,\n BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian") + 
   scale_y_continuous(label=comma)
 
 p2 <- df_key_fields %>%
@@ -60,13 +58,13 @@ p2 <- df_key_fields %>%
   ggplot(aes(x=fct_reorder(VIC_RACE_short,freq,.desc = TRUE),y=freq)) +
   geom_bar(stat = "identity",fill = "cornflowerblue") +
   #scale_x_discrete(guide = guide_axis(n.dodge=3))+
-  ggtitle("Reports by Victim Race") +
+  #ggtitle("Reports by Victim Race") +
   xlab("Victim Race") +
   ylab("Count") + 
-  labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White, BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian/Native") + 
+  #labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White, BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian/Native") + 
   scale_y_continuous(label=comma)
 
-grid.arrange(p1, p2, ncol=2)
+grid.arrange(p1, p2, ncol=2, top="Reports by Victim Race", bottom="U=Unknown, B=Black, WH=White/Hispanic, W=White, BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian" )
 ```
 
 
@@ -80,7 +78,7 @@ ggplot(df_key_fields, aes(VIC_RACE_short, SUSP_RACE_short)) +
   xlab("Suspect Race") +
   ylab("Victim Race") +
   ggtitle("Victim Race vs Suspect Race") +
-  labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White, BH=Black/Hispanic, AP=Asian/Pacific Islander, AI=American Indian/Native", fill="Count") 
+  labs(subtitle = "U=Unknown, B=Black, WH=White/Hispanic, W=White, BH=Black/Hispanic, \n AP=Asian/Pacific Islander, AI=American Indian", fill="Count") 
 
 ```
 
@@ -94,6 +92,7 @@ Next, lets do a gender focused analysis.
 ggplot(df_key_fields, aes(SUSP_SEX,VIC_SEX)) + 
   geom_bin2d()+
   #scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+  scale_fill_continuous(label=comma)+
   labs(
    x ="Suspect Sex"
   ,y ="Victim Sex"
@@ -113,7 +112,7 @@ labs(
    x ="Borough"
   ,y ="Count"
   ,title = "Crime by Borough and Type"
-  ,subtitle = "BK=Brooklyn, BX=Bronx, MH=Manhattan, QN=Queens, SI=Staten Island")+
+  ,subtitle = "BK=Brooklyn, BX=Bronx, MH=Manhattan, QN=Queens, SI=Staten Island, NA =Missing Data")+
 scale_y_continuous(label=comma)
 ```
 
@@ -125,53 +124,21 @@ Let us now take a look at other variables in the dataset. After some trial and e
 ```{r}
 counts3 <- df_filter %>%
   filter(VIC_Individual_Flag == "Y") %>%
-  group_by(VIC_RACE_short, SUSP_RACE_short, CRIME_CAT, BORO_NM, Premise_Derived, VIC_Individual_Flag, VIC_AGE_GROUP, Inside_Outside) %>%
+  group_by(VIC_RACE_short, SUSP_RACE_short, CRIME_CAT, BORO_NM, Premise_Derived, VIC_Individual_Flag, fct_rev(VIC_AGE_GROUP), Inside_Outside) %>%
+  rename(VIC_AGE = `fct_rev(VIC_AGE_GROUP)`) %>%
   summarize(Freq = n())
 
-vcd::mosaic(VIC_AGE_GROUP ~ BORO_NM + Inside_Outside, counts3, direction = c("v","v", "h"))
+vcd::mosaic(VIC_AGE ~ BORO_NM + Inside_Outside, counts3, direction = c("v","v", "h"))
 ```
-We see here that more crime occurs inside compared to outside (which aligns with the fact most crime is larceny/theft). What is interesting there does not seem to be a difference between boroughs or age groups. Even accounting for uneven age groups in the raw data, it still seems like 25-44 is the largest category. 
+
+We see here that more crime occurs inside compared to outside (which aligns with the fact most crime is larceny/theft). What is interesting there does not seem to be a difference between age groups and boroughs and premise as the divisions are mostly even. Even accounting for uneven age groups in the raw data, it still seems like 25-44 is the largest category. 
 
 
 
 
 ## Time Series Analysis
 
-### Motivation for Filtering Data
-To begin the analysis on time, first we would like to justify why we filtered the data for only crimes that took place in 2022. 
-```{r}
-ts_year_all <- df %>% 
-  #filter(year(Incident_Date) >= 2022) %>%
-  group_by(year(Incident_Date))  %>%
-  summarize(Complaint_Count = n() ) %>% rename( Incident_Year = `year(Incident_Date)`)
-
-ggplot(ts_year_all, aes(x=Incident_Year, y=Complaint_Count )) + geom_line() +
-  scale_y_continuous(label=comma) +
-  scale_x_continuous(limits= c(2000,2023) ) +
-  labs(
-    title = "Date of Incident (Reported in 2022)",
-    x = "Incident Year (raw data)",
-    y = "Number of Reports",
-  )
-
-```
-
-From this we see that there is a large drop off in historic reports. This make sense as it is more likely that someone would report a crime in the same year that it occurs. Although NYPD allows people to report crimes that occurred in 2020, there will be much fewer of them reported in 2022. If we wanted to use data prior to 2022 we should include the old crime reports for prior years. Also there are some quality issues with historic data as we see very old crimes (year 1500) which indicate some human error or a record-keeping issue.  
-
-So focusing on incidents in 2022, we can look at the overall trend during the year.
-```{r}
-ggplot(df_filter, aes(x=Incident_Month)) +
-      geom_line(aes(fill=..count..),stat="bin",binwidth=1) +
-      scale_x_continuous(limits = c(1,9), n.breaks=12) +
-      scale_y_continuous(limits = c(0,50000), label=comma) +
-      labs(
-        title = "2022 Crimes Per Month (Q1-Q3)",
-        x = "Month (as a number)",
-        y = "Total Reports",
-      )
-```
-
-We can see there are more crimes reported in the summer months, presumably it is warmer. Let's facet this:
+Per pre-processing, we are focusing on incidents reported in 2022. We can look at the overall trend during the year as of the publish date, after Q3 2022. 
 
 ```{r}
 ggplot(df_filter, aes(x=Incident_Month, color=
@@ -189,10 +156,10 @@ ggplot(df_filter, aes(x=Incident_Month, color=
       ) 
 ```
 
-This graph shows us that the overall trend is dominated by theft crimes. It does seem like there is a hump over summer which may align to more human activity and thus more crime. Uniquely, there is a dip for drug crimes in the summer. 
+The overall trend is dominated by theft crimes since the volume is largest. It does seem like there is a hump over summer which may align to more human activity and thus more crime. Uniquely, there is a dip for drug crimes in the summer. 
 
 ### Day of Week
-Let's now look at some other time related charts
+Let's now look at some other time related charts.
 ```{r}
 ggplot(df_filter, aes(y=CRIME_CAT , fill=fct_rev(Incident_DayOfWeek)) ) + 
   geom_bar(stat='count', position='dodge') +
@@ -212,10 +179,12 @@ There are a few interesting trends here. For one, theft appears to be lower on w
 ### Time of Day
 Let's also look at the time of the day:
 ```{r}
-ggplot(df_filter, aes(x = Incident_HourTime, y=fct_rev(Incident_DayOfWeek), fill=fct_rev(Incident_DayOfWeek) )) +
+ggplot(df_filter, aes(x = Incident_HourTime, y=fct_rev(Incident_DayOfWeek)
+                      )) +
+                      #, fill=fct_rev(Incident_DayOfWeek) 
   geom_density_ridges() +
   scale_x_continuous(limits = c(0,24), breaks = seq(0, 24, by = 1)) +
-  scale_fill_brewer(palette='Set2', breaks=c('Sun','Mon','Tue','Wed','Thu','Fri','Sat'))+
+  #scale_fill_brewer(palette='Set2', breaks=c('Sun','Mon','Tue','Wed','Thu','Fri','Sat'))+
   labs(
       title = "Hourly Breakdown (Total Q1-Q3 2022)",
       x = "Time of Day (24 Clock)",
@@ -465,59 +434,4 @@ We speculate that we see up and down jumps in incremental crime density due to t
 
 2. Another reason is that many crimes are just reported to the center of the streets (as discussed in the spatial distribution map earlier). What ends up happening is that some incremental radius/area buckets end up including a straight line of all these concentrated crimes which lead to their crime density shooting up- see for example the area between the third last and the second last circle that ends up having majority of the crimes reported on streets W 112th to W 120th.
 
-
-
-
-
-
-## Various Other Plots (To Revise/Delete)
-
-
---try mixing and matching more fields in different moasics to see if anything pops? Open to other ideas but pretty sure we need a graph with 3+ categorical vars given this dataset.  Try mosaic pair plots too.
-```{r, echo=FALSE, eval=FALSE}
-counts3 <- df_filter %>%
-  group_by(VIC_RACE_short, SUSP_RACE_short, CRIME_CAT, BORO_NM, Premise_Derived, VIC_Individual_Flag, VIC_AGE_GROUP, Inside_Outside) %>%
-  summarize(Freq = n())
-vcd::mosaic(VIC_Individual_Flag ~ BORO_NM + CRIME_CAT, counts3, direction = c("v","v","h"),)
-vcd::mosaic(CRIME_CAT ~ BORO_NM + VIC_Individual_Flag, counts3, direction = c("v","v","h"),)
-
-vcd::mosaic(VIC_AGE_GROUP ~ BORO_NM + Inside_Outside, counts3, direction = c("v","v","h"))
-```
-
---add other charts about borough or jurisdiction? Age group? Might need to try a bunch but we'll only include the ones we think look interesting (ie. where there is a pattern or anomaly/skew or something we can tie to real life)
-```{r, echo=FALSE, eval=FALSE}
-df_key_fields %>%
-  group_by(VIC_AGE_GROUP) %>%
-  summarize(freq = n()) %>%
-  arrange(desc(freq)) %>%
-  slice(1:10) %>%
-  ggplot(aes(x=fct_reorder(VIC_AGE_GROUP,freq,.desc = TRUE),y=freq)) +
-  geom_bar(stat = "identity",fill = "cornflowerblue") +
-  scale_x_discrete(guide = guide_axis(n.dodge=3))+
-  ggtitle("Victim Age vs Total Count") +
-  xlab("Age") +
-  ylab("Count")
-```
-
-```{r, echo=FALSE, eval=FALSE}
-df_key_fields %>%
-  group_by(SUSP_AGE_GROUP) %>%
-  summarize(freq = n()) %>%
-  arrange(desc(freq)) %>%
-  slice(1:10) %>%
-  ggplot(aes(x=fct_reorder(SUSP_AGE_GROUP,freq,.desc = TRUE),y=freq)) +
-  geom_bar(stat = "identity",fill = "cornflowerblue") +
-  scale_x_discrete(guide = guide_axis(n.dodge=3))+
-  ggtitle("Suspect Age vs Total Count") +
-  xlab("Age") +
-  ylab("Count")
-```
-
-Heat map version:
---need to clean these columns? add garbage values to unknown
-```{r, echo=FALSE, eval=FALSE}
-ggplot(df_key_fields, aes(VIC_AGE_GROUP, SUSP_AGE_GROUP)) + 
-  geom_bin2d()+
-  scale_fill_viridis_c()
-```
 

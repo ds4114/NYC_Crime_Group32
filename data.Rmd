@@ -1,8 +1,10 @@
 # Data 
 
-```{r setup_data, include=FALSE}
+In this section we ingest the data and perform several cleaning operations to pre-process the data for use in the Results chapter. Please click the eye icon above to view the code, transformations, and required packages used in this project.   
+
+```{r setup_data}
 #knitr::opts_chunk$set(echo= TRUE, warning = TRUE, message = TRUE)
-knitr::opts_chunk$set(echo= TRUE, warning = FALSE, message = FALSE)
+#knitr::opts_chunk$set(echo= FALSE, warning = FALSE, message = FALSE)
 ```
 
 ```{r libraries}
@@ -33,7 +35,80 @@ Year-to-Date (YTD) (2022-01 to 2022-09): https://data.cityofnewyork.us/Public-Sa
 
 The dataset contains mostly categorical variables and dates with each row indicating a crime/violation. As of the last update on October 19, 2022, the YTD Dataset contains 397K rows and 36 columns. A data dictionary is provided by NYC Open Data at the link above.
 
-Additional details can be found in the Proposal: https://ds4114.github.io/NYC_Crime_Group32/proposal.html#data-availability
+### Content
+"Complaint data" is a mixed set of records because it contains crimes (ex. robbery, rape, assault), parking violations, complaints of harassment, reports of abandoned animals, and more. In this script, we investigate, clean, and filter the data so that we can explor and answer our research questions. 
+
+As the link above indicates, there are two sets of data containing distinct records. A year-to-date dataset from 1/1/2022 to 9/30/2022 and a historic dataset containing records from 1/1/2006 to 12/31/2021. We are only using the the year-to-date data but can incorporate historic records in a future iteration of the analysis.  
+
+The following is a list of column names and their description. Not all fields are used for the analysis and some contain mostly blank values as we will show. As you may notice, most of the data is categorical but we will derive continuous variables through data and location fields. 
+
+S.No Column Name (Data Type): Description
+
+1) CMPLNT_NUM (text): Randomly generated persistent ID for each complaint
+2) ADDR_PCT_CD (text): The precinct in which the incident occurred
+3) BORO_NM	(text): The name of the borough in which the incident occurred 
+4) CMPLNT_FR_DT	(DateTime): Exact date of occurrence for the reported event (or starting date of occurrence, if CMPLNT_TO_DT exists)
+5) CMPLNT_FR_TM	(text): Exact time of occurrence for the reported event (or starting time of occurrence, if CMPLNT_TO_TM exists)
+6) CMPLNT_TO_DT	(DateTime): Ending date of occurrence for the reported event, if exact time of occurrence is unknown
+7) CMPLNT_TO_TM	(text): Ending time of occurrence for the reported event, if exact time of occurrence is unknown
+8) CRM_ATPT_CPTD_CD	(text): Indicator of whether crime was successfully completed or attempted, but failed or was interrupted prematurely 
+9) HADEVELOPT	(text): Name of NYCHA housing development of occurrence, if applicable 
+10) HOUSING_PSA	(Number): Development Level CodeNumber
+11) JURISDICTION_CODE	(Number): Jurisdiction responsible for incident. Either internal, like Police(0), Transit(1), and Housing(2); or external(3), like Correction, Port Authority, etc.
+12) JURIS_DESC (text): Description of the jurisdiction code
+13) KY_CD	(Number): Three digit offense classification code
+14) LAW_CAT_CD (text): Level of offense: felony, misdemeanor, violation
+15) LOC_OF_OCCUR_DESC	(text): Specific location of occurrence in or around the premises; inside, opposite of, front of, rear of
+16) OFNS_DESC	(text): Description of offense corresponding with key code
+17) PARKS_NM	(text): Name of NYC park, playground or greenspace of occurrence, if applicable (state parks are not included)
+18) PATROL_BORO	(text): The name of the patrol borough in which the incident occurred
+19) PD_CD	(Number): Three digit internal classification code (more granular than Key Code)
+20) PD_DESC (text): Description of internal classification corresponding with PD code (more granular than Offense Description)
+21) PREM_TYP_DESC	(text): Specific description of premises; grocery store, residence, street, etc.
+22) RPT_DT (DateTime): Date event was reported to police
+23) STATION_NAME	(text): Transit station name
+24) SUSP_AGE_GROUP	(text): Suspect’s Age Group
+25) SUSP_RACE	(text): Suspect’s Race Description
+26) SUSP_SEX	(text): Suspect’s Sex Description
+27) TRANSIT_DISTRICT (Number): Transit district in which the offense occurred
+28) VIC_AGE_GROUP (text):	Victim’s Age Group
+29) VIC_RACE (text): Victim’s Race Description
+30) VIC_SEX	(text): Victim’s Sex Description
+31) X_COORD_CD (Number): X-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)
+32) Y_COORD_CD (Number): Y-coordinate for New York State Plane Coordinate System, Long Island Zone, NAD 83, units feet (FIPS 3104)
+33) Latitude (Number): Midblock Latitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)
+34) Longitude	(Number): Midblock Longitude coordinate for Global Coordinate System, WGS 1984, decimal degrees (EPSG 4326)
+35) LatLon (Location)
+36) New Georeferenced Column (Point)
+
+
+### Who Collects The Data
+The data was collected and published by the NY Police Department (NYPD).
+
+
+### Format and Importation
+OTI provides the data in 4 formats: 1) online table, 2) visualization, 3) CSV, and 4) API. The first two have limited functionality and customization so we will not use those versions. The API requires an account and authentication tokens. Given that the CSV for YTD data is not too large (140MB), it seems the easiest to work with. CSV is a format we are most familiar with and one that R handles well. 
+
+Is there a difference between CSV and API? Yes. Not in number of observations but in the columns. With the CSV, we get a total of 36 columns (listed above) but with the API we get a total of 41 columns. 
+
+Following are the columns that are present in the CSV data but not in the API data: 
+
+1. New Georeferenced Column. 
+
+Following are the columns that are present in the API data but not in the CSV data:
+
+1. :@computed_region_92fq_4b7q  
+2. :@computed_region_yeji_bk3q  
+3. :@computed_region_efsh_h5xi
+4. geocoded_column
+5. :@computed_region_sbqj_enih
+6. :@computed_region_f5dn_yrer
+
+For our purposes, the data in the CSV is sufficient and easy to use. 
+
+### Data Updates
+This dataset was first made public on 11/1/2018. It is updated quarterly. It appears that the metadata is updated more frequently but it is not clear what changes are incorporated as there could be several updates made in Oct 2022 but the data will only contain records up to the prior month end of Sept 2022. 
+
 
 
 ## Data Transformation and Cleaning
@@ -49,6 +124,7 @@ We then filter our data frame to relevant records, and then select key fields fo
 There is also a section at the end on missing data.
 
 ### Data Loading
+We ingest the CSV data and must re-cast a data type for one column. 
 ```{r DataLoading}
 #Group32 - This file has been added to gitignore so it will not be uploaded. So we are on the same page and can run the same code, add the csv to your local project folder in a new subfolder "data". 
 df_raw <- read_csv('./data/NYPD_Complaint_Data_Current__Year_To_Date_.csv'
@@ -65,7 +141,7 @@ df <- df_raw
 
 
 ### Bucket Crime Types
-This code creates a new field to simplify the crime category to reduce the number of unique values. 
+This code chunk creates a new field to simplify the crime category to reduce the number of unique values for visualization purposes. We cut down from over 60 values to 5 and will show more in the Results chapter.
 
 ```{r DataPrep1_CrimeType_Buckets}
 df <- df %>% 
@@ -78,7 +154,7 @@ df <- df %>%
     OFNS_DESC %in% c("NYS LAWS-UNCLASSIFIED FELONY","MISCELLANEOUS PENAL LAW","FORGERY","OFFENSES AGAINST PUBLIC ADMINI","CHILD ABANDONMENT/NON SUPPORT","NYS LAWS-UNCLASSIFIED VIOLATION","OTHER STATE LAWS","OTHER STATE LAWS (NON PENAL LAW)","NEW YORK CITY HEALTH CODE","ADMINISTRATIVE CODE","OTHER STATE LAWS (NON PENAL LA","AGRICULTURE & MRKTS LAW-UNCLASSIFIED","ENDAN WELFARE INCOMP","OFFENSES RELATED TO CHILDREN") ~"OTHER"))
 ```
 
-There are 5 values with missing Offense category. Since they have valid PD_CD (Crime ID) and PD_DESC, we can impute these values from other columns with the same PD_CD. 
+Note: there are 5 values with missing Offense category. Since they have valid PD_CD (Crime ID) and PD_DESC, we can impute these values from other columns with the same PD_CD. 
   -Two values are for obscenity - 594 PD_CD (categorized as sex crimes)
   -One values for crime pos weap - 797 PD_CD (categorized as major violent crimes/dangerous weapons)
   -One value for "place false bomb" - 648 PD_CD (categorized as other)
@@ -132,7 +208,7 @@ df <- df %>%
 
 
 ### Geo-Location Fields
-This section uses a new package to calcluate the distance between two points in Lat/Long format. Here we are finding the distance from each crime to the center of the main Columbia campus to use later. 
+This section uses a new package, geosphere, to calcluate the distance between two points in Lat/Long format. Here we are finding the distance from each crime to the center of the main Columbia campus for use later. 
 
 ```{r DataPrep3_DistanceFields}
 #Location of Columbia - hardcoded for calculation
@@ -148,7 +224,7 @@ df$dist_to_CU <- apply(df, 1, function(x)distm(
 ```
 
 ### Other Derivations
-In this section, we add additional fields for more classification (explained more in the Results section), reclassify "null" to Unknown in specific instances, shorten values, and combine information to simplify categories. 
+In this section, we add additional fields for more classification (explained more in the Results section), reclassify "null" to Unknown in specific instances, shorten values for ease-of-use, and combine information from several premise columns into one to simplify category values. 
 
 ```{r DataPrep4_MoreFields}
 #Update certain null fields. Setting race to null because there is already an "Unknown" category 
@@ -223,8 +299,28 @@ df <- df %>%
 
 
 ## Filter Table for Relevance
-The raw data only contains crimes that were reported in 2022 even if they took place earlier. As we will show in the Results, this create a bias in the time series and this section creates a new data frame to filter out old records (as defined by derived field above; before 1/1/2022).
+The raw data only contains crimes that were reported in 2022 even if they took place earlier. As we will show below, this create a bias in the time series and this section creates a new data frame to filter out old records (as defined by derived field above; before 1/1/2022).
 We also filter for only "relevant" crimes - i.e. excluding parking violations, noise compliants (those in the "Other" category)
+
+```{r}
+ts_year_all <- df %>% 
+  #filter(year(Incident_Date) >= 2022) %>%
+  group_by(year(Incident_Date))  %>%
+  summarize(Complaint_Count = n() ) %>% rename( Incident_Year = `year(Incident_Date)`)
+
+ggplot(ts_year_all, aes(x=Incident_Year, y=Complaint_Count )) + geom_line() +
+  scale_y_continuous(label=comma) +
+  scale_x_continuous(limits= c(2000,2023) ) +
+  labs(
+    title = "Date of Incident (Reported in 2022)",
+    x = "Incident Year (raw data)",
+    y = "Number of Reports",
+  )
+
+```
+
+From this we see that there is a large drop off in historic reports. This make sense as it is more likely that someone would report a crime in the same year that it occurs. Although NYPD allows people to report crimes that occurred in 2020, there will be much fewer of them reported in 2022. If we wanted to use data prior to 2022 we should include the old crime reports for prior years. Also there are some quality issues with historic data as we see very old crimes (year 1500) which indicate some human error or a record-keeping issue.  
+
 ```{r DataPrep6_Filter}
 df_filter <- df %>% filter(  Incident_Date >= as.Date('2022/01/01')  ) %>%
   filter (
@@ -235,11 +331,11 @@ df_filter <- df %>% filter(  Incident_Date >= as.Date('2022/01/01')  ) %>%
 #View(df_filter)
 #unique(df_filter$CRIME_CAT)
 ```
-This improves the results as we will show in the next chapter. There are not many records that are excluded (396978 - 364298)
+After filtering the data, we have a cleaner data frame and more sensical results as we will show in the next chapter. Overall, there are not many records that are excluded (from 396,978 to 364,298).
 
 
 ## Select and Rename Columns
-This section simply chooses fields that are used in our analysis to simplify and reduce the overall size of the working data frame. 
+This section simply chooses fields that are used in our analysis to simplify and reduce the overall size of the working data frame. We also make some character fields factors and order them by frequency. 
 ```{r DataPrep5_Renaming}
 #Not required
 df_key_fields <- df_filter %>% 
@@ -314,7 +410,7 @@ df_key_fields$SUSP_SEX <- fct_relevel(df_key_fields$SUSP_SEX, c('M','F','L','E',
 
 
 ## Missing Value Analysis
-First let us look at the raw data to see what things look like originally. We can categorize nulls as real (i.e. true NA) vs "fake" (i.e. "null" in the data or similar). Then show which fields and what percent of each may have an issue.
+First let us look at the raw data to see what things look like originally. We can categorize nulls as real (i.e. true NA) vs "artificial" (i.e. the word "null" in the raw data or similar). Then we can show which fields and what percent of each (out of the 300k rows) may have an issue.
 ```{r NullCalc1}
 df_nulls <- df %>% 
   #head(1000) %>% 
@@ -324,33 +420,37 @@ df_nulls <- df %>%
     Real_Null = case_when(is.na(value) ~ 1, TRUE ~ 0)
     ,Fake_Null = case_when( value == "(null)" ~ 1, TRUE ~ 0)
   ) %>% filter( Real_Null + Fake_Null >= 1) %>%
-  group_by(field) %>%  summarize(total_real_null=sum(Real_Null),total_fake_null=sum(Fake_Null), total_null=sum(Real_Null)+sum(Fake_Null)) %>%
-  mutate(total_null_percent = total_null/396978) %>% 
-  arrange(desc(total_null))
+  group_by(field) %>%  summarize(Real_Null=sum(Real_Null),Artificial_Null=sum(Fake_Null), Total=sum(Real_Null)+sum(Fake_Null)) %>%
+  mutate(Percent = round(Total/396978*100,2)) %>% 
+  arrange(desc(Total))
 
 print(df_nulls, n=50)
 ```
-So we see we have mostly missing data for 5 fields. Location and its derived field is also missing a good portion which is likely due to masking for privacy reasons per the data source notes. 
-Let us look at missing patterns now:
+So we see we have mostly missing data for 5 fields. Location and its derived field is also missing a good portion which is likely due to masking for privacy reasons per the data source notes found at the NY Open Data Link.
 
+Let us look at missing patterns now:
+Raw Data, All Columns:
 ```{r, fig.height=4, fig.width=15}
 #View(df_key_fields[is.na(df_key_fields$CMPLNT_NUM),])
 #View(df[!is.na(df$TRANSIT_DISTRICT),])
 plot_missing(df, percent = FALSE)
+```
+Raw Data, All Columns (Except Transit_District and Housing_PSA):
+```{r, fig.height=4, fig.width=15}
 plot_missing( df[ , !colnames(df) %in% c("TRANSIT_DISTRICT","HOUSING_PSA") ] , percent = FALSE)
 ```
-These charts are hard to read given the number of columns but it shows that most data is actually populated very well as we saw above. There are two problem fields causing all of the real nulls but we can re-graph this without those and see that complete cases are at the top. However, this is still not accurate because there are string values in the data that say "(null)" or "Unknown" which would appear as populated. In any case, we do not need to clean and evaluate all columns, so let us work off of the new, filtered dataset (see below).
+These charts are hard to read given the number of columns but it shows that most data is actually populated very well as we saw above. There are two problem fields causing all of the real nulls but we can re-graph this without those and see that complete cases are at the top. However, this is still not accurate because there are string values in the data that say "(null)" or "Unknown" which would appear as populated. In any case, we do not need to clean and evaluate all columns, so let us work off of the new, filtered dataset we created in a prior section (see below).
 Side Note: We initially noticed the Complaint_Num was null often but this was due to it containing alphanumeric characters and R loading it as a number only. It has been corrected and serves as a primary key for the data frame.
 
 ```{r, fig.height=4, fig.width=15}
 plot_missing(df_key_fields, percent = FALSE)
 ```
-The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NULL properly. We have recoded some values to "Unknown" as that appears in the raw data is is reasonable (e.g. if the suspect was not found, we have no information on them). We see there are a few blanks for Borough and lat/long and thus the related derived field, but otherwise we have a good data frame to use in the next chapter.
+The filtered data (relevant columns and rows only) is populated very well and this dataset accounts for improperly coded values where "(null)" will appear as NA properly. We have re-coded some values to "Unknown" as that value appears in the raw data is is reasonable (e.g. if the suspect was not found, we have no information on them and can say Unknown). We see there are a few blanks for Borough and lat/long and thus the related derived field, but otherwise we have a good data frame to use in the next chapter.
 
 
 ## Interactive Component Datasets
-The following code is used to create CSV files for use in the interactive component. Data is pre-filtered to keep the overall size small and manageable when plotting.
-```{r, echo=TRUE}
+The following code is used to create CSV files for use in the interactive component. Data is pre-filtered to keep the overall size small and manageable when plotting lots of points. This speeds up the time when users interact in that chapter.
+```{r, echo=FALSE}
 #Code to create CSV files for use in interactive data
 columbia_short <- df_key_fields %>% 
   filter(dist_to_CU <= 1000) %>% select(Latitude, Longitude)
